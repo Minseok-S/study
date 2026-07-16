@@ -209,17 +209,20 @@
   }
 
   // ── 기출 출제 이력 배지 ──
-  // it.gichul = {t:"토픽명", r:[출제된 회차]} — data/study-data.js 에 기출 분석 결과로 부여됨.
-  // 주의: 항목 단위가 아니라 '토픽 단위' 통계다. 같은 토픽으로 묶인 항목들은 같은 값을 갖는다.
-  // 그래서 배지에 토픽명과 전체 모수(GICHUL_TOTAL)를 함께 적어 오해를 줄인다.
-  const GICHUL_TOTAL = (window.GICHUL_DATA && window.GICHUL_DATA.rounds) ? window.GICHUL_DATA.rounds.length : 18;
+  // it.gichul = {q:["24-9","30-3"], a:["근거앵커"]} — 이 항목과 연결된 실제 기출 문항.
+  // 앵커 용어를 기출 원문에서 찾아 자동 연결한 결과이며, 표본 검수 기준 정확도는 8~9할이다.
+  // 그래서 배지에 '몇 회 몇 번'을 그대로 노출해 직접 대조·검증할 수 있게 한다.
   function gichulBadge(it){
-    if(!it.gichul || !it.gichul.r || !it.gichul.r.length) return "";
-    const n=it.gichul.r.length;
-    const cls = n>=14 ? " hot" : n>=10 ? " warm" : "";
-    const title = it.gichul.t+" 토픽이 기출 "+GICHUL_TOTAL+"개 회차 중 "+n+"개 회차에서 출제됨\n· 출제 회차: "+it.gichul.r.join(", ")+"회\n· 항목이 아니라 토픽 단위 통계입니다";
-    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">'
-      + esc(it.gichul.t)+' <b>'+n+'/'+GICHUL_TOTAL+'</b>회</span>';
+    if(!it.gichul || !it.gichul.q || !it.gichul.q.length) return "";
+    const qs=it.gichul.q;
+    const label = qs.map(x=>{const [r,n]=x.split("-"); return r+"회 "+n+"번";});
+    const cls = qs.length>=3 ? " hot" : qs.length>=2 ? " warm" : "";
+    const title = "이 항목과 연결된 기출 문항 "+qs.length+"개\n· "+label.join("\n· ")
+      + "\n\n근거 용어: "+(it.gichul.a||[]).join(", ")
+      + "\n※ 자동 연결 결과라 일부 오차가 있을 수 있습니다";
+    // 1개면 회차·번호를 그대로, 여러 개면 개수로 접어서 보여준다
+    const text = qs.length===1 ? label[0] : "기출 "+qs.length+"문항";
+    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">'+esc(text)+'</span>';
   }
 
   // ── 카드(둘러보기) 렌더 ──
