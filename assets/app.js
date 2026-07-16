@@ -53,6 +53,48 @@
     s=s.replace(/\u0000(\d+)\u0000/g,(m,i)=>"<code>"+esc(codes[+i])+"</code>");
     return s;
   }
+  // ── 패킷 구조 다이어그램 ──
+  // ```packet
+  // title: ESP 터널모드
+  // fields: +New IP 헤더, +ESP 헤더, IP 헤더, TCP 헤더, 데이터, +ESP Trailer, +ESP Auth
+  // enc: 3-6 | 암호화 (기밀성)
+  // auth: 2-6
+  // note: 새 IP 헤더는 보호되지 않음
+  // ```
+  // fields 앞의 +는 IPSec이 새로 추가하는 필드. enc/auth는 1-based 인덱스 범위.
+  function packetHTML(code){
+    const cfg={fields:[]};
+    code.split("\n").forEach(l=>{
+      const m=l.match(/^\s*(title|fields|enc|auth|note)\s*:\s*(.+)$/);
+      if(m) cfg[m[1]]=m[2].trim();
+    });
+    const fields=(cfg.fields||"").split(",").map(f=>f.trim()).filter(Boolean);
+    if(!fields.length) return "";
+    const n=fields.length;
+    function bar(spec, cls, fallback, row){
+      if(!spec) return "";
+      const [range,label]=spec.split("|").map(s=>s.trim());
+      const m=range.match(/^(\d+)\s*-\s*(\d+)$/);
+      if(!m) return "";
+      const a=Math.max(1,Math.min(n,+m[1])), b=Math.max(a,Math.min(n,+m[2]));
+      return '<div class="pkt-bar '+cls+'" style="grid-column:'+a+'/'+(b+1)+';grid-row:'+row+'">'
+        + esc(label||fallback) + '</div>';
+    }
+    let h='<div class="pkt">';
+    if(cfg.title) h+='<div class="pkt-title">'+inlineMd(cfg.title)+'</div>';
+    h+='<div class="pkt-scroll"><div class="pkt-grid" style="grid-template-columns:repeat('+n+',auto)">';
+    fields.forEach((f,idx)=>{
+      const added=f.startsWith("+");
+      h+='<div class="pkt-f'+(added?" add":"")+'" style="grid-column:'+(idx+1)+';grid-row:1">'
+        + esc(added?f.slice(1).trim():f) + '</div>';
+    });
+    h+=bar(cfg.enc,"enc","🔒 암호화 범위",2);
+    h+=bar(cfg.auth,"auth","🛡 인증 범위",3);
+    h+='</div></div>';
+    if(cfg.note) h+='<div class="pkt-note">'+inlineMd(cfg.note)+'</div>';
+    return h+'</div>';
+  }
+
   function renderMd(src){
     const lines = src.replace(/\r/g,"").split("\n");
     let html="", i=0;
@@ -85,6 +127,7 @@
         let code="";
         while(i<lines.length && !/^\s*```/.test(lines[i])){ code+=lines[i]+"\n"; i++; }
         i++;
+        if(lang==="packet"){ html+=packetHTML(code); continue; }
         html+="<pre><code>"+esc(code.replace(/\n$/,""))+"</code></pre>"; continue;
       }
       if(/^\s*\|.*\|\s*$/.test(line) && i+1<lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i+1])){

@@ -97,11 +97,17 @@
     font-size:13px; font-weight:600;
   }
   .modes button.on{background:var(--brand-deep); color:#eafeff}
-  .modes a.ext-link{
-    border:0; background:transparent; color:var(--ink-dim); padding:7px 13px; border-radius:7px;
-    font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:4px;
+  /* ── 페이지 전환 메뉴 (학습 노트 ↔ 단답형 드릴) ── */
+  .page-switch{display:flex; gap:6px; padding:12px 20px; border-bottom:1px solid var(--line)}
+  .page-switch .ps-item{
+    flex:1; text-align:center; text-decoration:none; padding:9px 10px; border-radius:9px;
+    font-size:13px; font-weight:700; color:var(--ink-dim); background:var(--panel);
+    border:1px solid var(--line2); transition:.15s;
   }
-  .modes a.ext-link:hover{color:var(--brand)}
+  .page-switch .ps-item:hover{border-color:var(--brand); color:var(--brand)}
+  .page-switch .ps-item.on{
+    background:var(--brand-deep); border-color:var(--brand-deep); color:#eafeff; cursor:default;
+  }
   .filters{display:flex; gap:6px; flex-wrap:wrap}
   .chip{
     border:1px solid var(--line2); background:var(--panel); color:var(--ink-dim);
@@ -181,6 +187,37 @@
   .md th{background:var(--panel2); color:var(--ink); font-weight:700}
   .md hr{border:0; border-top:1px solid var(--line); margin:14px 0}
   mark{background:#ffe9a8; color:#5a4300; border-radius:3px; padding:0 2px}
+
+  /* ── 패킷 구조 다이어그램 ── */
+  .pkt{
+    margin:14px 0; padding:14px; border:1px solid var(--line);
+    border-radius:12px; background:var(--panel2);
+  }
+  .pkt-title{
+    font:700 12px/1 var(--sans); letter-spacing:.02em; color:var(--ink);
+    margin-bottom:12px;
+  }
+  .pkt-scroll{overflow-x:auto; padding-bottom:2px}
+  .pkt-grid{
+    display:grid; gap:6px 4px; justify-content:start;
+    grid-template-rows:auto auto auto; min-width:min-content;
+  }
+  .pkt-f{
+    border:1px solid var(--line2); background:var(--panel); color:var(--ink-dim);
+    border-radius:7px; padding:9px 11px; text-align:center; white-space:nowrap;
+    font:600 12px/1.3 var(--mono);
+  }
+  .pkt-f.add{
+    border-color:var(--brand); background:var(--brand); color:var(--brand-ink);
+  }
+  .pkt-bar{
+    border-radius:6px; padding:5px 8px; text-align:center; white-space:nowrap;
+    font:700 11px/1.3 var(--sans);
+  }
+  .pkt-bar.enc{background:var(--add-bg); color:var(--add); border:1px dashed var(--add)}
+  .pkt-bar.auth{background:var(--star-bg); color:var(--star); border:1px dashed var(--star)}
+  .pkt-note{margin-top:11px; font-size:12px; color:var(--ink-mute); line-height:1.6}
+  .pkt-note strong{color:var(--ink-dim)}
 
   /* ── 플래시카드 모드 ── */
   .flash-wrap{max-width:720px; margin:10px auto; text-align:center}
