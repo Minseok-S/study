@@ -17,6 +17,25 @@
 .round-btn .r-cnt{display:block;font-size:.68rem;color:var(--ink-soft);margin-top:2px}
 .round-btn .r-w{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:500;color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:1px 4px;margin-top:4px}
 
+/* ---------- 코드·로그 블록 ---------- */
+/* formatText()가 <pre class="code">/<div class="prose">로 조립하므로
+   컨테이너의 pre-wrap을 끄고 줄바꿈은 .prose가 담당한다 */
+.q-text, .a-text, .note-box .note-text, .wrong-item .wq, .wrong-item .wa{white-space:normal}
+.prose{white-space:pre-wrap;word-break:keep-all}
+.prose+.prose{margin-top:2px}
+.blank{color:var(--accent);font-weight:600;font-family:var(--mono)}
+pre.code{
+  font-family:var(--mono); font-size:.82rem; line-height:1.65;
+  background:#F4F6F5; border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:8px; padding:11px 13px; margin:10px 0;
+  overflow-x:auto; white-space:pre; word-break:normal; color:#22302B;
+  -webkit-overflow-scrolling:touch;
+}
+.a-text pre.code{font-weight:500}
+.note-box pre.code{font-size:.76rem;margin:8px 0}
+.wrong-item pre.code{font-size:.74rem;margin:6px 0}
+@media(max-width:520px){ pre.code{font-size:.74rem;padding:9px 10px} }
+
 /* ---------- 답안 입력 ---------- */
 .essay-input{width:100%;font-family:var(--sans);font-size:.95rem;padding:14px;border:1.5px solid var(--line);border-radius:10px;resize:vertical;line-height:1.8;color:var(--ink);background:#FBFCFB;word-break:keep-all}
 .essay-input:focus{outline:none;border-color:var(--accent)}

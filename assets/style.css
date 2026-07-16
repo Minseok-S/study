@@ -157,6 +157,10 @@
   .badge{font:700 10px/1 var(--mono); padding:3px 6px; border-radius:5px; letter-spacing:.03em}
   .badge.star{background:var(--star-bg); color:var(--star)}
   .badge.add{background:var(--add-bg); color:var(--add); border:1px solid #d8d0f2}
+  /* 기출 출제 이력 — 출제 회차 수가 많을수록 강조 (warm: 10회+, hot: 14회+) */
+  .badge.gichul{background:#eef2f7; color:#5a6b80; border:1px solid #dde4ec; cursor:help}
+  .badge.gichul.warm{background:#fff2e0; color:#a05a12; border-color:#f4dcbb}
+  .badge.gichul.hot{background:#fde8e4; color:#b4452e; border-color:#f6cdc4}
   .add-mark{
     display:inline-block; margin:16px 0 6px; padding:5px 12px; border-radius:99px;
     font:700 11px/1 var(--mono); letter-spacing:.04em;

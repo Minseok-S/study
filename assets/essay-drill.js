@@ -429,10 +429,97 @@ function showConfirm(message, onYes){
 }
 
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ---------- 코드·로그 블록 인식 ----------
+   기출 지문의 설정 파일·룰·로그는 ``` 펜스 없이 평문으로 들어있다.
+   아래 신호가 잡히는 줄을 코드로 보고, 연속된 구간을 <pre>로 묶어 가독성을 높인다.
+   산문이 코드로 잘못 잡히면 오히려 읽기 나빠지므로 신호는 보수적으로 유지할 것. */
+const CODE_SIGNS = [
+  /[{};]\s*$/,                                   // zone "..." IN {  /  type master;  /  };
+  /^\s*[{}]/,                                    // 블록 여닫기
+  /^\s*\d{1,3}(\.\d{1,3}){3}[\s:]/,              // 로그 앞머리의 IP
+  /"(GET|POST|HEAD|PUT|DELETE)\s|\bHTTP\/[012]\.[019]/,  // 웹 로그·요청 라인
+  /^\s*(GET|POST)\s+\/\S/,
+  /^\s*(alert|pass|drop|reject)\s+(tcp|udp|icmp|ip|any)\b/i,  // Snort 룰
+  /\b(iptables|access-list|hping3?|nmap|tcpdump|netstat|lsof)\b/,
+  /^\s*(zone|type|file|masters|allow-\w+|options|forwarders)\b.*[;{"]/i,
+  /^\s*(Options|AddType|AddHandler|Order|Deny|Allow|LimitRequestBody|AllowOverride)\s+\S/,
+  /^\s*<\/?(FilesMatch|Directory|Location|VirtualHost|Limit)\b/i,
+  /^\s*[#$]\s+\S/,                               // 셸 프롬프트
+  /^[\w.\-]+:[^:\s]*:\d+:/,                      // passwd / shadow 레코드
+  /^\s*(int|char|void|unsigned|return|if|for|while)\b.*[;({]/,  // C 코드
+  /\b(strcpy|printf|scanf|sprintf|memcpy|gets)\s*\(/,
+  /^\s*(chmod|chown|find|grep|awk|sed|cat|ls|ps|su|sudo|useradd|usermod|passwd)\s+[-\/\w]/,
+  /^\s*[\w.\-]+\s*=\s*[^=]+$/,                   // key = value 설정
+  /^\s*(Content-Type|User-Agent|Referer|Host|Cache-Control|Cookie|Set-Cookie|Accept|Connection|Server|Date|Content-Length)\s*:/i,
+];
+// 중괄호·세미콜론·IP·HTTP 처럼 산문에는 거의 나오지 않는 '구조적' 신호
+const CODE_STRUCT = [
+  /[{};]\s*$/,
+  /^\s*[{}]/,
+  /^\s*\d{1,3}(\.\d{1,3}){3}[\s:]/,
+  /\bHTTP\/[012]\.[019]/,
+];
+function isCodeLine(l){
+  const t = l.trim();
+  if(!t) return false;
+  // 산문 불릿("- iptables 룰 설정은 출제 0순위...")이 도구명 때문에 코드로 잡히는 것을 막는다
+  if(/^[-*•]\s/.test(t) && !/[;{]\s*$/.test(t)) return false;
+  if(/^[가-힣]/.test(t) && !/[{};]\s*$/.test(t)) return false;  // 한글로 시작하는 설명문은 제외
+  if(!CODE_SIGNS.some(re => re.test(l))) return false;
+  // 한글 비중이 높으면 구조적 신호가 있을 때만 코드로 인정 (설명이 섞인 줄 보호)
+  const ko = (t.match(/[가-힣]/g) || []).length / t.length;
+  if(ko > 0.3) return CODE_STRUCT.some(re => re.test(l));
+  return true;
+}
+// 연속된 코드 줄을 하나의 블록으로 묶는다 (블록 내부의 빈 줄은 유지)
+function groupBlocks(lines){
+  const out = [];
+  let i = 0;
+  while(i < lines.length){
+    if(isCodeLine(lines[i])){
+      const buf = [];
+      while(i < lines.length){
+        if(isCodeLine(lines[i])){ buf.push(lines[i]); i++; continue; }
+        // 코드 줄 사이에 낀 빈 줄은 블록에 포함 (뒤에 코드가 더 있을 때만)
+        if(!lines[i].trim()){
+          let j = i;
+          while(j < lines.length && !lines[j].trim()) j++;
+          if(j < lines.length && isCodeLine(lines[j])){ i = j; continue; }
+        }
+        break;
+      }
+      out.push({ code: true, lines: buf });
+    } else {
+      const buf = [];
+      while(i < lines.length && !isCodeLine(lines[i])){ buf.push(lines[i]); i++; }
+      out.push({ code: false, lines: buf });
+    }
+  }
+  return out;
+}
+function highlightBlanks(h){
+  return h.replace(/\(\s*([A-Za-z]|[0-9]{1,2}|[가-힣])\s*\)/g,
+    '<span class="blank">( $1 )</span>');
+}
 function formatText(s){
-  let h = esc(s);
-  h = h.replace(/\(\s*([A-Za-z]|[0-9]{1,2}|[가-힣])\s*\)/g, '<span style="color:var(--accent);font-weight:600;font-family:var(--mono)">( $1 )</span>');
-  return h;
+  const src = (s || '').replace(/\r/g, '');
+  // ``` 펜스가 있으면 그대로 존중한다
+  const parts = src.split(/```/);
+  let html = '';
+  parts.forEach((part, idx) => {
+    if(idx % 2 === 1){   // 펜스 안 = 코드
+      html += '<pre class="code">' + esc(part.replace(/^\w*\n/, '').replace(/\n$/, '')) + '</pre>';
+      return;
+    }
+    groupBlocks(part.split('\n')).forEach(b => {
+      const text = b.lines.join('\n').replace(/^\n+|\n+$/g, '');
+      if(!text.trim()) return;
+      if(b.code) html += '<pre class="code">' + esc(text) + '</pre>';
+      else html += '<div class="prose">' + highlightBlanks(esc(text)) + '</div>';
+    });
+  });
+  return html || '<div class="prose">' + highlightBlanks(esc(src)) + '</div>';
 }
 
 function showFatal(msg){

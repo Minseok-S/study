@@ -208,11 +208,22 @@
     });
   }
 
+  // ── 기출 출제 이력 배지 ──
+  // it.gichul = {t:"토픽명", r:[출제된 회차]} — data/study-data.js 에 기출 분석 결과로 부여됨
+  function gichulBadge(it){
+    if(!it.gichul || !it.gichul.r || !it.gichul.r.length) return "";
+    const n=it.gichul.r.length;
+    const cls = n>=14 ? " hot" : n>=10 ? " warm" : "";
+    const title = it.gichul.t+" · "+it.gichul.r.join(", ")+"회 출제";
+    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">기출 '+n+'회</span>';
+  }
+
   // ── 카드(둘러보기) 렌더 ──
   function cardHTML(it){
     const doneC=isDone(it.id)?" done":"";
     let badges="";
     if(it.star) badges+='<span class="badge star">★ 빈출</span>';
+    badges+=gichulBadge(it);
     if(it.added) badges+='<span class="badge add">＋ 보강</span>';
     else if(it.hasAdd) badges+='<span class="badge add">＋ 보강 추가</span>';
     const tag = state.search ? (it.subjNum+". "+it.subjTitle.replace(/\s*\(.*\)/,"")+" › "+it.secTitle) : "";
@@ -298,6 +309,7 @@
     const it=list[state.flashIdx];
     let badges="";
     if(it.star) badges+='<span class="badge star">★ 빈출</span>';
+    badges+=gichulBadge(it);
     if(it.added) badges+='<span class="badge add">＋ 보강</span>';
     content.innerHTML=
       '<div class="flash-wrap">'
@@ -450,7 +462,7 @@
           +'<span class="exq-dom">'+esc(q.domain)+'</span>'
           +'<span class="exq-pts">'+q.points+'점</span></div>'
         +'<div class="exq-body">'
-          +'<div class="exq-q">'+inlineMd(q.question).replace(/\n/g,"<br>")+'</div>'
+          +'<div class="exq-q"><div class="md">'+renderMd(q.question)+'</div></div>'
           +scen
           +'<textarea class="exq-ta" placeholder="답안을 작성해 보세요 (자동 저장)">'+(st.ans?esc(st.ans):"")+'</textarea>'
           +'<button class="exq-reveal">📖 모범답안 · 해설 보기</button>'
