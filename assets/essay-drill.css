@@ -1,0 +1,49 @@
+/* 서술형·실무형 드릴 전용 — short-answer.css 위에 얹는 추가 스타일 */
+
+:root{ --mid:#9A5B1E; --mid-soft:#F6ECDF; }
+
+/* 4칸 스탯 레일은 좁은 화면에서 글자가 뭉개지므로 살짝 줄인다 */
+@media(max-width:520px){
+  .stat{padding:12px 6px}
+  .stat .lbl{font-size:.66rem}
+}
+
+/* ---------- 회차 그리드 ---------- */
+.round-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.round-btn{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 8px;text-align:center;transition:border-color .15s,transform .1s}
+.round-btn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.round-btn:active{transform:translateY(0)}
+.round-btn .r-no{display:block;font-family:var(--mono);font-size:1rem;font-weight:600}
+.round-btn .r-cnt{display:block;font-size:.68rem;color:var(--ink-soft);margin-top:2px}
+.round-btn .r-w{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:500;color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:1px 4px;margin-top:4px}
+
+/* ---------- 답안 입력 ---------- */
+.essay-input{width:100%;font-family:var(--sans);font-size:.95rem;padding:14px;border:1.5px solid var(--line);border-radius:10px;resize:vertical;line-height:1.8;color:var(--ink);background:#FBFCFB;word-break:keep-all}
+.essay-input:focus{outline:none;border-color:var(--accent)}
+.input-foot{display:flex;justify-content:flex-end;margin-top:6px;font-family:var(--mono);font-size:.7rem;color:var(--ink-soft)}
+
+/* ---------- 채점 ---------- */
+.score-line .mid{color:var(--mid)}
+.grade-msg{margin-top:16px;font-size:.85rem}
+.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:10px}
+.kw-lbl{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.08em;color:var(--ink-soft);margin-right:2px}
+.kw{font-size:.72rem;font-weight:500;border-radius:5px;padding:2px 7px;line-height:1.6}
+.kw.hit{color:var(--accent);background:var(--accent-soft)}
+.kw.miss{color:var(--warn);background:var(--warn-soft)}
+
+/* 모범답안이 길어 3지선다 판정 버튼이 세로로 눌리는 것을 방지 */
+.actions.three .btn{padding:13px 8px;font-size:.88rem}
+.btn-mid{background:var(--mid-soft);border-color:var(--mid);color:var(--mid)}
+@media(max-width:520px){ .actions.three{flex-direction:column} }
+
+/* ---------- 출제 코멘트 ---------- */
+.note-box{margin-top:16px;border:1.5px solid var(--line);border-radius:10px;background:#FBFCFB;padding:10px 14px}
+.note-box summary{cursor:pointer;font-size:.78rem;font-weight:600;color:var(--ink-soft);list-style:none;display:flex;gap:8px;align-items:center}
+.note-box summary::before{content:'+';font-family:var(--mono);color:var(--accent);font-weight:700}
+.note-box[open] summary::before{content:'−'}
+.note-box .note-text{font-size:.8rem;line-height:1.7;color:var(--ink-soft);white-space:pre-wrap;word-break:keep-all;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+
+/* ---------- 결과 ---------- */
+.v-chip{font-family:var(--mono);font-size:.62rem;font-weight:600;border-radius:4px;padding:1px 6px;margin-left:auto}
+.v-chip.part{color:var(--mid);background:var(--mid-soft)}
+.v-chip.none{color:var(--warn);background:var(--warn-soft)}

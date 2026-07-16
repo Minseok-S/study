@@ -15,7 +15,6 @@ const CATS = [
 const CAT_NAME = Object.fromEntries(CATS.map(c=>[c.id,c.name]));
 
 const WRONG_KEY = 'isec_wrong_v1';
-const REC_KEY = 'isec_includeRec_v1';
 
 // localStorage가 차단된 환경(프라이빗 브라우징, 샌드박스 iframe 등)에서도
 // 앱이 죽지 않도록 안전한 래퍼 + 메모리 폴백을 사용한다.
@@ -30,12 +29,8 @@ function safeSet(key, val){
   catch(e){ storageOK=false; memStore[key]=val; }
 }
 
-// 추천 문제 포함 여부 (기본: 포함)
-let includeRec = safeGet(REC_KEY, '1') === '1';
-function setIncludeRec(v){ includeRec=v; safeSet(REC_KEY, v?'1':'0'); }
-// 현재 설정에 따른 문제 풀
-function pool(){ return includeRec ? QUESTIONS.slice() : QUESTIONS.filter(q=>!q.r); }
-const REC_LIST = ()=> QUESTIONS.filter(q=>q.r);
+// 문제 풀 — 기출만 출제 (데이터의 추천 문제 r:true는 제외)
+function pool(){ return QUESTIONS.filter(q=>!q.r); }
 function loadWrong(){ try{return JSON.parse(safeGet(WRONG_KEY,'[]'))}catch(e){return []} }
 function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); }
 
@@ -81,26 +76,17 @@ function startSession(list, mode, label){
 /* ============ 홈 ============ */
 function renderHome(){
   const P = pool();
-  const recN = REC_LIST().length;
   pill.textContent = `${P.length} 문항`;
   const wrong = loadWrong();
   const wrongInPool = P.filter(q=>wrong.includes(q.n)).length;
   app.innerHTML = `
   <section class="hero">
     <h1>틀린 문제는 <em>다시 만날 때까지</em><br>끝나지 않는다</h1>
-    <p>정보보안기사 실기 단답형 ${QUESTIONS.length - recN}제 + 추천 ${recN}제. 답을 직접 입력해 채점하고, 약점만 골라 반복 훈련하세요.</p>
+    <p>정보보안기사 실기 단답형 기출 ${P.length}제. 답을 직접 입력해 채점하고, 약점만 골라 반복 훈련하세요.</p>
     <div class="stat-rail">
-      <div class="stat"><span class="num">${P.length}</span><span class="lbl">${includeRec?'전체(추천 포함)':'기출만'}</span></div>
+      <div class="stat"><span class="num">${P.length}</span><span class="lbl">기출 문항</span></div>
       <div class="stat bad"><span class="num">${wrongInPool}</span><span class="lbl">오답 노트</span></div>
       <div class="stat good"><span class="num">${P.length - wrongInPool}</span><span class="lbl">남은 안전 문항</span></div>
-    </div>
-
-    <div class="rec-toggle">
-      <div class="rec-toggle-text">
-        <span class="rec-toggle-title">추천 문제 포함</span>
-        <span class="rec-toggle-sub">최신 출제 경향 대비 ${recN}문항 (제로트러스트·클라우드·법 개정 등)</span>
-      </div>
-      <button class="switch ${includeRec?'on':''}" id="recSwitch" role="switch" aria-checked="${includeRec}"><span class="knob"></span></button>
     </div>
 
     <div class="mode-grid">
@@ -110,10 +96,6 @@ function renderHome(){
       </button>
       <button class="mode-btn" id="mShuffle">
         <span><span class="t">랜덤 셔플</span><span class="d">${P.length}문항을 무작위 순서로</span></span>
-        <span class="arrow">→</span>
-      </button>
-      <button class="mode-btn rec" id="mRec">
-        <span><span class="t">추천 문제만 풀기 <span class="rec-badge">NEW</span></span><span class="d">${recN}문항 집중 · 최신 경향 핵심</span></span>
         <span class="arrow">→</span>
       </button>
       <button class="mode-btn danger" id="mWrong" ${wrongInPool? '':'disabled'}>
@@ -144,13 +126,11 @@ function renderHome(){
       }).join('')}
     </div>
 
-    <p class="note">‘추천 문제 포함’을 켜면 전체·셔플·분야별 풀기에 최신 경향 추천 문제가 함께 섞입니다. 끄면 기출 ${QUESTIONS.length-recN}제만 풉니다. ‘추천 문제만 풀기’는 토글과 무관하게 항상 추천 ${recN}문항만 출제합니다. 답을 입력하면 키워드 자동 채점이 1차로 도와주고, 최종 정답 여부는 키보드 1(정답)·2(오답)로 확정합니다. 틀린 문제는 오답 노트에 자동 저장됩니다.</p>
+    <p class="note">답을 입력하면 키워드 자동 채점이 1차로 도와주고, 최종 정답 여부는 키보드 1(정답)·2(오답)로 확정합니다. 틀린 문제는 오답 노트에 자동 저장됩니다.</p>
   </section>`;
 
-  document.getElementById('recSwitch').onclick = ()=>{ setIncludeRec(!includeRec); renderHome(); };
-  document.getElementById('mAll').onclick = ()=> startSession(pool(), 'all', includeRec?'전체 풀기':'기출 전체');
+  document.getElementById('mAll').onclick = ()=> startSession(pool(), 'all', '전체 풀기');
   document.getElementById('mShuffle').onclick = ()=> startSession(shuffle(pool()), 'shuffle', '랜덤 셔플');
-  document.getElementById('mRec').onclick = ()=> startSession(REC_LIST(), 'rec', '추천 문제');
   document.getElementById('mWrong').onclick = ()=>{
     const set = new Set(loadWrong());
     const list = pool().filter(q=>set.has(q.n));
@@ -182,7 +162,7 @@ function renderQuiz(){
     <div class="score-line"><span class="o">정답 ${S.o}</span><span class="x">오답 ${S.x}</span><span>Q-${String(q.n).padStart(3,'0')}</span></div>
 
     <article class="card">
-      <span class="num-chip">Q-${String(q.n).padStart(3,'0')}</span><span class="cat-chip">${CAT_NAME[q.c]||''}</span>${q.r?'<span class="rec-chip">추천</span>':''}
+      <span class="num-chip">Q-${String(q.n).padStart(3,'0')}</span><span class="cat-chip">${CAT_NAME[q.c]||''}</span>
       <div class="q-text">${esc(q.q)}</div>
 
       <div id="inputArea">

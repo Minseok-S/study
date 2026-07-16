@@ -98,7 +98,9 @@
   }
   .modes button.on{background:var(--brand-deep); color:#eafeff}
   /* ── 페이지 전환 메뉴 (학습 노트 ↔ 단답형 드릴) ── */
-  .page-switch{display:flex; gap:6px; padding:12px 20px; border-bottom:1px solid var(--line)}
+  .page-switch{display:flex; flex-wrap:wrap; gap:6px; padding:12px 20px; border-bottom:1px solid var(--line)}
+  /* 사이드바 폭(300px)에 3개를 한 줄로 넣으면 글자가 깨져, 세 번째 항목은 다음 줄로 내린다 */
+  .page-switch .ps-item:nth-child(3){flex-basis:100%}
   .page-switch .ps-item{
     flex:1; text-align:center; text-decoration:none; padding:9px 10px; border-radius:9px;
     font-size:13px; font-weight:700; color:var(--ink-dim); background:var(--panel);
