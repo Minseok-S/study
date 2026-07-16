@@ -209,13 +209,17 @@
   }
 
   // ── 기출 출제 이력 배지 ──
-  // it.gichul = {t:"토픽명", r:[출제된 회차]} — data/study-data.js 에 기출 분석 결과로 부여됨
+  // it.gichul = {t:"토픽명", r:[출제된 회차]} — data/study-data.js 에 기출 분석 결과로 부여됨.
+  // 주의: 항목 단위가 아니라 '토픽 단위' 통계다. 같은 토픽으로 묶인 항목들은 같은 값을 갖는다.
+  // 그래서 배지에 토픽명과 전체 모수(GICHUL_TOTAL)를 함께 적어 오해를 줄인다.
+  const GICHUL_TOTAL = (window.GICHUL_DATA && window.GICHUL_DATA.rounds) ? window.GICHUL_DATA.rounds.length : 18;
   function gichulBadge(it){
     if(!it.gichul || !it.gichul.r || !it.gichul.r.length) return "";
     const n=it.gichul.r.length;
     const cls = n>=14 ? " hot" : n>=10 ? " warm" : "";
-    const title = it.gichul.t+" · "+it.gichul.r.join(", ")+"회 출제";
-    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">기출 '+n+'회</span>';
+    const title = it.gichul.t+" 토픽이 기출 "+GICHUL_TOTAL+"개 회차 중 "+n+"개 회차에서 출제됨\n· 출제 회차: "+it.gichul.r.join(", ")+"회\n· 항목이 아니라 토픽 단위 통계입니다";
+    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">'
+      + esc(it.gichul.t)+' <b>'+n+'/'+GICHUL_TOTAL+'</b>회</span>';
   }
 
   // ── 카드(둘러보기) 렌더 ──
