@@ -92,6 +92,7 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 .card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:26px 24px;box-shadow:4px 4px 0 rgba(22,33,28,.08)}
 .card .num-chip{font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:14px;letter-spacing:.06em}
 .card .cat-chip{font-size:.68rem;font-weight:600;color:var(--ink-soft);background:var(--line);border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:14px;margin-left:6px}
+.card .cat-chip.round-chip{color:var(--accent);background:var(--accent-soft)}
 .q-text{font-size:1.02rem;line-height:1.75;white-space:pre-wrap;word-break:keep-all}
 .answer{margin-top:22px;border-top:1.5px dashed var(--line);padding-top:18px;display:none}
 .answer.show{display:block;animation:fade .2s ease}
