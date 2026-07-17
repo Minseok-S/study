@@ -326,6 +326,7 @@ function renderQuiz(){
         <div class="a-text" id="modelAns"></div>
         ${note ? `<details class="note-box"><summary>출제 코멘트 · 배점 전략</summary><div class="note-text"></div></details>` : ''}
         <div id="gradeMsg" class="grade-msg"></div>
+        <div class="skip-row"><button id="editBtn">✏️ 내 답안 수정하고 다시 채점</button></div>
         <div class="actions three" id="verdictRow">
           <button class="btn btn-o" id="markO"><span class="key">1</span> 충분히 씀<small>복습 목록에서 제외</small></button>
           <button class="btn btn-mid" id="markM"><span class="key">2</span> 부분 점수<small>복습 목록에 저장</small></button>
@@ -385,6 +386,17 @@ function reveal(grade, userVal){
   document.getElementById('markO').onclick = () => decide('full');
   document.getElementById('markM').onclick = () => decide('part');
   document.getElementById('markX').onclick = () => decide('none');
+
+  // 채점 후에도 내 답안을 다시 고쳐 재채점할 수 있게 입력 화면으로 되돌린다
+  document.getElementById('editBtn').onclick = () => {
+    document.removeEventListener('keydown', keyJudge);
+    document.getElementById('ansBox').classList.remove('show');
+    document.getElementById('inputArea').style.display = '';
+    const ta = document.getElementById('userAns');
+    ta.focus();
+    // 커서를 작성한 답안 맨 끝으로 이동
+    const v = ta.value; ta.value = ''; ta.value = v;
+  };
 
   function decide(v){ document.removeEventListener('keydown', keyJudge); next(v); }
   function keyJudge(e){
