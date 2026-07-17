@@ -10,6 +10,38 @@ const TYPES = [
   {id:'실무형', desc:'로그·설정·시나리오를 보고 판단하는 유형', accent:'#9A5B1E'},
 ];
 
+/* 과목(분야) — 단답형 드릴과 동일한 5개 체계로 분류 */
+const CATS = [
+  {id:'sys',  name:'시스템 보안',            desc:'리눅스·유닉스·윈도우, 계정·권한, 로그', accent:'#0D6E5F'},
+  {id:'net',  name:'네트워크 보안',          desc:'TCP/IP, DNS, IPSec, 스캔·스니핑, 방화벽', accent:'#1F5FA6'},
+  {id:'app',  name:'애플리케이션 보안',      desc:'웹 취약점, SQLi·XSS, 파일 업로드, DB·메일', accent:'#9A5B1E'},
+  {id:'soc',  name:'보안관제·침해사고 대응', desc:'IDS·Snort, 포렌식, 악성코드 분석', accent:'#7A3FA6'},
+  {id:'risk', name:'위험관리·법규',          desc:'위험분석, ISMS-P, 개인정보보호법, BCP', accent:'#B4452E'},
+];
+const CAT_NAME = Object.fromEntries(CATS.map(c => [c.id, c.name]));
+
+// 기출 서술형·실무형 108문항의 과목 분류 (키 = "회차-번호")
+const CAT_MAP = {
+  '13-11':'risk','13-12':'net','13-13':'risk','13-14':'app','13-15':'soc','13-16':'app',
+  '14-11':'sys','14-12':'sys','14-13':'sys','14-14':'net','14-15':'app','14-16':'soc',
+  '15-11':'net','15-12':'soc','15-13':'risk','15-14':'sys','15-15':'net','15-16':'risk',
+  '16-11':'app','16-12':'soc','16-13':'app','16-14':'app','16-15':'risk','16-16':'risk',
+  '17-11':'app','17-12':'net','17-13':'net','17-14':'soc','17-15':'app','17-16':'app',
+  '18-11':'app','18-12':'net','18-13':'net','18-14':'app','18-15':'sys','18-16':'net',
+  '19-11':'sys','19-12':'risk','19-13':'net','19-14':'risk','19-15':'app','19-16':'risk',
+  '20-11':'risk','20-12':'net','20-13':'soc','20-14':'app','20-15':'net','20-16':'risk',
+  '21-11':'soc','21-12':'risk','21-13':'risk','21-14':'net','21-15':'risk','21-16':'net',
+  '22-13':'app','22-14':'risk','22-15':'app','22-16':'net','22-17':'app','22-18':'risk',
+  '23-13':'app','23-14':'net','23-15':'sys','23-16':'net','23-17':'risk','23-18':'net',
+  '24-13':'sys','24-14':'sys','24-15':'net','24-16':'net','24-17':'sys','24-18':'sys',
+  '25-13':'app','25-14':'net','25-15':'risk','25-16':'soc','25-17':'net','25-18':'soc',
+  '26-13':'sys','26-14':'risk','26-15':'net','26-16':'app','26-17':'app','26-18':'app',
+  '27-13':'risk','27-14':'risk','27-15':'sys','27-16':'risk','27-17':'app','27-18':'net',
+  '28-13':'sys','28-14':'sys','28-15':'net','28-16':'risk','28-17':'app','28-18':'sys',
+  '29-13':'app','29-14':'app','29-15':'soc','29-16':'risk','29-17':'sys','29-18':'risk',
+  '30-13':'app','30-14':'risk','30-15':'app','30-16':'soc','30-17':'sys','30-18':'app',
+};
+
 /* ============ 데이터 준비 ============ */
 const QUESTIONS = (window.GICHUL_DATA?.rounds || []).flatMap(r =>
   r.questions
@@ -19,6 +51,7 @@ const QUESTIONS = (window.GICHUL_DATA?.rounds || []).flatMap(r =>
       round: r.no,
       num: q.num,
       type: q.type,
+      cat: CAT_MAP[`${r.no}-${q.num}`] || 'sys',
       q: q.question,
       a: q.answer,
     }))
@@ -185,6 +218,27 @@ function renderHome(){
     </div>
 
     <div class="cat-head">
+      <span class="cat-eyebrow">SUBJECT</span>
+      <h2 class="cat-title">과목별로 풀기</h2>
+      <span style="font-size:.72rem;color:var(--ink-soft);margin-left:auto">카드: 순서대로 · <b style="color:var(--ink)">⤮</b> 셔플</span>
+    </div>
+    <div class="cat-grid">
+      ${CATS.map(c => {
+        const cl = QUESTIONS.filter(q => q.cat === c.id);
+        const w = cl.filter(q => wrong.has(q.id)).length;
+        return `<div class="cat-btn" style="--ca:${c.accent}">
+          <span class="cat-bar"></span>
+          <button class="cat-body" data-cat="${c.id}" data-mode="order">
+            <span class="cat-name">${c.name}</span>
+            <span class="cat-desc">${c.desc}</span>
+          </button>
+          <span class="cat-meta"><span class="cat-count">${cl.length}</span>${w ? `<span class="cat-wrong">복습 ${w}</span>` : ''}</span>
+          <button class="cat-shuffle" data-cat="${c.id}" data-mode="shuffle" title="${c.name} 셔플로 풀기" aria-label="${c.name} 무작위 순서로 풀기">⤮</button>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="cat-head">
       <span class="cat-eyebrow">ROUND</span>
       <h2 class="cat-title">회차별로 풀기</h2>
     </div>
@@ -209,12 +263,20 @@ function renderHome(){
     const set = new Set(loadWrong());
     startSession(shuffle(QUESTIONS.filter(q => set.has(q.id))), 'wrong', '복습 목록');
   };
-  document.querySelectorAll('.cat-body, .cat-shuffle').forEach(btn => {
+  document.querySelectorAll('.cat-body[data-type], .cat-shuffle[data-type]').forEach(btn => {
     btn.onclick = () => {
       const t = btn.dataset.type;
       const sh = btn.dataset.mode === 'shuffle';
       let list = QUESTIONS.filter(q => q.type === t);
       startSession(sh ? shuffle(list) : list, sh ? 'type-shuffle' : 'type', t + (sh ? ' · 셔플' : ''));
+    };
+  });
+  document.querySelectorAll('.cat-body[data-cat], .cat-shuffle[data-cat]').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.cat;
+      const sh = btn.dataset.mode === 'shuffle';
+      let list = QUESTIONS.filter(q => q.cat === id);
+      startSession(sh ? shuffle(list) : list, sh ? 'cat-shuffle' : 'cat', CAT_NAME[id] + (sh ? ' · 셔플' : ''));
     };
   });
   document.querySelectorAll('.round-btn').forEach(btn => {
@@ -241,7 +303,7 @@ function renderQuiz(){
     <div class="score-line"><span class="o">충분 ${S.full}</span><span class="mid">부분 ${S.part}</span><span class="x">못씀 ${S.none}</span></div>
 
     <article class="card">
-      <span class="num-chip">${q.round}회 ${q.num}번</span><span class="cat-chip">${q.type}</span>
+      <span class="num-chip">${q.round}회 ${q.num}번</span><span class="cat-chip">${q.type}</span><span class="cat-chip">${CAT_NAME[q.cat]||''}</span>
       <div class="q-text" id="qText"></div>
 
       <div id="inputArea">
@@ -364,7 +426,7 @@ function renderResult(){
     const q = QUESTIONS.find(x => x.id === w.id);
     const { body } = splitAnswer(q.a);
     return `<details class="wrong-item">
-      <summary>${q.round}회 ${q.num}번 · ${q.type} <span class="v-chip ${w.verdict}">${w.verdict === 'part' ? '부분' : '못씀'}</span></summary>
+      <summary>${q.round}회 ${q.num}번 · ${q.type} · ${CAT_NAME[q.cat]||''} <span class="v-chip ${w.verdict}">${w.verdict === 'part' ? '부분' : '못씀'}</span></summary>
       <div class="wq" data-body="${esc(body)}">${esc(q.q)}</div>
       <div class="wa">모범답안 · ${esc(body)}</div>
     </details>`;
