@@ -221,7 +221,7 @@ function renderHome(){
     <div class="cat-head">
       <span class="cat-eyebrow">SUBJECT</span>
       <h2 class="cat-title">과목별로 풀기 <span style="font-weight:500;font-size:.8rem;color:var(--ink-soft)">단답 → 서술·실무 순</span></h2>
-      <span style="font-size:.72rem;color:var(--ink-soft);margin-left:auto">카드: 순서대로 · <b style="color:var(--ink)">⤮</b> 셔플</span>
+      <span style="font-size:.72rem;color:var(--ink-soft);margin-left:auto">카드: 순서대로 · <b style="color:var(--ink)">⤮</b> 셔플 · ☑ 여러 과목</span>
     </div>
     <div class="cat-grid">
       ${CATS.map(c => {
@@ -229,8 +229,9 @@ function renderHome(){
         const s = cl.filter(isShort).length;
         const e = cl.length - s;
         const w = cl.filter(q => wrong.has(q.key)).length;
-        return `<div class="cat-btn" style="--ca:${c.accent}">
+        return `<div class="cat-btn" style="--ca:${c.accent}" data-card="${c.id}">
           <span class="cat-bar"></span>
+          <label class="cat-pick" title="여러 과목 함께 풀기"><input type="checkbox" class="pick" data-cat="${c.id}"></label>
           <button class="cat-body" data-cat="${c.id}" data-mode="order">
             <span class="cat-name">${c.name}</span>
             <span class="cat-desc">${c.desc}</span>
@@ -240,6 +241,14 @@ function renderHome(){
           <button class="cat-shuffle" data-cat="${c.id}" data-mode="shuffle" title="${c.name} 셔플로 풀기" aria-label="${c.name} 무작위 순서로 풀기">⤮</button>
         </div>`;
       }).join('')}
+    </div>
+    <div class="combo-bar" id="comboBar" hidden>
+      <span class="combo-info" id="comboInfo"></span>
+      <div class="combo-actions">
+        <button class="combo-clear" id="comboClear">선택 해제</button>
+        <button id="comboOrder">순서대로</button>
+        <button class="primary" id="comboShuffle">셔플로 풀기</button>
+      </div>
     </div>
 
     <div class="cat-head">
@@ -280,6 +289,46 @@ function renderHome(){
       startSession(sh ? shuffle(list) : list, sh ? 'cat-shuffle' : 'cat', CAT_NAME[id] + (sh ? ' · 셔플' : ''));
     };
   });
+
+  /* ---- 여러 과목 함께 풀기 (선택 과목의 단답 → 서술·실무 순) ---- */
+  const picked = new Set();
+  const bar = document.getElementById('comboBar');
+  const info = document.getElementById('comboInfo');
+  function refreshCombo(){
+    const ids = CATS.filter(c => picked.has(c.id)).map(c => c.id);
+    const cnt = QUESTIONS.filter(q => picked.has(q.cat)).length;
+    if(ids.length){
+      bar.hidden = false;
+      info.innerHTML = `<b>${ids.length}과목</b> 선택 · ${cnt}문항 &nbsp;<span style="color:var(--ink-soft);font-weight:500">${ids.map(id => CAT_NAME[id]).join(' · ')}</span>`;
+    }else{
+      bar.hidden = true;
+    }
+  }
+  function comboLabel(){
+    const names = CATS.filter(c => picked.has(c.id)).map(c => CAT_NAME[c.id]);
+    return names.length <= 2 ? names.join(' + ') : `${names.length}과목 선택`;
+  }
+  function startCombo(sh){
+    // 순서대로: 선택 과목을 CATS 순으로, 각 과목 안에서는 단답 → 서술·실무 순
+    let list = CATS.filter(c => picked.has(c.id)).flatMap(c => subjectList(c.id));
+    if(!list.length) return;
+    startSession(sh ? shuffle(list) : list, sh ? 'multi-shuffle' : 'multi', comboLabel() + (sh ? ' · 셔플' : ''));
+  }
+  document.querySelectorAll('.pick').forEach(chk => {
+    chk.onchange = () => {
+      const id = chk.dataset.cat;
+      if(chk.checked) picked.add(id); else picked.delete(id);
+      chk.closest('.cat-btn').classList.toggle('picked', chk.checked);
+      refreshCombo();
+    };
+  });
+  document.getElementById('comboClear').onclick = () => {
+    picked.clear();
+    document.querySelectorAll('.pick').forEach(c => { c.checked = false; c.closest('.cat-btn').classList.remove('picked'); });
+    refreshCombo();
+  };
+  document.getElementById('comboOrder').onclick = () => startCombo(false);
+  document.getElementById('comboShuffle').onclick = () => startCombo(true);
 }
 
 /* ============ 퀴즈 공통 골격 ============ */
