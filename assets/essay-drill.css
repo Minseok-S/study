@@ -8,6 +8,9 @@
   .stat .lbl{font-size:.66rem}
 }
 
+/* ---------- 과목 카드 안 유형 구성 표시 (통합 드릴) ---------- */
+.cat-mix{display:block;margin-top:6px;font-family:var(--mono);font-size:.66rem;font-weight:500;color:var(--ink-soft);letter-spacing:.01em}
+
 /* ---------- 회차 그리드 ---------- */
 .round-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
 .round-btn{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 8px;text-align:center;transition:border-color .15s,transform .1s}
