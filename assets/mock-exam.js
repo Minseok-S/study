@@ -319,6 +319,7 @@ function revealShort(grade, userVal){
   document.getElementById('inputArea').style.display = 'none';
   document.getElementById('ansBox').classList.add('show');
 
+  document.getElementById('myAnsWrap').style.display = 'block';
   const myText = document.getElementById('myAnsText');
   if(userVal && userVal.trim()) myText.textContent = userVal;
   else myText.innerHTML = '<span style="color:var(--ink-soft);font-weight:400">(입력 없음 · 정답만 확인)</span>';
