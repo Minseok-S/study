@@ -3,6 +3,7 @@
 const app = document.getElementById('app');
 const pill = document.getElementById('sessionPill');
 let S = null; // 현재 세션
+let activeKeyJudge = null; // 현재 화면에 붙어 있는 1·2·3 판정 리스너 (재채점 시 중복 방지)
 
 const WRONG_KEY = 'isec_essay_wrong_v1';
 const TYPES = [
@@ -319,14 +320,17 @@ function renderQuiz(){
 
       <div class="answer" id="ansBox">
         <div class="my-ans" id="myAnsWrap">
-          <div class="a-lbl" style="color:var(--ink-soft)">내 답안</div>
-          <div class="my-text" id="myAnsText"></div>
+          <div class="a-lbl" style="color:var(--ink-soft)">내 답안 <span style="font-weight:400;font-size:.72rem;color:var(--ink-soft)">· 모범답안을 보면서 고친 뒤 다시 채점할 수 있어요</span></div>
+          <textarea id="myAnsEdit" rows="8" class="essay-input"
+            placeholder="모범답안과 비교해 답안을 보완해 보세요. 다시 채점은 Ctrl(⌘)+Enter"></textarea>
+          <div class="actions" style="margin-top:10px">
+            <button class="btn btn-reveal" id="regradeBtn">수정 후 다시 채점 <small>Ctrl+Enter</small></button>
+          </div>
         </div>
         <div class="a-lbl">모범답안</div>
         <div class="a-text" id="modelAns"></div>
         ${note ? `<details class="note-box"><summary>출제 코멘트 · 배점 전략</summary><div class="note-text"></div></details>` : ''}
         <div id="gradeMsg" class="grade-msg"></div>
-        <div class="skip-row"><button id="editBtn">✏️ 내 답안 수정하고 다시 채점</button></div>
         <div class="actions three" id="verdictRow">
           <button class="btn btn-o" id="markO"><span class="key">1</span> 충분히 씀<small>복습 목록에서 제외</small></button>
           <button class="btn btn-mid" id="markM"><span class="key">2</span> 부분 점수<small>복습 목록에 저장</small></button>
@@ -351,8 +355,19 @@ function renderQuiz(){
   document.getElementById('revealBtn').onclick = () => reveal(null, '');
   document.getElementById('quitBtn').onclick = () => showConfirm('지금까지 푼 결과를 보고 종료할까요?', renderResult);
 
+  // 채점 후 모범답안을 보면서 내 답안을 고쳐 다시 채점
+  const meTa = document.getElementById('myAnsEdit');
+  meTa.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); doRegrade(); }
+  });
+  document.getElementById('regradeBtn').onclick = doRegrade;
+
   function doCheck(){
     const val = ta.value;
+    reveal(autoGrade(val, body), val);
+  }
+  function doRegrade(){
+    const val = meTa.value;
     reveal(autoGrade(val, body), val);
   }
 }
@@ -361,10 +376,9 @@ function reveal(grade, userVal){
   document.getElementById('inputArea').style.display = 'none';
   document.getElementById('ansBox').classList.add('show');
 
-  const myText = document.getElementById('myAnsText');
   document.getElementById('myAnsWrap').style.display = 'block';
-  if(userVal && userVal.trim()) myText.textContent = userVal;
-  else myText.innerHTML = '<span style="color:var(--ink-soft);font-weight:400">(작성 없음 · 모범답안만 확인)</span>';
+  const meTa = document.getElementById('myAnsEdit');
+  if(typeof userVal === 'string') meTa.value = userVal;
 
   const msg = document.getElementById('gradeMsg');
   if(grade === null){
@@ -387,24 +401,17 @@ function reveal(grade, userVal){
   document.getElementById('markM').onclick = () => decide('part');
   document.getElementById('markX').onclick = () => decide('none');
 
-  // 채점 후에도 내 답안을 다시 고쳐 재채점할 수 있게 입력 화면으로 되돌린다
-  document.getElementById('editBtn').onclick = () => {
-    document.removeEventListener('keydown', keyJudge);
-    document.getElementById('ansBox').classList.remove('show');
-    document.getElementById('inputArea').style.display = '';
-    const ta = document.getElementById('userAns');
-    ta.focus();
-    // 커서를 작성한 답안 맨 끝으로 이동
-    const v = ta.value; ta.value = ''; ta.value = v;
-  };
+  // 재채점(reveal 재호출) 시 이전 판정 리스너가 남아 중복되지 않도록 정리 후 다시 등록
+  if(activeKeyJudge){ document.removeEventListener('keydown', activeKeyJudge); activeKeyJudge = null; }
 
-  function decide(v){ document.removeEventListener('keydown', keyJudge); next(v); }
+  function decide(v){ document.removeEventListener('keydown', keyJudge); activeKeyJudge = null; next(v); }
   function keyJudge(e){
     if(e.target && e.target.tagName === 'TEXTAREA') return;
     if(e.key === '1'){ e.preventDefault(); decide('full'); }
     else if(e.key === '2'){ e.preventDefault(); decide('part'); }
     else if(e.key === '3'){ e.preventDefault(); decide('none'); }
   }
+  activeKeyJudge = keyJudge;
   document.addEventListener('keydown', keyJudge);
 }
 
