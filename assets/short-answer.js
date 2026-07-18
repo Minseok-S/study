@@ -62,6 +62,26 @@ function pool(){ return QUESTIONS.filter(q=>!q.r); }
 function loadWrong(){ try{return JSON.parse(safeGet(WRONG_KEY,'[]'))}catch(e){return []} }
 function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); }
 
+// ── 이어풀기(중단 지점 저장) ─────────────────────────────
+// 세션 진행 상태를 저장해, 풀다 멈춰도 남은 문제를 마저 풀 수 있게 한다.
+const RESUME_KEY = 'isec_sa_resume_v1';
+function saveResume(){
+  if(!S || S.i>=S.list.length) return;                 // 진행 중일 때만 저장
+  safeSet(RESUME_KEY, JSON.stringify({
+    ids: S.list.map(q=>q.n), i:S.i, o:S.o, x:S.x,
+    wrong:S.wrong, mode:S.mode, label:S.label, at:Date.now()
+  }));
+}
+function clearResume(){ try{ localStorage.removeItem(RESUME_KEY); }catch(e){} delete memStore[RESUME_KEY]; }
+function loadResume(){
+  let r; try{ r = JSON.parse(safeGet(RESUME_KEY,'null')); }catch(e){ r=null; }
+  if(!r || !Array.isArray(r.ids)) return null;
+  const byN = new Map(QUESTIONS.map(q=>[q.n,q]));
+  const list = r.ids.map(n=>byN.get(n)).filter(Boolean);   // 데이터 변경으로 사라진 문항은 제외
+  if(!list.length || r.i>=list.length) return null;        // 이미 다 푼 상태면 무효
+  return { list, i:Math.min(r.i,list.length), o:r.o||0, x:r.x||0, wrong:r.wrong||[], mode:r.mode||'resume', label:r.label||'이어풀기' };
+}
+
 
 /* ============ 채점 정규화 ============ */
 function normalize(str){
@@ -105,6 +125,12 @@ function startSession(list, mode, label){
 function renderHome(){
   const P = pool();
   pill.textContent = `${P.length} 문항`;
+  const resumeState = loadResume();
+  const resumeHTML = resumeState ? `
+      <button class="mode-btn primary" id="mResume" style="border-color:var(--accent)">
+        <span><span class="t">▶ 이어풀기</span><span class="d">${esc(resumeState.label)} · ${resumeState.i}/${resumeState.list.length}문항까지 풀었어요</span></span>
+        <span class="arrow">→</span>
+      </button>` : '';
   const wrong = loadWrong();
   const wrongInPool = P.filter(q=>wrong.includes(q.n)).length;
   app.innerHTML = `
@@ -118,7 +144,8 @@ function renderHome(){
     </div>
 
     <div class="mode-grid">
-      <button class="mode-btn primary" id="mAll">
+      ${resumeHTML}
+      <button class="mode-btn${resumeState?'':' primary'}" id="mAll">
         <span><span class="t">전체 풀기</span><span class="d">처음부터 끝까지 순서대로 (${P.length}문항)</span></span>
         <span class="arrow">→</span>
       </button>
@@ -166,6 +193,13 @@ function renderHome(){
     <p class="note">과목 카드 왼쪽 체크박스로 <b>두 과목 이상</b>을 골라 함께 풀 수 있어요. 답을 입력하면 키워드 자동 채점이 1차로 도와주고, 최종 정답 여부는 키보드 1(정답)·2(오답)로 확정합니다. 틀린 문제는 오답 노트에 자동 저장됩니다.</p>
   </section>`;
 
+  if(resumeState){
+    document.getElementById('mResume').onclick = ()=>{
+      S = { list:resumeState.list, i:resumeState.i, o:resumeState.o, x:resumeState.x,
+            wrong:resumeState.wrong, mode:resumeState.mode, label:resumeState.label, answered:false };
+      renderQuiz();
+    };
+  }
   document.getElementById('mAll').onclick = ()=> startSession(pool(), 'all', '전체 풀기');
   document.getElementById('mShuffle').onclick = ()=> startSession(shuffle(pool()), 'shuffle', '랜덤 셔플');
   document.getElementById('mWrong').onclick = ()=>{
@@ -226,6 +260,7 @@ function renderHome(){
 
 /* ============ 퀴즈 화면 ============ */
 function renderQuiz(){
+  saveResume();                       // 현재 진행 지점 저장 (이어풀기용)
   const q = S.list[S.i];
   const total = S.list.length;
   const pct = Math.round((S.i)/total*100);
@@ -348,7 +383,7 @@ function next(correct){
     const w = loadWrong(); w.push(q.n); saveWrong(w);
   }
   S.i++;
-  if(S.i>=S.list.length) renderResult();
+  if(S.i>=S.list.length){ clearResume(); renderResult(); }   // 끝까지 풀면 이어풀기 기록 삭제
   else renderQuiz();
 }
 

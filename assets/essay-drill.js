@@ -155,6 +155,26 @@ function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); 
 function markWrong(id){ const w = loadWrong(); w.push(id); saveWrong(w); }
 function clearWrong(id){ saveWrong(loadWrong().filter(x => x !== id)); }
 
+// ── 이어풀기(중단 지점 저장) ─────────────────────────────
+const RESUME_KEY = 'isec_essay_resume_v1';
+function saveResume(){
+  if(!S || S.i >= S.list.length) return;
+  safeSet(RESUME_KEY, JSON.stringify({
+    ids: S.list.map(q => q.id), i:S.i, full:S.full, part:S.part, none:S.none,
+    wrong:S.wrong, mode:S.mode, label:S.label, at:Date.now()
+  }));
+}
+function clearResume(){ try{ localStorage.removeItem(RESUME_KEY); }catch(e){} delete memStore[RESUME_KEY]; }
+function loadResume(){
+  let r; try{ r = JSON.parse(safeGet(RESUME_KEY, 'null')); }catch(e){ r = null; }
+  if(!r || !Array.isArray(r.ids)) return null;
+  const byId = new Map(QUESTIONS.map(q => [q.id, q]));
+  const list = r.ids.map(id => byId.get(id)).filter(Boolean);
+  if(!list.length || r.i >= list.length) return null;
+  return { list, i:Math.min(r.i, list.length), full:r.full||0, part:r.part||0, none:r.none||0,
+           wrong:r.wrong||[], mode:r.mode||'resume', label:r.label||'이어풀기' };
+}
+
 /* ============ 세션 ============ */
 function shuffle(a){ const r = a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
 
@@ -170,6 +190,12 @@ function renderHome(){
   const wrongN = QUESTIONS.filter(q => wrong.has(q.id)).length;
   pill.textContent = `${QUESTIONS.length} 문항`;
   const rounds = [...new Set(QUESTIONS.map(q => q.round))].sort((a,b) => a-b);
+  const resumeState = loadResume();
+  const resumeHTML = resumeState ? `
+      <button class="mode-btn primary" id="mResume" style="border-color:var(--accent)">
+        <span><span class="t">▶ 이어풀기</span><span class="d">${esc(resumeState.label)} · ${resumeState.i}/${resumeState.list.length}문항까지 풀었어요</span></span>
+        <span class="arrow">→</span>
+      </button>` : '';
 
   app.innerHTML = `
   <section class="hero">
@@ -183,7 +209,8 @@ function renderHome(){
     </div>
 
     <div class="mode-grid">
-      <button class="mode-btn primary" id="mAll">
+      ${resumeHTML}
+      <button class="mode-btn${resumeState?'':' primary'}" id="mAll">
         <span><span class="t">전체 풀기</span><span class="d">13회부터 순서대로 (${QUESTIONS.length}문항)</span></span>
         <span class="arrow">→</span>
       </button>
@@ -267,6 +294,13 @@ function renderHome(){
     <p class="note">답안을 쓰고 <b>Ctrl(⌘)+Enter</b>로 채점하면 모범답안의 핵심 키워드가 몇 개나 들어갔는지 표시됩니다. 최종 판정은 키보드 <b>1</b>(충분히 씀)·<b>2</b>(부분 점수)·<b>3</b>(못 씀)으로 확정하며, 2·3은 복습 목록에 저장됩니다.</p>
   </section>`;
 
+  if(resumeState){
+    document.getElementById('mResume').onclick = () => {
+      S = { list:resumeState.list, i:resumeState.i, full:resumeState.full, part:resumeState.part,
+            none:resumeState.none, wrong:resumeState.wrong, mode:resumeState.mode, label:resumeState.label };
+      renderQuiz();
+    };
+  }
   document.getElementById('mAll').onclick = () => startSession(QUESTIONS.slice(), 'all', '전체 풀기');
   document.getElementById('mShuffle').onclick = () => startSession(shuffle(QUESTIONS), 'shuffle', '랜덤 셔플');
   document.getElementById('mWrong').onclick = () => {
@@ -338,6 +372,7 @@ function renderHome(){
 
 /* ============ 퀴즈 ============ */
 function renderQuiz(){
+  saveResume();                       // 현재 진행 지점 저장 (이어풀기용)
   const q = S.list[S.i];
   const { body, note } = splitAnswer(q.a);
   const total = S.list.length;
@@ -472,7 +507,7 @@ function next(verdict){
     markWrong(q.id);
   }
   S.i++;
-  if(S.i >= S.list.length) renderResult();
+  if(S.i >= S.list.length){ clearResume(); renderResult(); }
   else renderQuiz();
 }
 
