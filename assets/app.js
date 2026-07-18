@@ -167,6 +167,17 @@
       return true;
     });
   }
+
+  // ── ROI 점수 ──
+  // 기출 연결 문항 수(it.gichul.q.length)를 그대로 우선순위 점수로 사용한다.
+  // ★(빈출) 표시는 이 값이 3 이상인 항목과 100% 일치하도록 사전 검수되어 있어
+  // 별도 가중치 없이 gichul 연결 개수만으로 충분한 순위를 만든다.
+  function roiScore(it){ return it.gichul ? it.gichul.q.length : 0; }
+  // roi 정렬은 "숨기기"가 아니라 "순서 재배치"이므로 filterItems와 분리해 둔다.
+  function sortByRoi(list){
+    if(!state.filters.roi) return list;
+    return list.map((it,i)=>({it,i})).sort((a,b)=> roiScore(b.it)-roiScore(a.it) || a.i-b.i).map(x=>x.it);
+  }
   function currentBaseList(){
     if(state.search.trim()){
       const q=state.search.trim().toLowerCase();
@@ -233,7 +244,8 @@
     badges+=gichulBadge(it);
     if(it.added) badges+='<span class="badge add">＋ 보강</span>';
     else if(it.hasAdd) badges+='<span class="badge add">＋ 보강 추가</span>';
-    const tag = state.search ? (it.subjNum+". "+it.subjTitle.replace(/\s*\(.*\)/,"")+" › "+it.secTitle) : "";
+    const showOrigin = state.search || (state.viewAll && state.filters.roi);
+    const tag = showOrigin ? (it.subjNum+". "+it.subjTitle.replace(/\s*\(.*\)/,"")+" › "+it.secTitle) : "";
     let body=renderMd(it.body);
     if(state.search) body=highlight(body, state.search.trim());
     let title=inlineMd(it.title);
@@ -254,33 +266,41 @@
   function renderBrowse(){
     const content=document.getElementById("content");
     let list, crumb, title, meta;
-    // 전체 보기: 모든 과목·섹션을 구분선과 함께 한 번에 표시
+    // 전체 보기: ROI 정렬이 꺼져 있으면 모든 과목·섹션을 구분선과 함께 표시,
+    // 켜져 있으면 과목 구분 없이 ROI 점수 내림차순의 단일 랭킹 리스트로 평탄화한다.
     if(state.viewAll && !state.search.trim()){
       const dnAll=ITEMS.filter(it=>isDone(it.id)).length;
       let body="", shown=0;
-      DATA.forEach(subj=>{
-        subj.sections.forEach(sec=>{
-          const items=filterItems(sec.items);
-          if(!items.length) return;
-          shown+=items.length;
-          body+='<div class="sec-div"><h3>'+esc(subj.num+". "+sec.title)+'</h3><div class="l"></div><span class="p">'+items.length+'</span></div>';
-          body+=items.map(cardHTML).join("");
+      if(state.filters.roi){
+        const flat=sortByRoi(filterItems(ITEMS));
+        shown=flat.length;
+        body=flat.map(cardHTML).join("");
+      }else{
+        DATA.forEach(subj=>{
+          subj.sections.forEach(sec=>{
+            const items=filterItems(sec.items);
+            if(!items.length) return;
+            shown+=items.length;
+            body+='<div class="sec-div"><h3>'+esc(subj.num+". "+sec.title)+'</h3><div class="l"></div><span class="p">'+items.length+'</span></div>';
+            body+=items.map(cardHTML).join("");
+          });
         });
-      });
+      }
       let html='<div class="crumb">전체 항목</div>'
-        +'<div class="page-h"><h2>📚 전체 보기</h2></div>'
-        +'<div class="page-meta">'+shown+'개 항목 표시 · 전체 학습 '+dnAll+'/'+ITEMS.length+'</div>';
+        +'<div class="page-h"><h2>📚 전체 보기'+(state.filters.roi?' · 🔥 ROI 랭킹순':'')+'</h2></div>'
+        +'<div class="page-meta">'+shown+'개 항목 표시 · 전체 학습 '+dnAll+'/'+ITEMS.length
+          +(state.filters.roi?' · 기출 연결 문항 수가 많은 순으로 정렬됨':'')+'</div>';
       html += shown? body : '<div class="empty"><div class="big">🔍</div><div>조건에 맞는 항목이 없어요. 필터를 조정해 보세요.</div></div>';
       content.innerHTML=html;
       return;
     }
     if(state.search.trim()){
-      list=filterItems(currentBaseList());
+      list=sortByRoi(filterItems(currentBaseList()));
       crumb="검색 결과"; title='"'+state.search.trim()+'"';
       meta=list.length+"개 항목";
     }else{
       const subj=DATA[state.si], sec=subj.sections[state.ci];
-      list=filterItems(sec.items);
+      list=sortByRoi(filterItems(sec.items));
       crumb=subj.num+". "+subj.title;
       title=sec.title;
       const dn=sec.items.filter(it=>isDone(it.id)).length;
@@ -303,7 +323,7 @@
     if(state.search.trim()) list=filterItems(currentBaseList());
     else if(state.viewAll) list=filterItems(ITEMS);
     else list=filterItems(DATA[state.si].sections[state.ci].items);
-    state.flashList=list; state.flashIdx=0;
+    state.flashList=sortByRoi(list); state.flashIdx=0;
   }
   function renderFlash(){
     const content=document.getElementById("content");

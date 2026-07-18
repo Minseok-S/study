@@ -118,6 +118,8 @@
   .chip.on[data-f="star"]{border-color:var(--star); color:var(--star); background:var(--star-bg)}
   .chip.on[data-f="add"]{border-color:var(--add); color:var(--add); background:var(--add-bg)}
   .chip.on[data-f="todo"]{border-color:var(--brand); color:var(--brand); background:#e6f7f8}
+  .filter-sep{width:1px; align-self:stretch; background:var(--line2); margin:2px 2px}
+  .chip.on[data-f="roi"]{border-color:#b4452e; color:#b4452e; background:#fde8e4}
 
   /* ── 콘텐츠 영역 ── */
   .content{padding:26px 30px 80px; max-width:960px; margin:0 auto}
