@@ -100,7 +100,7 @@ function markWrong(key){ const w = loadWrong(); w.push(key); saveWrong(w); }
 function clearWrong(key){ saveWrong(loadWrong().filter(x => x !== key)); }
 
 // ── 복습 항목(직접 선택) ──────────────────────────────────
-// 자동 복습 목록(오답/부분)과 별개로, 사용자가 직접 골라 담는 복습 목록.
+// 자동 오답 노트(오답/부분)와 별개로, 사용자가 직접 골라 담는 복습 목록.
 const REVIEW_KEY = 'isec_subject_review_v1';
 function loadReview(){ try{ return JSON.parse(safeGet(REVIEW_KEY, '[]')); }catch(e){ return []; } }
 function saveReview(arr){ safeSet(REVIEW_KEY, JSON.stringify([...new Set(arr)])); }
@@ -226,7 +226,7 @@ function renderHome(){
       <div class="stat"><span class="num">${QUESTIONS.length}</span><span class="lbl">전체 문항</span></div>
       <div class="stat"><span class="num">${shortN}</span><span class="lbl">단답형</span></div>
       <div class="stat"><span class="num">${essayN}</span><span class="lbl">서술·실무형</span></div>
-      <div class="stat bad"><span class="num">${wrongN}</span><span class="lbl">복습 대상</span></div>
+      <div class="stat bad"><span class="num">${wrongN}</span><span class="lbl">오답 노트</span></div>
     </div>
 
     <div class="cat-head">
@@ -248,7 +248,7 @@ function renderHome(){
             <span class="cat-desc">${c.desc}</span>
             <span class="cat-mix">단답 ${s} · 서술·실무 ${e}</span>
           </button>
-          <span class="cat-meta"><span class="cat-count">${cl.length}</span>${w ? `<span class="cat-wrong">복습 ${w}</span>` : ''}</span>
+          <span class="cat-meta"><span class="cat-count">${cl.length}</span>${w ? `<span class="cat-wrong">오답 ${w}</span>` : ''}</span>
           <button class="cat-shuffle" data-cat="${c.id}" data-mode="shuffle" title="${c.name} 셔플로 풀기" aria-label="${c.name} 무작위 순서로 풀기">⤮</button>
         </div>`;
       }).join('')}
@@ -276,7 +276,7 @@ function renderHome(){
         <span class="arrow">→</span>
       </button>
       <button class="mode-btn danger" id="mWrong" ${wrongN ? '' : 'disabled'}>
-        <span><span class="t">복습 목록만 다시</span><span class="d">${wrongN ? wrongN + '문항 집중 복습' : '아직 복습 목록이 비어 있어요'}</span></span>
+        <span><span class="t">오답만 다시</span><span class="d">${wrongN ? wrongN + '문항 집중 복습' : '아직 오답 노트가 비어 있어요'}</span></span>
         <span class="arrow">→</span>
       </button>
       <button class="mode-btn review" id="mReview" ${reviewN ? '' : 'disabled'}>
@@ -289,7 +289,7 @@ function renderHome(){
       </button>
     </div>
 
-    <p class="note">단답형은 답을 입력하고 <b>Enter</b>로, 서술·실무형은 <b>Ctrl(⌘)+Enter</b>로 채점합니다. 자동 채점은 참고용이며 최종 판정은 키보드로 확정합니다 — 단답형 <b>1</b>(정답)·<b>2</b>(오답), 서술·실무형 <b>1</b>(충분)·<b>2</b>(부분)·<b>3</b>(못 씀). 부분·오답은 이 드릴 전용 복습 목록에 저장됩니다.</p>
+    <p class="note">단답형은 답을 입력하고 <b>Enter</b>로, 서술·실무형은 <b>Ctrl(⌘)+Enter</b>로 채점합니다. 자동 채점은 참고용이며 최종 판정은 키보드로 확정합니다 — 단답형 <b>1</b>(정답)·<b>2</b>(오답), 서술·실무형 <b>1</b>(충분)·<b>2</b>(부분)·<b>3</b>(못 씀). 부분·오답은 이 드릴 전용 오답 노트에 저장됩니다.</p>
   </section>`;
 
   document.getElementById('mAll').onclick = () =>
@@ -298,7 +298,7 @@ function renderHome(){
     startSession(shuffle(QUESTIONS), 'shuffle', '랜덤 셔플');
   document.getElementById('mWrong').onclick = () => {
     const set = new Set(loadWrong());
-    startSession(shuffle(QUESTIONS.filter(q => set.has(q.key))), 'wrong', '복습 목록');
+    startSession(shuffle(QUESTIONS.filter(q => set.has(q.key))), 'wrong', '오답 노트');
   };
   document.getElementById('mReview').onclick = () => {
     const set = new Set(loadReview());
@@ -528,7 +528,7 @@ function renderShortQuiz(q){
         <div id="gradeMsg" class="grade-msg"></div>
         <div class="actions" id="verdictRow">
           <button class="btn btn-o" id="markO"><span class="key">1</span> 맞았어요<small>정답 처리</small></button>
-          <button class="btn btn-x" id="markX"><span class="key">2</span> 틀렸어요<small>복습 목록에 저장</small></button>
+          <button class="btn btn-x" id="markX"><span class="key">2</span> 틀렸어요<small>오답 노트에 저장</small></button>
         </div>
       </div>
     </article>`;
@@ -623,9 +623,9 @@ function renderEssayQuiz(q){
         ${note ? `<details class="note-box"><summary>출제 코멘트 · 배점 전략</summary><div class="note-text"></div></details>` : ''}
         <div id="gradeMsg" class="grade-msg"></div>
         <div class="actions three" id="verdictRow">
-          <button class="btn btn-o" id="markO"><span class="key">1</span> 충분히 씀<small>복습 목록에서 제외</small></button>
-          <button class="btn btn-mid" id="markM"><span class="key">2</span> 부분 점수<small>복습 목록에 저장</small></button>
-          <button class="btn btn-x" id="markX"><span class="key">3</span> 못 씀<small>복습 목록에 저장</small></button>
+          <button class="btn btn-o" id="markO"><span class="key">1</span> 충분히 씀<small>오답 노트에서 제외</small></button>
+          <button class="btn btn-mid" id="markM"><span class="key">2</span> 부분 점수<small>오답 노트에 저장</small></button>
+          <button class="btn btn-x" id="markX"><span class="key">3</span> 못 씀<small>오답 노트에 저장</small></button>
         </div>
       </div>
     </article>`;
@@ -720,7 +720,7 @@ function renderResult(){
   let verdict, sub;
   if(pct >= 85){ verdict = '합격권 답안력'; sub = '단답부터 서술·실무까지 고르게 잡았습니다.'; }
   else if(pct >= 60){ verdict = '부분 점수는 확보'; sub = '빠진 키워드만 채우면 만점권까지 갑니다.'; }
-  else if(pct >= 35){ verdict = '뼈대는 있습니다'; sub = '복습 목록을 한 번 더 돌려 살을 붙이세요.'; }
+  else if(pct >= 35){ verdict = '뼈대는 있습니다'; sub = '오답 노트를 한 번 더 돌려 살을 붙이세요.'; }
   else{ verdict = '지금이 시작점'; sub = '단답 개념부터 다시 다지고 서술 틀을 익히세요.'; }
 
   const details = S.wrong.map(w => {
@@ -742,10 +742,10 @@ function renderResult(){
       <p>${sub}</p>
     </div>
     ${S.wrong.length
-      ? `<div class="wrong-list"><h3>복습할 문제 ${S.wrong.length}개 · 복습 목록에 저장됨</h3>${details}</div>`
+      ? `<div class="wrong-list"><h3>오답 ${S.wrong.length}개 · 오답 노트에 저장됨</h3>${details}</div>`
       : `<p style="text-align:center;color:var(--accent);font-weight:600">모두 정답/충분 — 완벽합니다.</p>`}
     <div class="result-actions">
-      ${S.wrong.length ? `<button class="mode-btn danger" id="rWrong"><span><span class="t">방금 복습 표시한 문제만</span><span class="d">${S.wrong.length}문항 즉시 재도전</span></span><span class="arrow">→</span></button>` : ''}
+      ${S.wrong.length ? `<button class="mode-btn danger" id="rWrong"><span><span class="t">방금 틀린 문제만</span><span class="d">${S.wrong.length}문항 즉시 재도전</span></span><span class="arrow">→</span></button>` : ''}
       <button class="mode-btn" id="rRetry"><span><span class="t">같은 세트 다시 풀기</span></span><span class="arrow">↻</span></button>
       <button class="mode-btn" id="rHome"><span><span class="t">처음 화면으로</span></span><span class="arrow">⌂</span></button>
     </div>`;
@@ -760,7 +760,7 @@ function renderResult(){
   if(S.wrong.length){
     document.getElementById('rWrong').onclick = () => {
       const list = S.wrong.map(w => BY_KEY[w.key]);
-      startSession(shuffle(list), 'wrong', '방금 복습 표시한 문제');
+      startSession(shuffle(list), 'wrong', '방금 틀린 문제');
     };
   }
   document.getElementById('rRetry').onclick = () => {
