@@ -6,6 +6,7 @@ const app = document.getElementById('app');
 const pill = document.getElementById('sessionPill');
 let S = null;                // 현재 세션
 let activeKeyJudge = null;    // 화면에 붙어 있는 판정 리스너 (재채점 중복 방지)
+let activeStarKey = null;     // 복습 담기(S) 단축키 리스너 — 문제 이동 시 교체
 
 const WRONG_KEY = 'isec_subject_wrong_v1';
 
@@ -367,14 +368,27 @@ function quizTop(q){
 function bindStar(q){
   const starBtn = document.getElementById('starBtn');
   if(!starBtn) return;
+  starBtn.title = '복습 항목에 담기 · 빼기 (단축키 S)';
   const paint = () => {
     const on = isReview(q.key);
     starBtn.classList.toggle('on', on);
     starBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    starBtn.textContent = on ? '★ 복습 항목' : '☆ 복습 담기';
+    starBtn.textContent = on ? '★ 복습 항목 (S)' : '☆ 복습 담기 (S)';
   };
   paint();
   starBtn.onclick = () => { toggleReview(q.key); paint(); };
+  // 단축키 S — 입력창 타이핑 중이거나 Ctrl/⌘/Alt 조합일 땐 무시
+  if(activeStarKey) document.removeEventListener('keydown', activeStarKey);
+  activeStarKey = (e) => {
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    if(e.target && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) return;
+    if(e.code === 'KeyS' || e.key === 's' || e.key === 'S'){
+      e.preventDefault();
+      toggleReview(q.key);
+      paint();
+    }
+  };
+  document.addEventListener('keydown', activeStarKey);
 }
 function cardHead(q){
   return `<span class="num-chip">${q.label}</span><span class="cat-chip">${q.kind}</span><span class="cat-chip">${CAT_NAME[q.cat]||''}</span>`;
@@ -459,7 +473,7 @@ function revealShort(grade, userVal){
       msg.innerHTML = `<span style="color:var(--warn);font-weight:600">자동 채점: 일치하는 키워드를 찾지 못했어요.</span> <span style="color:var(--ink-soft)">표기 차이일 수 있으니 직접 확인하세요.</span>`;
     }
   }
-  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 정답 · <b>2</b> 오답</div>`;
+  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 정답 · <b>2</b> 오답 · <b>S</b> 복습 담기</div>`;
 
   document.getElementById('markO').onclick = () => decide('full');
   document.getElementById('markX').onclick = () => decide('none');
@@ -566,7 +580,7 @@ function revealEssay(grade, userVal, body){
       ${grade.miss.length ? `<div class="kw-wrap"><span class="kw-lbl">빠진 키워드</span>${grade.miss.map(k => `<span class="kw miss">${esc(k)}</span>`).join('')}</div>` : ''}
       ${grade.hit.length ? `<div class="kw-wrap"><span class="kw-lbl">포함된 키워드</span>${grade.hit.map(k => `<span class="kw hit">${esc(k)}</span>`).join('')}</div>` : ''}`;
   }
-  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 충분히 씀 · <b>2</b> 부분 점수 · <b>3</b> 못 씀</div>`;
+  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 충분히 씀 · <b>2</b> 부분 점수 · <b>3</b> 못 씀 · <b>S</b> 복습 담기</div>`;
 
   document.getElementById('markO').onclick = () => decide('full');
   document.getElementById('markM').onclick = () => decide('part');
@@ -600,6 +614,7 @@ function next(verdict){
 
 /* ============ 결과 ============ */
 function renderResult(){
+  if(activeStarKey){ document.removeEventListener('keydown', activeStarKey); activeStarKey = null; }
   const done = S.full + S.part + S.none;
   const pct = done ? Math.round((S.full + S.part * 0.5) / done * 100) : 0;
   pill.textContent = '결과';

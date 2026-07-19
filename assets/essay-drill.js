@@ -4,6 +4,7 @@ const app = document.getElementById('app');
 const pill = document.getElementById('sessionPill');
 let S = null; // 현재 세션
 let activeKeyJudge = null; // 현재 화면에 붙어 있는 1·2·3 판정 리스너 (재채점 시 중복 방지)
+let activeStarKey = null;  // 복습 담기(S) 단축키 리스너 — 문제 이동 시 교체
 
 const WRONG_KEY = 'isec_essay_wrong_v1';
 const TYPES = [
@@ -456,14 +457,27 @@ function renderQuiz(){
   });
 
   const starBtn = document.getElementById('starBtn');
+  starBtn.title = '복습 항목에 담기 · 빼기 (단축키 S)';
   function paintStar(){
     const on = isReview(q.id);
     starBtn.classList.toggle('on', on);
     starBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    starBtn.textContent = on ? '★ 복습 항목' : '☆ 복습 담기';
+    starBtn.textContent = on ? '★ 복습 항목 (S)' : '☆ 복습 담기 (S)';
   }
   paintStar();
   starBtn.onclick = () => { toggleReview(q.id); paintStar(); };
+  // 단축키 S — 입력창 타이핑 중이거나 Ctrl/⌘/Alt 조합일 땐 무시
+  if(activeStarKey) document.removeEventListener('keydown', activeStarKey);
+  activeStarKey = (e) => {
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    if(e.target && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) return;
+    if(e.code === 'KeyS' || e.key === 's' || e.key === 'S'){
+      e.preventDefault();
+      toggleReview(q.id);
+      paintStar();
+    }
+  };
+  document.addEventListener('keydown', activeStarKey);
 
   document.getElementById('checkBtn').onclick = doCheck;
   document.getElementById('revealBtn').onclick = () => reveal(null, '');
@@ -509,7 +523,7 @@ function reveal(grade, userVal){
       ${grade.miss.length ? `<div class="kw-wrap"><span class="kw-lbl">빠진 키워드</span>${grade.miss.map(k => `<span class="kw miss">${esc(k)}</span>`).join('')}</div>` : ''}
       ${grade.hit.length ? `<div class="kw-wrap"><span class="kw-lbl">포함된 키워드</span>${grade.hit.map(k => `<span class="kw hit">${esc(k)}</span>`).join('')}</div>` : ''}`;
   }
-  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 충분히 씀 · <b>2</b> 부분 점수 · <b>3</b> 못 씀</div>`;
+  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 충분히 씀 · <b>2</b> 부분 점수 · <b>3</b> 못 씀 · <b>S</b> 복습 담기</div>`;
 
   document.getElementById('markO').onclick = () => decide('full');
   document.getElementById('markM').onclick = () => decide('part');
@@ -544,6 +558,7 @@ function next(verdict){
 
 /* ============ 결과 ============ */
 function renderResult(){
+  if(activeStarKey){ document.removeEventListener('keydown', activeStarKey); activeStarKey = null; }
   const done = S.full + S.part + S.none;
   // 부분 점수는 0.5점으로 환산
   const pct = done ? Math.round((S.full + S.part * 0.5) / done * 100) : 0;

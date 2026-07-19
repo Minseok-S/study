@@ -4,6 +4,7 @@ const QUESTIONS = window.QUESTIONS;
 const app = document.getElementById('app');
 const pill = document.getElementById('sessionPill');
 let S = null; // 현재 세션
+let activeStarKey = null; // 복습 담기(S) 단축키 리스너 — 문제 이동 시 교체
 
 const CATS = [
   {id:'sys',  name:'시스템 보안',            desc:'리눅스·유닉스·윈도우, 로그, 권한, 메모리', accent:'#0D6E5F'},
@@ -356,14 +357,27 @@ function renderQuiz(){
   });
 
   const starBtn = document.getElementById('starBtn');
+  starBtn.title = '복습 항목에 담기 · 빼기 (단축키 S)';
   function paintStar(){
     const on = isReview(q.n);
     starBtn.classList.toggle('on', on);
     starBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    starBtn.textContent = on ? '★ 복습 항목' : '☆ 복습 담기';
+    starBtn.textContent = on ? '★ 복습 항목 (S)' : '☆ 복습 담기 (S)';
   }
   paintStar();
   starBtn.onclick = ()=>{ toggleReview(q.n); paintStar(); };
+  // 단축키 S — 입력창 타이핑 중이거나 Ctrl/⌘/Alt 조합일 땐 무시
+  if(activeStarKey) document.removeEventListener('keydown', activeStarKey);
+  activeStarKey = (e)=>{
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    if(e.target && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) return;
+    if(e.code === 'KeyS' || e.key === 's' || e.key === 'S'){
+      e.preventDefault();
+      toggleReview(q.n);
+      paintStar();
+    }
+  };
+  document.addEventListener('keydown', activeStarKey);
 
   document.getElementById('checkBtn').onclick = doCheck;
   document.getElementById('revealBtn').onclick = ()=> reveal(null, '');
@@ -409,7 +423,7 @@ function reveal(grade, userVal){
       msg.innerHTML = `<span style="color:var(--warn);font-weight:600">자동 채점: 일치하는 키워드를 찾지 못했어요.</span> <span style="color:var(--ink-soft)">표기 차이일 수 있으니 직접 확인하세요.</span>`;
     }
   }
-  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 정답 · <b>2</b> 오답 으로 바로 넘어가기</div>`;
+  msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 정답 · <b>2</b> 오답 으로 바로 넘어가기 · <b>S</b> 복습 담기</div>`;
   document.getElementById('markO').onclick = ()=> decide(true);
   document.getElementById('markX').onclick = ()=> decide(false);
 
@@ -444,6 +458,7 @@ function next(correct){
 
 /* ============ 결과 ============ */
 function renderResult(){
+  if(activeStarKey){ document.removeEventListener('keydown', activeStarKey); activeStarKey = null; }
   const done = S.o + S.x;
   const pct = done? Math.round(S.o/done*100) : 0;
   pill.textContent = '결과';
