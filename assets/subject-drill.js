@@ -99,6 +99,15 @@ function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); 
 function markWrong(key){ const w = loadWrong(); w.push(key); saveWrong(w); }
 function clearWrong(key){ saveWrong(loadWrong().filter(x => x !== key)); }
 
+// ── 복습 항목(직접 선택) ──────────────────────────────────
+// 자동 복습 목록(오답/부분)과 별개로, 사용자가 직접 골라 담는 복습 목록.
+const REVIEW_KEY = 'isec_subject_review_v1';
+function loadReview(){ try{ return JSON.parse(safeGet(REVIEW_KEY, '[]')); }catch(e){ return []; } }
+function saveReview(arr){ safeSet(REVIEW_KEY, JSON.stringify([...new Set(arr)])); }
+function isReview(key){ return loadReview().includes(key); }
+function toggleReview(key){ const s = new Set(loadReview()); if(s.has(key)) s.delete(key); else s.add(key); saveReview([...s]); return s.has(key); }
+function setReview(key, on){ const s = new Set(loadReview()); if(on) s.add(key); else s.delete(key); saveReview([...s]); }
+
 /* ============ 단답형 채점 (short-answer 방식) ============ */
 function normShort(str){
   return (str || '')
@@ -204,6 +213,8 @@ function startSession(list, mode, label){
 function renderHome(){
   const wrong = new Set(loadWrong());
   const wrongN = QUESTIONS.filter(q => wrong.has(q.key)).length;
+  const reviewSet = new Set(loadReview());
+  const reviewN = QUESTIONS.filter(q => reviewSet.has(q.key)).length;
   const shortN = SHORT.length, essayN = ESSAY.length;
   pill.textContent = `${QUESTIONS.length} 문항`;
 
@@ -268,6 +279,14 @@ function renderHome(){
         <span><span class="t">복습 목록만 다시</span><span class="d">${wrongN ? wrongN + '문항 집중 복습' : '아직 복습 목록이 비어 있어요'}</span></span>
         <span class="arrow">→</span>
       </button>
+      <button class="mode-btn review" id="mReview" ${reviewN ? '' : 'disabled'}>
+        <span><span class="t">⭐ 복습 항목만 풀기</span><span class="d">${reviewN ? '직접 고른 ' + reviewN + '문항만 모아서 공부' : '아직 담은 복습 항목이 없어요 · 아래에서 선택하세요'}</span></span>
+        <span class="arrow">→</span>
+      </button>
+      <button class="mode-btn" id="mReviewPick">
+        <span><span class="t">복습 항목 선택·관리</span><span class="d">문제를 직접 골라 나만의 복습 목록을 만들어요</span></span>
+        <span class="arrow">→</span>
+      </button>
     </div>
 
     <p class="note">단답형은 답을 입력하고 <b>Enter</b>로, 서술·실무형은 <b>Ctrl(⌘)+Enter</b>로 채점합니다. 자동 채점은 참고용이며 최종 판정은 키보드로 확정합니다 — 단답형 <b>1</b>(정답)·<b>2</b>(오답), 서술·실무형 <b>1</b>(충분)·<b>2</b>(부분)·<b>3</b>(못 씀). 부분·오답은 이 드릴 전용 복습 목록에 저장됩니다.</p>
@@ -281,6 +300,12 @@ function renderHome(){
     const set = new Set(loadWrong());
     startSession(shuffle(QUESTIONS.filter(q => set.has(q.key))), 'wrong', '복습 목록');
   };
+  document.getElementById('mReview').onclick = () => {
+    const set = new Set(loadReview());
+    // 복습 항목도 과목 순 · 단답 먼저 순서를 유지
+    startSession(CATS.flatMap(c => subjectList(c.id)).filter(q => set.has(q.key)), 'review', '복습 항목');
+  };
+  document.getElementById('mReviewPick').onclick = renderReviewPicker;
   document.querySelectorAll('.cat-body[data-cat], .cat-shuffle[data-cat]').forEach(btn => {
     btn.onclick = () => {
       const id = btn.dataset.cat;
@@ -331,16 +356,138 @@ function renderHome(){
   document.getElementById('comboShuffle').onclick = () => startCombo(true);
 }
 
+/* ============ 복습 항목 선택·관리 화면 ============ */
+function renderReviewPicker(){
+  pill.textContent = '복습 항목 선택';
+  app.innerHTML = `
+  <section class="review-picker">
+    <div class="rp-head">
+      <button class="rp-back" id="rpBack">← 홈으로</button>
+      <h2 class="cat-title">복습 항목 선택</h2>
+      <p class="rp-sub">공부할 문제를 직접 골라 체크하세요. 선택한 항목은 <b>자동 저장</b>되며, 홈의 <b>복습 항목만 풀기</b> 또는 아래 버튼으로 모아서 공부할 수 있어요.</p>
+    </div>
+    <div class="rp-toolbar">
+      <input type="search" id="rpSearch" class="rp-search" placeholder="문제·정답·번호로 검색" autocomplete="off">
+      <span class="rp-count" id="rpCount"></span>
+    </div>
+    <div class="rp-list" id="rpList"></div>
+    <div class="combo-bar" id="reviewBar" hidden>
+      <span class="combo-info" id="rpBarInfo"></span>
+      <div class="combo-actions">
+        <button class="combo-clear" id="rpClear">전체 해제</button>
+        <button id="rpOrder">순서대로</button>
+        <button class="primary" id="rpShuffle">셔플로 풀기</button>
+      </div>
+    </div>
+  </section>`;
+
+  const listEl = document.getElementById('rpList');
+  const countEl = document.getElementById('rpCount');
+  const barInfo = document.getElementById('rpBarInfo');
+  const bar = document.getElementById('reviewBar');
+  const search = document.getElementById('rpSearch');
+
+  function match(q, f){
+    return !f || q.q.toLowerCase().includes(f) || (q.a||'').toLowerCase().includes(f)
+      || q.label.toLowerCase().includes(f);
+  }
+  function refreshMeta(){
+    const set = new Set(loadReview());
+    const n = QUESTIONS.filter(q => set.has(q.key)).length;
+    countEl.textContent = `선택 ${n} / 전체 ${QUESTIONS.length}`;
+    if(n){ bar.hidden = false; barInfo.innerHTML = `<b>${n}개</b> 복습 항목 선택됨`; }
+    else{ bar.hidden = true; }
+  }
+  function drawList(){
+    const sel = new Set(loadReview());
+    const f = search.value.trim().toLowerCase();
+    const groups = CATS.map(c => ({ c, items: subjectList(c.id).filter(q => match(q, f)) }))
+      .filter(g => g.items.length);
+    if(!groups.length){ listEl.innerHTML = `<p class="rp-empty">검색 결과가 없어요.</p>`; return; }
+
+    listEl.innerHTML = groups.map(g => `
+      <div class="rp-group" style="--ca:${g.c.accent}">
+        <div class="rp-group-head">
+          <span class="rp-group-name">${g.c.name}</span>
+          <span class="rp-group-cnt">${g.items.length}문항</span>
+          <button class="rp-all" data-cat="${g.c.id}">이 목록 전체 선택</button>
+        </div>
+        ${g.items.map(q => `
+          <label class="rp-item${sel.has(q.key)?' on':''}">
+            <input type="checkbox" class="rp-chk" data-key="${esc(q.key)}" ${sel.has(q.key)?'checked':''}>
+            <span class="rp-item-main">
+              <span class="rp-item-tag">${esc(q.label)} · ${q.kind}</span>
+              <span class="rp-item-q">${esc(q.q).replace(/\s*\n\s*/g,' ')}</span>
+            </span>
+          </label>`).join('')}
+      </div>`).join('');
+
+    listEl.querySelectorAll('.rp-chk').forEach(chk => {
+      chk.onchange = () => {
+        setReview(chk.dataset.key, chk.checked);
+        chk.closest('.rp-item').classList.toggle('on', chk.checked);
+        refreshMeta();
+      };
+    });
+    listEl.querySelectorAll('.rp-all').forEach(btn => {
+      btn.onclick = () => {
+        const f2 = search.value.trim().toLowerCase();
+        const keys = subjectList(btn.dataset.cat).filter(q => match(q, f2)).map(q => q.key);
+        const set = new Set(loadReview());
+        const allOn = keys.every(k => set.has(k));
+        keys.forEach(k => allOn ? set.delete(k) : set.add(k));
+        saveReview([...set]);
+        drawList(); refreshMeta();
+      };
+    });
+  }
+  function startReview(sh){
+    const set = new Set(loadReview());
+    // 순서대로: 과목 순 · 단답 먼저 순서를 유지
+    let list = CATS.flatMap(c => subjectList(c.id)).filter(q => set.has(q.key));
+    if(!list.length) return;
+    startSession(sh ? shuffle(list) : list, sh ? 'review-shuffle' : 'review', '복습 항목' + (sh ? ' · 셔플' : ''));
+  }
+
+  document.getElementById('rpBack').onclick = renderHome;
+  document.getElementById('rpClear').onclick = () => {
+    const keep = loadReview().filter(k => !BY_KEY[k]);
+    saveReview(keep);
+    drawList(); refreshMeta();
+  };
+  document.getElementById('rpOrder').onclick = () => startReview(false);
+  document.getElementById('rpShuffle').onclick = () => startReview(true);
+  search.addEventListener('input', drawList);
+
+  drawList();
+  refreshMeta();
+}
+
 /* ============ 퀴즈 공통 골격 ============ */
 function quizTop(q){
   const total = S.list.length;
   return `
     <div class="quiz-top">
       <div class="q-tag">${String(S.i+1).padStart(2,'0')}<span class="of"> / ${total}</span></div>
-      <button class="quit" id="quitBtn">그만두기</button>
+      <div class="quiz-top-actions">
+        <button class="star-btn" id="starBtn" aria-pressed="false"></button>
+        <button class="quit" id="quitBtn">그만두기</button>
+      </div>
     </div>
     <div class="rail"><div class="fill" style="width:${Math.round(S.i/total*100)}%"></div></div>
     <div class="score-line"><span class="o">정답 ${S.full}</span><span class="mid">부분 ${S.part}</span><span class="x">오답 ${S.none}</span></div>`;
+}
+function bindStar(q){
+  const starBtn = document.getElementById('starBtn');
+  if(!starBtn) return;
+  const paint = () => {
+    const on = isReview(q.key);
+    starBtn.classList.toggle('on', on);
+    starBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    starBtn.textContent = on ? '★ 복습 항목' : '☆ 복습 담기';
+  };
+  paint();
+  starBtn.onclick = () => { toggleReview(q.key); paint(); };
 }
 function cardHead(q){
   return `<span class="num-chip">${q.label}</span><span class="cat-chip">${q.kind}</span><span class="cat-chip">${CAT_NAME[q.cat]||''}</span>`;
@@ -395,6 +542,7 @@ function renderShortQuiz(q){
   document.getElementById('checkBtn').onclick = doCheck;
   document.getElementById('revealBtn').onclick = () => revealShort(null, '');
   document.getElementById('quitBtn').onclick = () => showConfirm('지금까지 푼 결과를 보고 종료할까요?', renderResult);
+  bindStar(q);
 
   function doCheck(){
     const val = ta.value;
@@ -502,6 +650,7 @@ function renderEssayQuiz(q){
     if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); doRegrade(); }
   });
   document.getElementById('regradeBtn').onclick = doRegrade;
+  bindStar(q);
 
   function doCheck(){ const val = ta.value; revealEssay(gradeEssay(val, body), val, body); }
   function doRegrade(){ const val = meTa.value; revealEssay(gradeEssay(val, body), val, body); }
