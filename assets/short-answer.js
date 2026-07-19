@@ -72,7 +72,7 @@ function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); 
 
 // ── 복습 항목(직접 선택) ──────────────────────────────────
 // 오답 노트(자동 저장)와 별개로, 사용자가 직접 골라 담는 복습 목록.
-// 별표 버튼이나 선택 화면에서 담고, "복습 항목만 풀기"로 모아서 공부한다.
+// 퀴즈 화면의 별표(☆/★) 버튼으로 담고, "복습 항목만 풀기"로 모아서 공부한다.
 const REVIEW_KEY = 'isec_sa_review_v1';
 function loadReview(){ try{return JSON.parse(safeGet(REVIEW_KEY,'[]'))}catch(e){return []} }
 function saveReview(arr){ safeSet(REVIEW_KEY, JSON.stringify([...new Set(arr)])); }
@@ -82,11 +82,6 @@ function toggleReview(n){
   if(set.has(n)) set.delete(n); else set.add(n);
   saveReview([...set]);
   return set.has(n);
-}
-function setReview(n, on){
-  const set = new Set(loadReview());
-  if(on) set.add(n); else set.delete(n);
-  saveReview([...set]);
 }
 
 // ── 이어풀기(중단 지점 저장) ─────────────────────────────
@@ -193,11 +188,7 @@ function renderHome(){
         <span class="arrow">→</span>
       </button>
       <button class="mode-btn review" id="mReview" ${reviewInPool? '':'disabled'}>
-        <span><span class="t">⭐ 복습 항목만 풀기</span><span class="d">${reviewInPool? '직접 고른 '+reviewInPool+'문항만 모아서 공부':'아직 담은 복습 항목이 없어요 · 아래에서 선택하세요'}</span></span>
-        <span class="arrow">→</span>
-      </button>
-      <button class="mode-btn" id="mReviewPick">
-        <span><span class="t">복습 항목 선택·관리</span><span class="d">문제를 직접 골라 나만의 복습 목록을 만들어요</span></span>
+        <span><span class="t">⭐ 복습 항목만 풀기</span><span class="d">${reviewInPool? '직접 고른 '+reviewInPool+'문항만 모아서 공부':'아직 담은 복습 항목이 없어요 · 문제를 풀며 ☆로 담아보세요'}</span></span>
         <span class="arrow">→</span>
       </button>
     </div>
@@ -258,7 +249,6 @@ function renderHome(){
     const list = pool().filter(q=>set.has(q.n));
     if(list.length) startSession(list, 'review', '복습 항목');
   };
-  document.getElementById('mReviewPick').onclick = renderReviewPicker;
   document.querySelectorAll('.cat-body, .cat-shuffle').forEach(btn=>{
     btn.onclick = ()=>{
       const id = btn.dataset.cat;
@@ -308,118 +298,6 @@ function renderHome(){
   };
   document.getElementById('comboOrder').onclick = ()=> startCombo(false);
   document.getElementById('comboShuffle').onclick = ()=> startCombo(true);
-}
-
-/* ============ 복습 항목 선택·관리 화면 ============ */
-function renderReviewPicker(){
-  pill.textContent = '복습 항목 선택';
-  const P = pool();
-  app.innerHTML = `
-  <section class="review-picker">
-    <div class="rp-head">
-      <button class="rp-back" id="rpBack">← 홈으로</button>
-      <h2 class="cat-title">복습 항목 선택</h2>
-      <p class="rp-sub">공부할 문제를 직접 골라 체크하세요. 선택한 항목은 <b>자동 저장</b>되며, 홈의 <b>복습 항목만 풀기</b> 또는 아래 버튼으로 모아서 공부할 수 있어요.</p>
-    </div>
-    <div class="rp-toolbar">
-      <input type="search" id="rpSearch" class="rp-search" placeholder="문제·정답·번호로 검색" autocomplete="off">
-      <span class="rp-count" id="rpCount"></span>
-    </div>
-    <div class="rp-list" id="rpList"></div>
-    <div class="combo-bar" id="reviewBar" hidden>
-      <span class="combo-info" id="rpBarInfo"></span>
-      <div class="combo-actions">
-        <button class="combo-clear" id="rpClear">전체 해제</button>
-        <button id="rpOrder">순서대로</button>
-        <button class="primary" id="rpShuffle">셔플로 풀기</button>
-      </div>
-    </div>
-  </section>`;
-
-  const listEl = document.getElementById('rpList');
-  const countEl = document.getElementById('rpCount');
-  const barInfo = document.getElementById('rpBarInfo');
-  const bar = document.getElementById('reviewBar');
-  const search = document.getElementById('rpSearch');
-
-  function refreshMeta(){
-    const set = new Set(loadReview());
-    const n = P.filter(q=>set.has(q.n)).length;
-    countEl.textContent = `선택 ${n} / 전체 ${P.length}`;
-    if(n){ bar.hidden = false; barInfo.innerHTML = `<b>${n}개</b> 복습 항목 선택됨`; }
-    else{ bar.hidden = true; }
-  }
-
-  function drawList(){
-    const sel = new Set(loadReview());
-    const f = search.value.trim().toLowerCase();
-    const groups = CATS.map(c=>{
-      const items = P.filter(q=> q.c===c.id &&
-        (!f || q.q.toLowerCase().includes(f) || (q.a||'').toLowerCase().includes(f) || String(q.n).toLowerCase().includes(f)));
-      return { c, items };
-    }).filter(g=>g.items.length);
-
-    if(!groups.length){ listEl.innerHTML = `<p class="rp-empty">검색 결과가 없어요.</p>`; return; }
-
-    listEl.innerHTML = groups.map(g=>`
-      <div class="rp-group" style="--ca:${g.c.accent}">
-        <div class="rp-group-head">
-          <span class="rp-group-name">${g.c.name}</span>
-          <span class="rp-group-cnt">${g.items.length}문항</span>
-          <button class="rp-all" data-cat="${g.c.id}">이 목록 전체 선택</button>
-        </div>
-        ${g.items.map(q=>`
-          <label class="rp-item${sel.has(q.n)?' on':''}">
-            <input type="checkbox" class="rp-chk" data-n="${esc(q.n)}" ${sel.has(q.n)?'checked':''}>
-            <span class="rp-item-main">
-              <span class="rp-item-tag">Q-${String(q.n).padStart(3,'0')}${ROUND_MAP[q.n]?` · ${ROUND_MAP[q.n]}회 기출`:''}</span>
-              <span class="rp-item-q">${esc(q.q).replace(/\s*\n\s*/g,' ')}</span>
-            </span>
-          </label>`).join('')}
-      </div>`).join('');
-
-    listEl.querySelectorAll('.rp-chk').forEach(chk=>{
-      chk.onchange = ()=>{
-        setReview(chk.dataset.n, chk.checked);
-        chk.closest('.rp-item').classList.toggle('on', chk.checked);
-        refreshMeta();
-      };
-    });
-    listEl.querySelectorAll('.rp-all').forEach(btn=>{
-      btn.onclick = ()=>{
-        const f2 = search.value.trim().toLowerCase();
-        const ids = P.filter(q=> q.c===btn.dataset.cat &&
-          (!f2 || q.q.toLowerCase().includes(f2) || (q.a||'').toLowerCase().includes(f2) || String(q.n).toLowerCase().includes(f2)))
-          .map(q=>q.n);
-        const set = new Set(loadReview());
-        const allOn = ids.every(n=>set.has(n));
-        ids.forEach(n=> allOn ? set.delete(n) : set.add(n));
-        saveReview([...set]);
-        drawList(); refreshMeta();
-      };
-    });
-  }
-
-  function startReview(shuffleMode){
-    const set = new Set(loadReview());
-    let list = P.filter(q=>set.has(q.n));
-    if(!list.length) return;
-    if(shuffleMode) list = shuffle(list);
-    startSession(list, shuffleMode?'review-shuffle':'review', '복습 항목' + (shuffleMode?' · 셔플':''));
-  }
-
-  document.getElementById('rpBack').onclick = renderHome;
-  document.getElementById('rpClear').onclick = ()=>{
-    const keep = loadReview().filter(n=>!P.some(q=>q.n===n));  // 현재 범위 밖 항목은 유지
-    saveReview(keep);
-    drawList(); refreshMeta();
-  };
-  document.getElementById('rpOrder').onclick = ()=> startReview(false);
-  document.getElementById('rpShuffle').onclick = ()=> startReview(true);
-  search.addEventListener('input', drawList);
-
-  drawList();
-  refreshMeta();
 }
 
 /* ============ 퀴즈 화면 ============ */
