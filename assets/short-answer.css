@@ -161,6 +161,41 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+/* ---------- 복습 항목(별표) 토글 · 선택 화면 ---------- */
+.quiz-top-actions{display:flex;align-items:center;gap:14px}
+.star-btn{font-size:.8rem;font-weight:600;color:var(--ink-soft);border:1.5px solid var(--line);background:var(--card);border-radius:8px;padding:6px 11px;transition:.14s;white-space:nowrap}
+.star-btn:hover{border-color:var(--accent);color:var(--accent)}
+.star-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.mode-btn.review{border-color:var(--accent)}
+.mode-btn.review .arrow{color:var(--accent)}
+
+.review-picker{padding:22px 0 40px}
+.rp-head{margin-bottom:18px}
+.rp-back{font-size:.82rem;font-weight:600;color:var(--ink-soft);margin-bottom:14px}
+.rp-back:hover{color:var(--accent)}
+.rp-head .cat-title{margin-top:2px}
+.rp-sub{font-size:.84rem;color:var(--ink-soft);margin-top:8px;line-height:1.6}
+.rp-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.rp-search{flex:1;min-width:180px;font-family:var(--sans);font-size:.9rem;padding:10px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.rp-search:focus{outline:none;border-color:var(--accent)}
+.rp-count{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);white-space:nowrap}
+.rp-list{display:flex;flex-direction:column;gap:16px}
+.rp-group{border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+.rp-group-head{display:flex;align-items:center;gap:10px;padding:11px 14px;background:color-mix(in srgb, var(--ca,#0D6E5F) 8%, transparent);border-bottom:1.5px solid var(--line)}
+.rp-group-name{font-weight:700;font-size:.92rem;color:var(--ca,#0D6E5F)}
+.rp-group-cnt{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft)}
+.rp-all{margin-left:auto;font-size:.76rem;font-weight:600;color:var(--ink-soft);border:1.5px solid var(--line);background:var(--card);border-radius:7px;padding:5px 10px}
+.rp-all:hover{border-color:var(--ca,#0D6E5F);color:var(--ca,#0D6E5F)}
+.rp-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;cursor:pointer;border-top:1px solid var(--line);transition:background .12s}
+.rp-item:first-of-type{border-top:none}
+.rp-item:hover{background:#F7FAF8}
+.rp-item.on{background:var(--accent-soft)}
+.rp-item input{margin-top:3px;width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);cursor:pointer}
+.rp-item-main{min-width:0}
+.rp-item-tag{display:block;font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--accent);margin-bottom:3px}
+.rp-item-q{font-size:.86rem;line-height:1.55;color:var(--ink);word-break:keep-all;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rp-empty{text-align:center;color:var(--ink-soft);font-size:.88rem;padding:40px 0}
+
 /* ---------- 커스텀 확인 모달 ---------- */
 .confirm-overlay{position:fixed;inset:0;background:rgba(22,33,28,.45);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;animation:fadeOverlay .15s ease}
 @keyframes fadeOverlay{from{opacity:0}to{opacity:1}}
