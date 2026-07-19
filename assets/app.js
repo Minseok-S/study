@@ -228,12 +228,41 @@
     const qs=it.gichul.q;
     const label = qs.map(x=>{const [r,n]=x.split("-"); return r+"회 "+n+"번";});
     const cls = qs.length>=3 ? " hot" : qs.length>=2 ? " warm" : "";
-    const title = "이 항목과 연결된 기출 문항 "+qs.length+"개\n· "+label.join("\n· ")
-      + "\n\n근거 용어: "+(it.gichul.a||[]).join(", ")
-      + "\n※ 자동 연결 결과라 일부 오차가 있을 수 있습니다";
+    const title = "클릭하면 연결된 기출 문항(문제·정답)을 볼 수 있어요\n· "+label.join("\n· ");
     // 1개면 회차·번호를 그대로, 여러 개면 개수로 접어서 보여준다
     const text = qs.length===1 ? label[0] : "기출 "+qs.length+"문항";
-    return '<span class="badge gichul'+cls+'" title="'+esc(title)+'">'+esc(text)+'</span>';
+    return '<span class="badge gichul'+cls+' gk-open" data-gichul="'+esc(qs.join(","))+'" title="'+esc(title)+'">📄 '+esc(text)+'</span>';
+  }
+
+  // ── 학습노트 ↔ 기출 연결 보기 ──
+  // 기출 배지를 클릭하면 연결된 실제 기출 문항(문제·정답)을 모달로 보여준다.
+  let _gichulMap=null;
+  function gichulMap(){
+    if(_gichulMap) return _gichulMap;
+    _gichulMap={};
+    ((window.GICHUL_DATA&&window.GICHUL_DATA.rounds)||[]).forEach(r=>r.questions.forEach(q=>{
+      _gichulMap[r.no+"-"+q.num]={q:q.question,a:q.answer,type:q.type,round:r.no,num:q.num};
+    }));
+    return _gichulMap;
+  }
+  function showGichulModal(ids){
+    const map=gichulMap();
+    const list=ids.map(id=>map[id]).filter(Boolean);
+    if(!list.length) return;
+    const body=list.map(g=>
+      '<div class="gk-item">'
+      +'<div class="gk-tag">'+g.round+'회 '+g.num+'번 · '+esc(g.type)+'</div>'
+      +'<div class="gk-q"><div class="md">'+renderMd(g.q)+'</div></div>'
+      +'<div class="gk-alabel">정답 · 해설</div>'
+      +'<div class="gk-a"><div class="md">'+renderMd(g.a)+'</div></div>'
+      +'</div>'
+    ).join('');
+    const ov=document.createElement("div");
+    ov.className="gk-overlay";
+    ov.innerHTML='<div class="gk-modal"><div class="gk-head"><span>📄 연결된 기출 '+list.length+'문항</span><button class="gk-close" aria-label="닫기">✕</button></div><div class="gk-scroll">'+body+'</div></div>';
+    ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".gk-close")) ov.remove(); });
+    document.addEventListener("keydown",function esc2(ev){ if(ev.key==="Escape"){ ov.remove(); document.removeEventListener("keydown",esc2); } });
+    document.body.appendChild(ov);
   }
 
   // ── 카드(둘러보기) 렌더 ──
@@ -365,6 +394,9 @@
 
   // ── 이벤트 위임 ──
   document.getElementById("content").addEventListener("click",e=>{
+    // 기출 배지 클릭 → 연결된 기출 문항 보기 (카드 펼침보다 먼저 처리)
+    const gk=e.target.closest(".gk-open");
+    if(gk && gk.dataset.gichul){ showGichulModal(gk.dataset.gichul.split(",")); e.stopPropagation(); return; }
     const card=e.target.closest(".card");
     if(card){
       const act=e.target.closest("[data-act]");

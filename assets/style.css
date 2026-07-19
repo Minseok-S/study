@@ -164,6 +164,28 @@
   .badge.gichul b{font-weight:800}
   .badge.gichul.warm{background:#fff2e0; color:#a05a12; border-color:#f4dcbb}
   .badge.gichul.hot{background:#fde8e4; color:#b4452e; border-color:#f6cdc4}
+  .badge.gichul.gk-open{cursor:pointer; transition:filter .12s}
+  .badge.gichul.gk-open:hover{filter:brightness(.96); text-decoration:underline}
+
+  /* ── 학습노트 ↔ 기출 연결 보기 모달 ── */
+  .gk-overlay{position:fixed; inset:0; background:rgba(20,28,26,.5); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; animation:gkfade .12s ease}
+  @keyframes gkfade{from{opacity:0}to{opacity:1}}
+  .gk-modal{background:var(--panel,#fff); border-radius:14px; max-width:720px; width:100%; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.3); overflow:hidden}
+  .gk-head{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--line2,#e5e9e7); font-weight:700; color:var(--ink,#1a2320)}
+  .gk-close{border:none; background:transparent; font-size:18px; cursor:pointer; color:var(--ink-soft,#8a938f); padding:4px 8px; border-radius:6px}
+  .gk-close:hover{background:var(--line2,#eee)}
+  .gk-scroll{overflow-y:auto; padding:6px 20px 20px}
+  .gk-item{padding:16px 0; border-bottom:1px dashed var(--line2,#e5e9e7)}
+  .gk-item:last-child{border-bottom:none}
+  .gk-tag{display:inline-block; font:700 11px/1 var(--mono,monospace); color:#b4452e; background:#fde8e4; border:1px solid #f6cdc4; padding:4px 8px; border-radius:6px; margin-bottom:10px}
+  .gk-q{color:var(--ink,#1a2320); font-size:.92rem; line-height:1.6}
+  .gk-alabel{margin:14px 0 4px; font:700 11px/1 var(--mono,monospace); color:var(--accent,#0d6e5f)}
+  .gk-a{color:var(--ink-dim,#3a463f); font-size:.88rem; line-height:1.6; background:#f6f9f8; border-radius:8px; padding:10px 12px}
+  .gk-a .md, .gk-q .md{white-space:normal}
+  @media (prefers-color-scheme:dark){
+    .gk-modal{background:#1c2422}
+    .gk-a{background:#232d2a}
+  }
   .add-mark{
     display:inline-block; margin:16px 0 6px; padding:5px 12px; border-radius:99px;
     font:700 11px/1 var(--mono); letter-spacing:.04em;
