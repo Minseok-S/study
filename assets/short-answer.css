@@ -35,7 +35,11 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 .hero h1{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:700;letter-spacing:-0.03em;line-height:1.25}
 .hero h1 em{font-style:normal;color:var(--accent)}
 .hero p{margin-top:10px;color:var(--ink-soft);font-size:.95rem}
-.stat-rail{display:flex;gap:0;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;margin:26px 0}
+.scope-toggle{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
+.scope-btn{border:1.5px solid var(--line,#d8ddda);background:var(--panel,#fff);color:var(--ink-soft,#6b746f);font-size:.82rem;font-weight:600;padding:7px 14px;border-radius:99px;cursor:pointer;transition:all .12s}
+.scope-btn b{font-weight:800;margin-left:3px}
+.scope-btn.on{border-color:var(--accent,#0d6e5f);color:var(--accent,#0d6e5f);background:#e6f7f8}
+.scope-hint{flex-basis:100%;font-size:.72rem;color:var(--ink-soft,#8a938f);margin-top:2px}
 .stat{flex:1;padding:14px 12px;text-align:center;background:var(--card)}
 .stat+.stat{border-left:1.5px solid var(--ink)}
 .stat .num{font-family:var(--mono);font-size:1.4rem;font-weight:600;display:block}

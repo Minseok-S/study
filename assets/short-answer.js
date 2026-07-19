@@ -57,8 +57,16 @@ function safeSet(key, val){
   catch(e){ storageOK=false; memStore[key]=val; }
 }
 
-// 문제 풀 — 기출만 출제 (데이터의 추천 문제 r:true는 제외)
-function pool(){ return QUESTIONS.filter(q=>!q.r); }
+// ── 출제 범위: 기출(숫자 n) + 보충(R 접두 n, 최신 트렌드·변형) ──
+// 보충 문항은 특정 회차 기출이 아니라 32회 대비용으로 추가한 세트다.
+const SUPP_KEY = 'isec_sa_supp_v1';
+let includeSupp = safeGet(SUPP_KEY, '1') === '1';   // 기본: 보충 포함
+function isSupp(q){ return /^R/.test(q.n); }
+function setSupp(on){ includeSupp = on; safeSet(SUPP_KEY, on ? '1' : '0'); }
+// 문제 풀 — r:true(예약 제외 플래그) + 토글에 따라 보충 문항 포함/제외
+function pool(){ return QUESTIONS.filter(q=>!q.r && (includeSupp || !isSupp(q))); }
+function countGichul(){ return QUESTIONS.filter(q=>!q.r && !isSupp(q)).length; }
+function countSupp(){ return QUESTIONS.filter(q=>!q.r && isSupp(q)).length; }
 function loadWrong(){ try{return JSON.parse(safeGet(WRONG_KEY,'[]'))}catch(e){return []} }
 function saveWrong(arr){ safeSet(WRONG_KEY, JSON.stringify([...new Set(arr)])); }
 
@@ -133,12 +141,18 @@ function renderHome(){
       </button>` : '';
   const wrong = loadWrong();
   const wrongInPool = P.filter(q=>wrong.includes(q.n)).length;
+  const nGichul = countGichul(), nSupp = countSupp();
   app.innerHTML = `
   <section class="hero">
     <h1>틀린 문제는 <em>다시 만날 때까지</em><br>끝나지 않는다</h1>
-    <p>정보보안기사 실기 단답형 기출 ${P.length}제. 답을 직접 입력해 채점하고, 약점만 골라 반복 훈련하세요.</p>
+    <p>정보보안기사 실기 단답형 ${P.length}제. 답을 직접 입력해 채점하고, 약점만 골라 반복 훈련하세요.</p>
+    <div class="scope-toggle" role="group" aria-label="출제 범위 선택">
+      <button class="scope-btn${includeSupp?' on':''}" data-supp="1">기출 + 보충 <b>${nGichul+nSupp}</b></button>
+      <button class="scope-btn${includeSupp?'':' on'}" data-supp="0">기출만 <b>${nGichul}</b></button>
+      <span class="scope-hint">보충 ${nSupp}문항 = 회차 미상 최신 트렌드·변형 (제로트러스트·SBOM·WPA3 등)</span>
+    </div>
     <div class="stat-rail">
-      <div class="stat"><span class="num">${P.length}</span><span class="lbl">기출 문항</span></div>
+      <div class="stat"><span class="num">${P.length}</span><span class="lbl">출제 문항</span></div>
       <div class="stat bad"><span class="num">${wrongInPool}</span><span class="lbl">오답 노트</span></div>
       <div class="stat good"><span class="num">${P.length - wrongInPool}</span><span class="lbl">남은 안전 문항</span></div>
     </div>
@@ -193,6 +207,9 @@ function renderHome(){
     <p class="note">과목 카드 왼쪽 체크박스로 <b>두 과목 이상</b>을 골라 함께 풀 수 있어요. 답을 입력하면 키워드 자동 채점이 1차로 도와주고, 최종 정답 여부는 키보드 1(정답)·2(오답)로 확정합니다. 틀린 문제는 오답 노트에 자동 저장됩니다.</p>
   </section>`;
 
+  document.querySelectorAll('.scope-btn').forEach(btn=>{
+    btn.onclick = ()=>{ setSupp(btn.dataset.supp==='1'); renderHome(); };
+  });
   if(resumeState){
     document.getElementById('mResume').onclick = ()=>{
       S = { list:resumeState.list, i:resumeState.i, o:resumeState.o, x:resumeState.x,
