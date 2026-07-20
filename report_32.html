@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>정보보안기사 실기 32회 출제 예측 리포트</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2;
+  --warn:#9A6410; --warn-wash:#F6ECD9;
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+    --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+    --line:#26332D; --line-soft:#1E2A25;
+    --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+    --crit:#E08066; --crit-wash:#2E1B15;
+    --warn:#D9A648; --warn-wash:#2C2413;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+}
+:root[data-theme="dark"]{
+  --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+  --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+  --line:#26332D; --line-soft:#1E2A25;
+  --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+  --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:0 20px 80px}
+.wrap{max-width:900px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent)}
+
+/* ── Header ── */
+header{padding:64px 0 34px;border-bottom:2px solid var(--ink)}
+.dossier{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.dossier .dot{width:8px;height:8px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 4px var(--crit-wash)}
+.dossier .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint)}
+h1{font-size:clamp(1.9rem,5.2vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.08;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin-top:14px;font-size:1.02rem;color:var(--ink-soft);max-width:60ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+.chip b{color:var(--ink)}
+.disc{margin-top:20px;font-size:.76rem;color:var(--ink-faint);border-left:3px solid var(--line);padding-left:12px;max-width:64ch}
+
+/* ── Section ── */
+section{padding:44px 0;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+h2{font-size:1.4rem;font-weight:700;letter-spacing:-.02em}
+.sec-head .n{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600}
+.lead{color:var(--ink-soft);font-size:.95rem;max-width:66ch;margin-bottom:8px}
+
+/* ── Structure cards ── */
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px}
+.card .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+.card .v{font-size:1.05rem;font-weight:700;margin-top:6px;letter-spacing:-.01em}
+.card .d{font-size:.82rem;color:var(--ink-soft);margin-top:4px}
+
+/* ── Priority matrix table ── */
+.twrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.9rem}
+thead th{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);text-align:left;padding:12px 14px;border-bottom:1.5px solid var(--line);font-weight:600;white-space:nowrap}
+th.num,td.num{text-align:right}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+.topic{font-weight:600}
+.dom{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);display:block;margin-top:2px;letter-spacing:.02em}
+.freq{display:flex;align-items:center;gap:8px;min-width:120px}
+.bar{height:7px;border-radius:99px;background:var(--accent);flex:0 0 auto}
+.bar-track{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden;min-width:52px}
+.bar-fill{height:100%;border-radius:99px;background:var(--accent)}
+.freq .fn{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);width:34px;text-align:right}
+.gap{font-family:var(--mono);font-weight:600}
+.gap.g0{color:var(--ink-faint)} .gap.g1{color:var(--warn)} .gap.g2{color:var(--crit)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.03em;
+  padding:3px 9px;border-radius:6px;white-space:nowrap}
+.pill.hi{color:var(--crit);background:var(--crit-wash)}
+.pill.mid{color:var(--warn);background:var(--warn-wash)}
+.pill.stap{color:var(--accent);background:var(--accent-wash)}
+
+/* ── two column lists ── */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:640px){.cols{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.box h3{font-size:.95rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.box .cap{font-size:.78rem;color:var(--ink-soft);margin-bottom:12px}
+.taglist{display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-size:.8rem;padding:5px 10px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line-soft);color:var(--ink)}
+.dotm{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.dotm.hi{background:var(--crit)} .dotm.stap{background:var(--accent)} .dotm.lo{background:var(--ink-faint)}
+
+/* ── predicted paper ── */
+.paper{display:grid;gap:10px}
+.qrow{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:14px 16px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline}
+.qrow .no{font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--accent);
+  background:var(--accent-wash);border-radius:6px;padding:3px 8px;white-space:nowrap}
+.qrow .body{min-width:0}
+.qrow .t{font-weight:600;font-size:.95rem}
+.qrow .why{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
+.qrow .gp{font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);white-space:nowrap}
+.ptype{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-faint);margin:20px 0 10px}
+.ptype:first-child{margin-top:0}
+
+/* ── app note ── */
+.appnote{background:var(--accent-wash);border:1px solid var(--accent);border-radius:14px;padding:22px 24px}
+.appnote h3{font-size:1.05rem;font-weight:700;color:var(--accent-deep);margin-bottom:8px}
+.appnote ul{list-style:none;display:grid;gap:8px;margin-top:10px}
+.appnote li{font-size:.9rem;color:var(--ink);padding-left:20px;position:relative}
+.appnote li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:var(--mono)}
+.appnote b{color:var(--accent-deep)}
+footer{padding:32px 0 0;font-size:.74rem;color:var(--ink-faint);text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.backlink{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.04em;color:var(--ink-soft);text-decoration:none;padding-top:20px}
+.backlink:hover{color:var(--accent)}
+.backlink:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="backlink" href="index.html">← 학습 앱으로</a>
+<header>
+  <div class="dossier"><span class="dot"></span><span class="lbl">Exam Forecast · Confidential Study Aid</span></div>
+  <h1>정보보안기사 실기 <em>32회</em> 출제 예측</h1>
+  <p class="sub">기출 13~31회를 토픽별 <b>출제 빈도 · 최근 출제 회차 · 공백기</b>로 정량 분석해, 32회에 나올 가능성이 높은 영역을 우선순위화했습니다.</p>
+  <div class="meta">
+    <span class="chip">분석 대상 <b>13–31회</b></span>
+    <span class="chip"><b>19</b>개 회차</span>
+    <span class="chip"><b>324</b>문항</span>
+    <span class="chip">구성 <b>단답12·서술4·실무2</b></span>
+    <span class="chip">생성 <b>2026-07-20</b></span>
+  </div>
+  <p class="disc">데이터 기반 <b>예상</b>이며 실제 출제와 무관합니다. 판단 기준은 <span class="mono">빈출 × 최근 공백</span> — 자주 나오는데 최근에 안 나온 토픽일수록 재출제 확률이 높다는 회귀 경향을 이용합니다.</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="n">01</span><h2>구조 분석</h2></div>
+  <p class="lead">22회부터 시험 구성이 고정되었습니다. 32회도 동일한 배점 구조로 출제될 가능성이 높습니다.</p>
+  <div class="grid3">
+    <div class="card"><div class="k">단답형 1–12</div><div class="v">각 3점 · 36점</div><div class="d">개념·용어 암기. 회당 12문항</div></div>
+    <div class="card"><div class="k">서술형 13–16</div><div class="v">각 12점 · 48점</div><div class="d">원리·절차를 문장으로</div></div>
+    <div class="card"><div class="k">실무형 17–18</div><div class="v">택1 · 16점</div><div class="d">로그·설정·시나리오 분석</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">02</span><h2>우선순위 매트릭스</h2><span class="pill hi">1순위 = 빈출 + 공백</span></div>
+  <p class="lead">누적 출제 빈도(막대, /19회)와 최근 출제 이후 공백(+회차)을 함께 봅니다. <b>공백이 길수록</b> 32회에서 되돌아올 시점입니다.</p>
+  <div class="twrap">
+    <table>
+      <thead><tr><th>토픽</th><th>누적 빈도 /19</th><th class="num">최근</th><th class="num">공백</th><th>우선도</th></tr></thead>
+      <tbody>
+        <!-- rows: freq/19 -->
+        <tr><td class="topic">ARP 스푸핑<span class="dom">네트워크</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="fn">6</span></div></td><td class="num mono">26회</td><td class="num gap g2">+5</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">악성코드 / APT / 랜섬웨어<span class="dom">보안관제</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:53%"></div></div><span class="fn">10</span></div></td><td class="num mono">28회</td><td class="num gap g2">+3</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">DDoS (SYN Flood · Smurf · Land)<span class="dom">네트워크</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:37%"></div></div><span class="fn">7</span></div></td><td class="num mono">28회</td><td class="num gap g2">+3</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">스니핑 / 프러미스큐어스<span class="dom">네트워크</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:37%"></div></div><span class="fn">7</span></div></td><td class="num mono">28회</td><td class="num gap g2">+3</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">BCP / BIA / 재해복구<span class="dom">위험·법규</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:21%"></div></div><span class="fn">4</span></div></td><td class="num mono">27회</td><td class="num gap g2">+4</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">SetUID / SGID / 스티키비트<span class="dom">시스템</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><span class="fn">9</span></div></td><td class="num mono">29회</td><td class="num gap g1">+2</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">위험처리 (수용·회피·전가·DoA)<span class="dom">위험·법규</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><span class="fn">9</span></div></td><td class="num mono">29회</td><td class="num gap g1">+2</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">킬체인 / MITRE ATT&amp;CK<span class="dom">보안관제</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:37%"></div></div><span class="fn">7</span></div></td><td class="num mono">29회</td><td class="num gap g1">+2</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">웹쉘 / 파일 업로드<span class="dom">애플리케이션</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="fn">6</span></div></td><td class="num mono">29회</td><td class="num gap g1">+2</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">로그파일 utmp / wtmp / btmp<span class="dom">시스템</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><span class="fn">5</span></div></td><td class="num mono">29회</td><td class="num gap g1">+2</td><td><span class="pill hi">1순위</span></td></tr>
+        <tr><td class="topic">Snort / IDS 룰<span class="dom">보안관제</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:74%"></div></div><span class="fn">14</span></div></td><td class="num mono">30회</td><td class="num gap g1">+1</td><td><span class="pill mid">2순위</span></td></tr>
+        <tr><td class="topic">개인정보 안전성확보조치<span class="dom">위험·법규</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:74%"></div></div><span class="fn">14</span></div></td><td class="num mono">30회</td><td class="num gap g1">+1</td><td><span class="pill mid">2순위</span></td></tr>
+        <tr><td class="topic">IPSec / VPN (AH · ESP)<span class="dom">네트워크</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><span class="fn">9</span></div></td><td class="num mono">30회</td><td class="num gap g1">+1</td><td><span class="pill mid">2순위</span></td></tr>
+        <tr><td class="topic">SQL 인젝션<span class="dom">애플리케이션</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="fn">6</span></div></td><td class="num mono">30회</td><td class="num gap g1">+1</td><td><span class="pill mid">2순위</span></td></tr>
+        <tr><td class="topic">위험분석 기법 (델파이·시나리오)<span class="dom">위험·법규</span></td><td><div class="freq"><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><span class="fn">5</span></div></td><td class="num mono">30회</td><td class="num gap g1">+1</td><td><span class="pill mid">2순위</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">03</span><h2>스테이플 · 하향 조정</h2></div>
+  <div class="cols">
+    <div class="box">
+      <h3><span class="dotm stap"></span>스테이플 (거의 매회)</h3>
+      <p class="cap">31회에 나왔어도 형태만 바꿔 재출제되는 경향. 무조건 대비.</p>
+      <div class="taglist">
+        <span class="tag">위험관리·분석 절차 <b class="mono">18</b></span>
+        <span class="tag">DNS 스푸핑 <b class="mono">14</b></span>
+        <span class="tag">쿠키/세션 <b class="mono">14</b></span>
+        <span class="tag">iptables/방화벽 <b class="mono">12</b></span>
+        <span class="tag">SSL/TLS <b class="mono">11</b></span>
+        <span class="tag">ISMS-P <b class="mono">11</b></span>
+        <span class="tag">대칭·비대칭·해시 <b class="mono">10</b></span>
+        <span class="tag">정보통신망법 <b class="mono">10</b></span>
+        <span class="tag">shadow/passwd <b class="mono">9</b></span>
+        <span class="tag">XSS <b class="mono">9</b></span>
+      </div>
+    </div>
+    <div class="box">
+      <h3><span class="dotm lo"></span>하향 조정 (31회 출제 직후)</h3>
+      <p class="cap">막 출제되어 32회 재등장 확률이 낮음. 스테이플은 제외.</p>
+      <div class="taglist">
+        <span class="tag">생체인식 보호원칙</span>
+        <span class="tag">CSRF</span>
+        <span class="tag">퍼징(Fuzzing)</span>
+        <span class="tag">트립와이어(무결성)</span>
+        <span class="tag">CISO(전자금융)</span>
+        <span class="tag">디지털 포렌식</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>32회 예상 문제지</h2></div>
+  <p class="lead">위 우선순위를 배점 구조에 배치한 예상 출제안입니다. 괄호는 근거(누적 빈도·공백).</p>
+  <div class="ptype">단답형 12 · 각 3점</div>
+  <div class="paper">
+    <div class="qrow"><span class="no">01</span><div class="body"><div class="t">SetUID / SGID / 스티키비트</div><div class="why">8진수(4000·2000·1000)와 의미</div></div><span class="gp">9회 · +2</span></div>
+    <div class="qrow"><span class="no">02</span><div class="body"><div class="t">로그파일 utmp / wtmp / btmp + 조회 명령</div><div class="why">w·who / last / lastb</div></div><span class="gp">5회 · +2</span></div>
+    <div class="qrow"><span class="no">03</span><div class="body"><div class="t">ARP 스푸핑 원리·대응</div><div class="why">정적 ARP 등록 · 최장 공백</div></div><span class="gp">6회 · +5</span></div>
+    <div class="qrow"><span class="no">04</span><div class="body"><div class="t">DDoS 유형</div><div class="why">SYN Flooding · Smurf · Land</div></div><span class="gp">7회 · +3</span></div>
+    <div class="qrow"><span class="no">05</span><div class="body"><div class="t">포트 스캔</div><div class="why">SYN(Half-open) · XMAS · NULL</div></div><span class="gp">2회 · +4</span></div>
+    <div class="qrow"><span class="no">06</span><div class="body"><div class="t">SQL 인젝션 개념·대응</div><div class="why">매개변수화 쿼리</div></div><span class="gp">6회 · +1</span></div>
+    <div class="qrow"><span class="no">07</span><div class="body"><div class="t">악성코드</div><div class="why">랜섬웨어 · 공급망 공격 · APT</div></div><span class="gp">10회 · +3</span></div>
+    <div class="qrow"><span class="no">08</span><div class="body"><div class="t">사이버 킬체인 / MITRE ATT&amp;CK</div><div class="why">방어자 관점 vs TTP</div></div><span class="gp">7회 · +2</span></div>
+    <div class="qrow"><span class="no">09</span><div class="body"><div class="t">위험처리 방식</div><div class="why">수용·회피·전가·감소 · DoA</div></div><span class="gp">9회 · +2</span></div>
+    <div class="qrow"><span class="no">10</span><div class="body"><div class="t">개인정보 안전성확보조치</div><div class="why">접속기록 보관(1년/2년) · 암호화</div></div><span class="gp">14회 · +1</span></div>
+    <div class="qrow"><span class="no">11</span><div class="body"><div class="t">해시 / 블록암호 운영모드</div><div class="why">ECB · CBC</div></div><span class="gp">10회 · 스테이플</span></div>
+    <div class="qrow"><span class="no">12</span><div class="body"><div class="t">최신 트렌드 신출</div><div class="why">제로트러스트 · SBOM · 공급망 · WPA3 중 1</div></div><span class="gp">신출 대비</span></div>
+  </div>
+  <div class="ptype">서술형 4 · 각 12점</div>
+  <div class="paper">
+    <div class="qrow"><span class="no">13</span><div class="body"><div class="t">위험분석 절차 또는 ISMS-P 3개 영역</div><div class="why">최빈출 서술 토픽</div></div><span class="gp">18회</span></div>
+    <div class="qrow"><span class="no">14</span><div class="body"><div class="t">IPSec (AH·ESP / 터널·전송 모드)</div><div class="why">또는 SSL/TLS 핸드셰이크</div></div><span class="gp">9회 · +1</span></div>
+    <div class="qrow"><span class="no">15</span><div class="body"><div class="t">Snort 룰 작성·해석</div><div class="why">헤더+옵션 · 강력 후보</div></div><span class="gp">14회 · +1</span></div>
+    <div class="qrow"><span class="no">16</span><div class="body"><div class="t">XSS 종류·대응 또는 접근통제 모델</div><div class="why">Stored/Reflected/DOM · RBAC/MAC/DAC</div></div><span class="gp">9회</span></div>
+  </div>
+  <div class="ptype">실무형 2 (택1) · 16점</div>
+  <div class="paper">
+    <div class="qrow"><span class="no">17</span><div class="body"><div class="t">로그 / 패킷 분석</div><div class="why">Apache access_log · iptables · tcpdump로 공격 판별</div></div><span class="gp">+2</span></div>
+    <div class="qrow"><span class="no">18</span><div class="body"><div class="t">웹 취약점 시나리오</div><div class="why">파일 업로드·웹쉘 또는 시큐어코딩(SQLi·CSRF)</div></div><span class="gp">+2</span></div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="sec-head"><span class="n">05</span><h2>학습 앱 반영</h2></div>
+  <div class="appnote">
+    <h3>이 분석은 학습 앱에 그대로 반영했습니다</h3>
+    <ul>
+      <li><b>31회 기출</b> 18문항을 기출 저장소에 추가 — 학습노트 기출풀이 · 서술·실무 드릴에서 바로 풀이 가능</li>
+      <li><b>32회 대비 예상문제 3회분</b>(제9·10·11회)을 예상문제 모드에 추가 — 회차당 18문항 100점, 답안 작성 · 모범답안 · 자가채점 지원</li>
+      <li>예상 문항은 위 <b>1·2순위 토픽</b>을 3회분에 고르게 배치 — ARP·DDoS·포트스캔·악성코드·킬체인·SetUID·Snort·위험처리·SBOM·제로트러스트 등</li>
+    </ul>
+  </div>
+  <footer>정보보안기사 실기 32회 출제 예측 · 기출 13–31회 정량 분석 기반 · 학습용 예상 자료</footer>
+</section>
+</div>
+
+</body>
+</html>
