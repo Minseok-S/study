@@ -17,6 +17,25 @@ const CATS = [
 ];
 const CAT_NAME = Object.fromEntries(CATS.map(c => [c.id, c.name]));
 
+/* ============ 기출 조회 (관련 기출 연결용) ============ */
+// window.GICHUL_DATA에서 "회차-번호" → {round,num,type,question,answer} 맵을 만든다.
+const GMAP = {};
+(window.GICHUL_DATA?.rounds || []).forEach(r => {
+  r.questions.forEach(q => {
+    GMAP[`${r.no}-${q.num}`] = { round:r.no, num:q.num, type:q.type, question:q.question, answer:q.answer };
+  });
+});
+// 답안 = [모범답안] + [출제 코멘트]. 코멘트(해설투 불릿)는 학습 화면에서 접어 둔다.
+function isNoteLine(line){
+  return /^\s*[​\s]*([-*※·]|\\\*)/.test(line) && /(니다|참고|참조|http|출제|수험서|획득)/.test(line);
+}
+function splitAnswer(ans){
+  const lines = (ans||'').split('\n');
+  const i = lines.findIndex(isNoteLine);
+  if(i < 0) return { body:(ans||'').trim(), note:'' };
+  return { body: lines.slice(0,i).join('\n').trim(), note: lines.slice(i).join('\n').trim() };
+}
+
 /* ============ 데이터 준비 ============ */
 const CONCEPTS = (window.KEYWORD_DATA || []).map(k => ({
   id: k.id,
@@ -24,6 +43,7 @@ const CONCEPTS = (window.KEYWORD_DATA || []).map(k => ({
   concept: k.concept,
   prompt: k.prompt,
   keywords: k.keywords || [],
+  gichul: (k.gichul || []).map(id => GMAP[id] ? { id, ...GMAP[id] } : null).filter(Boolean),
 }));
 
 /* ============ 키워드 자동 대조 ============ */
@@ -115,6 +135,7 @@ function renderHome(){
   const wrongN = CONCEPTS.filter(q => wrong.has(q.id)).length;
   const reviewSet = new Set(loadReview());
   const reviewN = CONCEPTS.filter(q => reviewSet.has(q.id)).length;
+  const totalGichul = CONCEPTS.reduce((n, q) => n + q.gichul.length, 0);
   pill.textContent = `${CONCEPTS.length} 개념`;
   const resumeState = loadResume();
   const resumeHTML = resumeState ? `
@@ -126,10 +147,10 @@ function renderHome(){
   app.innerHTML = `
   <section class="hero">
     <h1>서술·실무는 <em>키워드를 떠올릴 수</em> 있어야<br>부분 점수가 붙는다</h1>
-    <p>기출 서술형·실무형에서 반복 출제되는 핵심 개념 ${CONCEPTS.length}개. 개념을 보고 <b>부분점수 필수 키워드</b>를 직접 떠올려 쓴 뒤 대조하세요.</p>
+    <p>기출 서술형·실무형에서 반복 출제되는 핵심 개념 ${CONCEPTS.length}개. 개념을 보고 <b>부분점수 필수 키워드</b>를 직접 떠올려 쓴 뒤 대조하고, 그 개념이 <b>실제 출제된 기출 ${totalGichul}제</b>를 바로 확인하세요.</p>
     <div class="stat-rail">
       <div class="stat"><span class="num">${CONCEPTS.length}</span><span class="lbl">전체 개념</span></div>
-      <div class="stat"><span class="num">${CATS.length}</span><span class="lbl">과목</span></div>
+      <div class="stat"><span class="num">${totalGichul}</span><span class="lbl">연결 기출</span></div>
       <div class="stat"><span class="num">${reviewN}</span><span class="lbl">복습 담음</span></div>
       <div class="stat bad"><span class="num">${wrongN}</span><span class="lbl">오답 노트</span></div>
     </div>
@@ -163,13 +184,14 @@ function renderHome(){
       ${CATS.map(c => {
         const cl = CONCEPTS.filter(q => q.cat === c.id);
         const w = cl.filter(q => wrong.has(q.id)).length;
+        const gi = cl.reduce((n, q) => n + q.gichul.length, 0);
         return `<div class="cat-btn" style="--ca:${c.accent}">
           <span class="cat-bar"></span>
           <button class="cat-body" data-cat="${c.id}" data-mode="order">
             <span class="cat-name">${c.name}</span>
             <span class="cat-desc">${c.desc}</span>
           </button>
-          <span class="cat-meta"><span class="cat-count">${cl.length}</span>${w ? `<span class="cat-wrong">오답 ${w}</span>` : ''}</span>
+          <span class="cat-meta"><span class="cat-count">${cl.length}</span><span class="cat-wrong" style="background:none;color:var(--ink-soft)">기출 ${gi}</span>${w ? `<span class="cat-wrong">오답 ${w}</span>` : ''}</span>
           <button class="cat-shuffle" data-cat="${c.id}" data-mode="shuffle" title="${c.name} 셔플로 풀기" aria-label="${c.name} 무작위 순서로 풀기">⤮</button>
         </div>`;
       }).join('')}
@@ -249,6 +271,7 @@ function renderQuiz(){
           <button class="btn btn-mid" id="markM"><span class="key">2</span> 일부만<small>오답 노트에 저장</small></button>
           <button class="btn btn-x" id="markX"><span class="key">3</span> 못 떠올림<small>오답 노트에 저장</small></button>
         </div>
+        <div id="relatedGichul"></div>
       </div>
     </article>`;
 
@@ -314,6 +337,10 @@ function reveal(grade){
       <div style="color:var(--ink-soft);font-size:.78rem;margin-top:4px">표현이 달라도 핵심을 담았다면 정답입니다. 위 키워드와 비교해 직접 판정하세요. (작성 ${grade.chars}자)</div>`;
   }
   msg.innerHTML += `<div style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)">키보드 <b>1</b> 다 떠올림 · <b>2</b> 일부만 · <b>3</b> 못 떠올림 · <b>S</b> 복습 담기</div>`;
+
+  // 이 개념과 연결된 실제 기출 문항 (접이식)
+  const relBox = document.getElementById('relatedGichul');
+  if(relBox) relBox.innerHTML = relatedGichulHTML(q);
 
   document.getElementById('markO').onclick = () => decide('full');
   document.getElementById('markM').onclick = () => decide('part');
@@ -418,6 +445,25 @@ function showConfirm(message, onYes){
 }
 
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// 기출 지문·답안은 줄바꿈을 살려 그대로 보여준다(코드·로그 포함).
+function preText(s){ return `<div style="white-space:pre-wrap;word-break:break-word">${esc(s)}</div>`; }
+// 개념에 연결된 기출을 접이식 목록으로 렌더
+function relatedGichulHTML(q){
+  if(!q.gichul || !q.gichul.length) return '';
+  const items = q.gichul.map(g => {
+    const { body } = splitAnswer(g.answer);
+    return `<details class="wrong-item">
+      <summary>${g.round}회 ${g.num}번 · ${esc(g.type)}</summary>
+      <div class="wq">${preText(g.question)}</div>
+      <div class="wa"><b>모범답안</b>${preText(body)}</div>
+    </details>`;
+  }).join('');
+  return `<div class="wrong-list" style="margin-top:18px">
+      <h3 style="font-size:.9rem">📚 이 개념이 나온 기출 ${q.gichul.length}제</h3>
+      <p style="font-size:.76rem;color:var(--ink-soft);margin:-6px 0 10px">회차를 눌러 실제 출제 지문과 모범답안을 펼쳐 보세요.</p>
+      ${items}
+    </div>`;
+}
 
 function showFatal(msg){
   app.innerHTML = `
