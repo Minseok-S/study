@@ -672,5 +672,11 @@
     if(ab) ab.classList.toggle("active", state.viewAll && !state.search);
   }
 
+  // 딥링크: index.html?q=검색어 로 특정 항목/검색 결과를 바로 연다 (다른 페이지에서 연결용)
+  try{
+    const q=new URLSearchParams(location.search).get("q");
+    if(q){ state.search=q; state.viewAll=false; const si=document.getElementById("searchInput"); if(si) si.value=q; }
+  }catch(e){}
+
   renderNav(); updateProgress(); render();
 })();
