@@ -1,0 +1,58 @@
+/* 서술·실무 빈출 핵심 개념 키워드 드릴 데이터
+   각 개념: 제시 프롬프트 + '부분점수 필수 키워드'. 키워드를 떠올려 쓰고 대조하는 능동 회상 훈련용.
+   cat: sys/net/app/soc/risk (드릴 색상·필터) */
+window.KEYWORD_DATA = [
+  // ── 위험관리·관리체계 ──
+  {id:"k01", cat:"risk", concept:"위험분석 접근법", prompt:"위험분석 3대 접근법의 명칭과 핵심을 쓰시오.",
+    keywords:["기준선 접근법(체크리스트 기반)","상세 위험분석(자산·위협·취약점 분석)","복합 접근법(고위험=상세, 그 외=기준선)"]},
+  {id:"k02", cat:"risk", concept:"위험 처리(대응) 4종", prompt:"위험 처리 전략 4가지를 쓰시오.",
+    keywords:["위험 수용","위험 감소(대책 구현)","위험 전가(보험·외주)","위험 회피(사업 포기)"]},
+  {id:"k03", cat:"risk", concept:"정보자산 중요도 산정", prompt:"자산 중요도 산정 기준 3가지와 등급 결정 방식은?",
+    keywords:["기밀성","무결성","가용성(CIA)","가장 높은 등급으로 산정"]},
+  {id:"k04", cat:"risk", concept:"정량적 위험평가 공식", prompt:"SLE·ALE·대책효과·ROI 공식을 쓰시오.",
+    keywords:["SLE = AV × EF","ALE = SLE × ARO","대책효과 = 감소ALE − 운영비","ROI = (ALE−X)/X × 100"]},
+  {id:"k05", cat:"risk", concept:"ISMS-P 인증기준", prompt:"ISMS-P 3영역과 물리보안 대책 예시를 쓰시오.",
+    keywords:["관리체계 수립·운영","보호대책 요구사항","개인정보 처리단계 요구사항","물리보안(보호구역·출입통제·UPS·화재감지)"]},
+  {id:"k06", cat:"soc", concept:"디지털 포렌식 원칙", prompt:"디지털 포렌식 5대 원칙과 수집 순서 원칙은?",
+    keywords:["정당성","무결성","재현성","신속성","연계보관성","휘발성 순서(메모리→디스크)"]},
+  // ── 개인정보·법규 ──
+  {id:"k07", cat:"risk", concept:"개인정보 영향평가(PIA)", prompt:"PIA 공공기관 의무대상 수치 3가지와 고려사항은?",
+    keywords:["5만(민감·고유식별)","50만(연계)","100만(일반)","고려사항(개인정보 수·제3자 제공·권리침해·민감정보)"]},
+  {id:"k08", cat:"risk", concept:"개인정보 안전성 확보조치", prompt:"접속기록 보관 수치와 비밀번호 암호화 방식은?",
+    keywords:["접속기록 1년/2년","5만명 이상=2년","비밀번호 = 일방향(해시) 암호화"]},
+  {id:"k09", cat:"risk", concept:"CISO 역할", prompt:"정보통신망법상 CISO의 4대 업무는?",
+    keywords:["관리체계 수립·운영","취약점 분석·평가·개선","침해사고 예방·대응","사전 보안조치 설계·구현"]},
+  // ── 네트워크 ──
+  {id:"k10", cat:"net", concept:"IPSec 모드(AH/ESP)", prompt:"IPSec 전송/터널 모드와 AH/ESP의 차이를 쓰시오.",
+    keywords:["전송 모드(페이로드만)","터널 모드(원본IP 전체 + 새 헤더)","AH(인증 only)","ESP(암호화 포함)"]},
+  {id:"k11", cat:"risk", concept:"재해복구 사이트(DRS)", prompt:"재해복구 사이트 4종을 복구속도 순으로, RTO/RPO와 함께.",
+    keywords:["미러(실시간)","핫(수시간)","웜(일부 구축)","콜드(기반시설만)","RTO(복구 시간)","RPO(복구 시점)"]},
+  {id:"k12", cat:"net", concept:"스니핑 / Promiscuous", prompt:"Promiscuous 모드 의미와 스니핑 탐지 4방법은?",
+    keywords:["무차별 모드(모든 패킷 수신)","탐지 ping·arp·dns·decoy","대응 암호화(SSL/SSH)"]},
+  {id:"k13", cat:"net", concept:"ARP 스푸핑", prompt:"ARP 스푸핑 원리와 대응책은?",
+    keywords:["ARP 무인증","캐시 덮어쓰기(MITM)","대응 정적ARP·DAI·arpwatch"]},
+  {id:"k14", cat:"soc", concept:"IDS / IPS 배치·탐지", prompt:"IDS/IPS 배치 차이와 탐지 방식 2가지는?",
+    keywords:["IDS(탐지·미러·내부망)","IPS(차단·인라인·경계)","오용탐지(시그니처)","이상탐지(프로파일)"]},
+  {id:"k15", cat:"net", concept:"DDoS / DRDoS 증폭", prompt:"DRDoS 증폭 공격 원리와 대응은?",
+    keywords:["IP 스푸핑 + 반사","증폭(ANY 질의)","대응 open resolver 제거·uRPF·RRL"]},
+  // ── 시스템 ──
+  {id:"k16", cat:"sys", concept:"접근통제 BLP / Biba", prompt:"BLP와 Biba의 목표와 규칙(읽기/쓰기)은?",
+    keywords:["BLP=기밀성(No Read Up / No Write Down)","Biba=무결성(No Read Down / No Write Up)"]},
+  {id:"k17", cat:"sys", concept:"특수권한(SUID/SGID/Sticky)", prompt:"특수권한 8진수와 점검·제거 명령은?",
+    keywords:["SetUID(4000)","SetGID(2000)","Sticky(1000)","find / -perm -4000","chmod -s"]},
+  {id:"k18", cat:"sys", concept:"NetBIOS 바인딩", prompt:"NetBIOS 바인딩 취약 이유와 보안 설정은?",
+    keywords:["원격 공유자원 접근 위험","ncpa.cpl → WINS → NetBIOS over TCP/IP 사용 안 함"]},
+  {id:"k19", cat:"sys", concept:"shadow 파일 구조", prompt:"shadow의 $id$salt$hash 구조와 솔트의 목적은?",
+    keywords:["$id(1=MD5·5=SHA256·6=SHA512)","salt(솔트)","hash(해시값)","솔트 = 레인보우테이블 방어"]},
+  // ── 애플리케이션 ──
+  {id:"k20", cat:"app", concept:"SQL Injection / prepared", prompt:"SQLi 인증 우회 입력값과 근본 대응은?",
+    keywords:["' or '1'='1 (항상 참)","prepared statement(입력을 데이터로)","쿼리 구조 선(先)컴파일"]},
+  {id:"k21", cat:"app", concept:"XSS 유형·대응", prompt:"XSS 3가지 유형과 대응책은?",
+    keywords:["저장형","반사형","DOM 기반","대응 출력 인코딩·CSP·HttpOnly"]},
+  {id:"k22", cat:"app", concept:"파일 업로드 취약점", prompt:"파일 업로드 대응책과 우회 기법은?",
+    keywords:["화이트리스트","매직넘버 검증","실행권한 제거","난수 파일명","우회(이중확장자·널바이트·대소문자)"]},
+  {id:"k23", cat:"app", concept:"쿠키 보안 속성", prompt:"쿠키 3대 보안 속성의 기능은?",
+    keywords:["Secure(HTTPS만 전송)","HttpOnly(스크립트 접근 차단)","SameSite(교차 사이트 전송 차단)"]},
+  {id:"k24", cat:"app", concept:"BYOD 모바일 보안", prompt:"BYOD 모바일 오피스 보안기술 3가지는?",
+    keywords:["MDM(원격삭제·정책 강제)","컨테이너화(업무·개인 영역 분리)","모바일 가상화(OS 분리)"]},
+];
