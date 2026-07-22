@@ -113,6 +113,10 @@ h1 em{font-style:normal;color:var(--accent)}
 .qbox .at code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding:1px 4px;border-radius:4px}
 .src{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);margin-top:8px}
 
+.tierhead{margin:8px 0 0;padding:34px 0 0;border-top:2px solid var(--ink);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tierhead h3{font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
+.tierhead .desc{font-size:.82rem;color:var(--ink-soft)}
+.cand-head .rk.near{background:var(--warn)}
 .tip{background:var(--warn-wash);border:1px solid var(--warn);border-radius:11px;padding:12px 15px;margin:14px 0 4px;font-size:.85rem;color:var(--ink-soft)}
 .tip b{color:var(--warn)}
 .foot{padding:34px 0 0;color:var(--ink-faint);font-size:.78rem;text-align:center}
@@ -136,12 +140,12 @@ h1 em{font-style:normal;color:var(--accent)}
 <header>
   <div class="eyebrow">EXAM 32 · HIGH-CONFIDENCE · 기출+예상</div>
   <h1>32회 <em>고신뢰 확정 후보</em> 집중<br>기출로 검증하고, 예상문제로 굳힌다</h1>
-  <p class="sub">13~31회 전체를 합산해 <b>출제 이력이 길어지며 신뢰도가 올라간</b> 서술·실무 후보 5개만 모았습니다.
+  <p class="sub">13~31회 전체를 합산해 임박도·신뢰도가 검증된 서술·실무 후보 <b>14개</b>를 <b>🔴 임박</b>과 <b>🟠 근접</b> 2순위로 정리했습니다.
      각 후보마다 <b>실제 기출 지문</b>과 <b>32회 예상문제(모범답안 포함)</b>를 나란히 두어, 어떤 각도로 나와도 대응할 수 있게 했습니다.</p>
   <div class="meta">
     <span class="chip">근거 <b>13~31회 서·실무</b></span>
     <span class="chip">선정 <b>임박도 × 신뢰도</b></span>
-    <span class="chip">배점 <b>서술 12 · 실무 16</b></span>
+    <span class="chip">🔴 임박 <b>8</b> · 🟠 근접 <b>6</b></span>
   </div>
   <div class="toc">
     <a href="#c1"><span class="rank">★</span><span class="nm">정량적 위험평가 (SLE·ALE·ROI)</span><span class="sc">gap11</span></a>
@@ -149,6 +153,15 @@ h1 em{font-style:normal;color:var(--accent)}
     <a href="#c3"><span class="rank">2</span><span class="nm">DDoS·DRDoS 증폭</span><span class="sc">n5</span></a>
     <a href="#c4"><span class="rank">3</span><span class="nm">스니핑 탐지</span><span class="sc">n3</span></a>
     <a href="#c5"><span class="rank">4</span><span class="nm">특수권한 SUID/SGID</span><span class="sc">n3</span></a>
+    <a href="#c6"><span class="rank">5</span><span class="nm">자산 중요도 산정</span><span class="sc">🔴</span></a>
+    <a href="#c7"><span class="rank">6</span><span class="nm">DB 접근권한·감사로그</span><span class="sc">🔴</span></a>
+    <a href="#c8"><span class="rank">7</span><span class="nm">SNMP 보안설정</span><span class="sc">🔴</span></a>
+    <a href="#c9"><span class="rank">8</span><span class="nm">위험분석 접근법</span><span class="sc">🟠</span></a>
+    <a href="#c10"><span class="rank">9</span><span class="nm">ARP 스푸핑</span><span class="sc">🟠</span></a>
+    <a href="#c11"><span class="rank">10</span><span class="nm">재해복구시스템 DRS</span><span class="sc">🟠</span></a>
+    <a href="#c12"><span class="rank">11</span><span class="nm">파일 업로드 취약점</span><span class="sc">🟠</span></a>
+    <a href="#c13"><span class="rank">12</span><span class="nm">NetBIOS 바인딩</span><span class="sc">🟠</span></a>
+    <a href="#c14"><span class="rank">13</span><span class="nm">IPSec 모드/AH·ESP</span><span class="sc">🟠</span></a>
   </div>
 </header>
 
@@ -315,8 +328,267 @@ ALE = 20,000 × 0.5 = <b>10,000</b>
   </div>
 </section>
 
+<!-- ===== 후보 5: 자산 중요도 산정 ===== -->
+<section class="cand" id="c6">
+  <div class="cand-head"><span class="rk">5</span><h2>자산 중요도 산정</h2></div>
+  <div class="histbar"><span class="h">19회</span><span class="h">25회</span><span class="h">28회</span><span class="gap">gap 4 · 🔴 임박</span></div>
+  <div class="core">
+    <div class="lbl">개념 · 기준</div>
+    <ul>
+      <li>개념: 자산이 조직에 주는 가치·손실 영향으로 보호 투자 수준을 판단하는 절차</li>
+      <li>기준 3가지 = <b>기밀성·무결성·가용성(CIA)</b> 등급 평가</li>
+      <li>산정 방식: 세 등급 중 <b>가장 높은 값</b>으로 자산 중요도 책정(평균 아님)</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 28회 16번(서술)</div><div class="body">
+      <div class="qt">정보자산 중요도 산정 개념과 필수 기준 3가지를 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">개념: 자산의 가치·손실 영향을 판단해 보호 투자 정도를 정하는 절차. 자산이 취급하는 정보의 속성에 따라 <b>기밀성·무결성·가용성 등급을 평가하여 가장 높은 등급</b>으로 중요도 책정.
+기준: ① <b>기밀성</b>(유출 시 영향) ② <b>무결성</b>(위·변조 시 영향) ③ <b>가용성</b>(중단 시 영향)</div></details>
+      <div class="src">GICHUL 28-16 · 25-15 · 19-16(위험평가서)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">어떤 자산의 등급이 기밀성 M, 무결성 H, 가용성 L 로 평가되었다.
+1) 이 자산의 중요도 등급과 그 산정 이유를 서술하시오.
+2) 평균이 아닌 최댓값으로 산정하는 이유는?</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>H</b> — 세 속성 중 가장 높은 등급으로 산정하므로 무결성 H가 기준.
+2) 한 속성만 심각히 훼손돼도 <b>피해가 크게 발생</b>하므로, 최악의 영향을 기준으로 보호수준을 정하기 위함.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 6: DB 접근권한·감사로그 ===== -->
+<section class="cand" id="c7">
+  <div class="cand-head"><span class="rk">6</span><h2>DB 접근권한 · 감사로그</h2></div>
+  <div class="histbar"><span class="h">26회</span><span class="h">28회</span><span class="gap">gap 4 · 🔴 임박</span></div>
+  <div class="core">
+    <div class="lbl">최소권한 · 감사</div>
+    <ul>
+      <li>일반/원격 사용자에 금지 권한: <code>CREATE USER</code>·<code>DROP USER</code>·<code>DROP ANY TABLE</code> 등 관리 권한</li>
+      <li>최소화: 업무 최소권한만 <code>GRANT</code>, 불필요 <code>REVOKE</code>, DBA·일반 분리, 기본계정·암호 변경</li>
+      <li>감사(Audit): <code>audit_trail</code> 활성화로 접근·변경 추적, 로그 위·변조 방지 별도 보관</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 26회 17번(실무)</div><div class="body">
+      <div class="qt">DBA가 일반/원격 사용자에게 부여하면 안 되는 권한 3가지와, 접근권한을 최소화하는 방법 4가지를 기술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">금지 권한: <b>CREATE USER · DROP USER · DROP ANY TABLE</b>(또는 BACKUP ANY TABLE)
+최소화: ① 업무별 최소권한 부여 ② Role로 권한 묶어 관리 ③ 불필요 권한·계정 회수(REVOKE) ④ 기본계정 잠금·기본암호 변경, 접속 IP 제한</div></details>
+      <div class="src">GICHUL 26-17 · 28-17(오라클 audit 파라미터)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">오라클에서 감사 로그를 OS 파일로 남기도록 설정되어 있다.
+1) 관련 파라미터 <code>audit_trail</code>·<code>audit_file_dest</code>의 의미를 쓰시오.
+2) 감사 로그를 별도 보관·보호해야 하는 이유는?</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>audit_trail</b>: 감사 기록 방식/대상(OS·DB·XML 등) 지정. <b>audit_file_dest</b>: OS 감사 로그가 저장되는 경로.
+2) 침해 시 공격자가 <b>흔적을 지우거나 위·변조</b>할 수 있으므로, 원본 무결성 보장을 위해 접근을 제한하고 별도 저장소에 보관해야 함.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 7: SNMP 보안설정 ===== -->
+<section class="cand" id="c8">
+  <div class="cand-head"><span class="rk">7</span><h2>SNMP 보안설정</h2></div>
+  <div class="histbar"><span class="h">24회</span><span class="gap">gap 8 · 최장 미출제 · 🔴 임박</span></div>
+  <div class="core">
+    <div class="lbl">보안 설정 4가지</div>
+    <ul>
+      <li>기본 <b>community string(public/private) 변경</b> — 유추 어려운 값으로</li>
+      <li><b>SNMP v3 사용</b> — 인증·암호화 지원(v1·v2c는 평문)</li>
+      <li><b>ACL</b>로 SNMP 접근 호스트 제한</li>
+      <li><b>RW 모드 삭제, RO(Read-Only) 우선</b>, 불필요 시 서비스 비활성화</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 24회 16번(서술)</div><div class="body">
+      <div class="qt">SNMP 서비스 사용 시 적용되어야 하는 보안 설정 4가지를 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">① 커뮤니티 스트링을 <b>기본값이 아닌 유추 어려운 값</b>으로 변경
+② 암호화 지원되는 <b>SNMP v3 사용</b>
+③ <b>ACL 적용</b>으로 SNMP 이용 호스트 제한
+④ <b>RW 모드 삭제, RO 모드 사용</b></div></details>
+      <div class="src">GICHUL 24-16 · 8회 공백으로 재출 임박도 높음</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">1) SNMP v1/v2c 대신 v3을 권장하는 보안상 이유는?
+2) community string 관련 보안 설정 2가지를 쓰시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) v1·v2c는 community string이 <b>평문 전송</b>되어 스니핑에 노출. v3는 <b>인증(무결성)·암호화(기밀성)</b>를 지원.
+2) ① 기본 public/private를 <b>추측 어려운 값으로 변경</b> ② RW 제거 후 <b>RO 우선 사용</b>(+ ACL 제한).</div></details>
+    </div></div>
+  </div>
+</section>
+
+<div class="tierhead"><h3>🟠 근접 · 2순위</h3><span class="desc">임박도 0.85~1.2 · 여유가 되면 함께 대비</span></div>
+
+<!-- ===== 후보 8: 위험분석 접근법 ===== -->
+<section class="cand" id="c9">
+  <div class="cand-head"><span class="rk near">8</span><h2>위험분석 접근법</h2></div>
+  <div class="histbar"><span class="h">22회</span><span class="h">27회</span><span class="gap">gap 5 · 위험관리 단골</span></div>
+  <div class="core">
+    <div class="lbl">3대 접근법</div>
+    <ul>
+      <li><b>기준선</b>: 표준 체크리스트로 기본 보호수준 적용 — 간단·신속, 소규모 적합 / 조직 현황 미반영</li>
+      <li><b>상세</b>: 자산·위협·취약점 분석 — 정확 / 시간·비용·전문성 필요</li>
+      <li><b>복합</b>: 고위험=상세, 그 외=기준선 — 정확성·속도 균형 / 고위험 판단 실패 시 위험</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 27회 13번(서술)</div><div class="body">
+      <div class="qt">위험분석 접근법 중 복합접근법의 개념, 장점, 단점을 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">개념: <b>고위험 영역은 상세 위험분석</b>, 그 외는 <b>기준선 접근법</b> 적용.
+장점: 분석의 <b>정확성과 속도의 균형</b>, 조직 상황에 맞춘 유연한 적용.
+단점: 두 방식을 병행하므로 <b>고위험 영역 식별을 잘못하면</b> 자원 배분이 왜곡됨.</div></details>
+      <div class="src">GICHUL 27-13 · 22-14(기준선·상세)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">기준선 접근법과 상세 위험분석을 개념·장점·단점 측면에서 비교 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at"><b>기준선</b>: 표준 체크리스트로 기본 수준 적용 / 장점 간단·신속·저비용 / 단점 조직 현황 미반영, 과·소보호.
+<b>상세</b>: 자산·위협·취약점을 개별 분석 / 장점 정확·조직 맞춤 / 단점 시간·비용·전문성 부담.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 9: ARP 스푸핑 ===== -->
+<section class="cand" id="c10">
+  <div class="cand-head"><span class="rk near">9</span><h2>ARP 스푸핑</h2></div>
+  <div class="histbar"><span class="h">25회</span><span class="gap">gap 7 · 🟠 근접</span></div>
+  <div class="core">
+    <div class="lbl">원리 · 대응</div>
+    <ul>
+      <li>ARP는 <b>인증이 없어</b> 위조 ARP 응답으로 <b>캐시를 덮어씀</b> → 게이트웨이 MAC을 공격자 것으로 변조(MITM)</li>
+      <li>증상: 특정 IP(GW)의 MAC이 다른 PC MAC으로 바뀜, 트래픽 경유로 지연</li>
+      <li>대응: <b>정적 ARP 등록</b>·<b>DAI</b>(Dynamic ARP Inspection)·<b>arpwatch</b>·암호화 통신</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 25회 17번(실무)</div><div class="body">
+      <div class="qt">인터넷이 느려져 ARP 캐시 테이블을 조회하니 GW(192.168.100.1)의 MAC이 다른 PC와 동일하게 표시됐다. 1) 조회 명령 2) 공격명 3) 원인</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <code>arp -a</code>
+2) <b>ARP 스푸핑</b>(GW로 가정 시 ARP Redirect)
+3) GW IP의 MAC이 공격자 PC MAC으로 <b>변조</b>되어, GW로 향하는 모든 패킷이 공격자를 경유(도청·변조 가능)</div></details>
+      <div class="src">GICHUL 25-17</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">ARP 스푸핑이 가능한 근본 원인을 프로토콜 관점에서 쓰고, 대응책 3가지를 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">원인: ARP는 <b>응답을 검증하는 인증 절차가 없어</b> 위조 응답으로 캐시를 임의로 덮어쓸 수 있음.
+대응: ① 중요 호스트·GW에 <b>정적(static) ARP</b> 등록 ② 스위치 <b>DAI</b> 적용 ③ <b>arpwatch</b>로 MAC 변경 탐지(+ SSL/SSH 암호화).</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 10: 재해복구시스템 DRS ===== -->
+<section class="cand" id="c11">
+  <div class="cand-head"><span class="rk near">10</span><h2>재해복구시스템 (DRS)</h2></div>
+  <div class="histbar"><span class="h">21회</span><span class="h">27회</span><span class="gap">gap 5 · RTO/RPO</span></div>
+  <div class="core">
+    <div class="lbl">4종 · 복구지표</div>
+    <ul>
+      <li><b>미러</b>(실시간, RTO 즉시·RPO 0) · <b>핫</b>(수시간) · <b>웜</b>(일부 구축) · <b>콜드</b>(데이터만 보관, RTO 최장)</li>
+      <li><b>RTO</b>=복구 목표 시간 · <b>RPO</b>=복구 목표 시점(데이터 손실 허용치)</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 27회 16번(서술)</div><div class="body">
+      <div class="qt">1) 미러 사이트의 정의 2) 미러사이트 장단점 각 2개 3) RTO가 가장 오래 걸리는 방식과 이유</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) 주센터와 동일 시스템을 <b>액티브-액티브 실시간</b>으로 운영
+2) 장점: 즉시 업무재개(RTO 즉시)·데이터 최신성(RPO 0) / 단점: 높은 구축·유지비·과부하 우려
+3) <b>콜드 사이트</b> — 데이터만 보관하고 자원은 최소라 재해 시 <b>조달·구축에 시간</b>이 걸림</div></details>
+      <div class="src">GICHUL 27-16 · 21-12(동일 문제)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">1) RTO와 RPO의 차이를 서술하시오.
+2) 실시간 동기화가 필요한 금융 코어시스템에 적합한 DRS 유형과 이유를 쓰시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>RTO</b>=서비스 복구까지 목표 시간, <b>RPO</b>=허용 가능한 데이터 손실 시점(백업 간격).
+2) <b>미러 사이트</b> — RPO 0·RTO 즉시로 데이터 손실 없이 즉시 전환 가능해 무중단·무손실이 요구되는 코어에 적합.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 11: 파일 업로드 취약점 ===== -->
+<section class="cand" id="c12">
+  <div class="cand-head"><span class="rk near">11</span><h2>파일 업로드 취약점</h2></div>
+  <div class="histbar"><span class="h">17회</span><span class="h">19회</span><span class="h">23회</span><span class="h">29회</span><span class="gap">gap 3 · 주기 도래 근접</span></div>
+  <div class="core">
+    <div class="lbl">대응 · 우회</div>
+    <ul>
+      <li>대응: <b>화이트리스트</b> 확장자·<b>매직넘버</b> 검증·실행권한 제거·난수 파일명·업로드 경로 분리</li>
+      <li>우회: <b>Content-Type 변조</b>·<b>대소문자/이중확장자</b>(test.pHp, test.jpg.php)·널바이트</li>
+      <li>성공 조건: 업로드 경로가 <b>웹에서 실행 가능</b>하고 확장자·타입 검증이 우회될 때</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 23회 13번(서술)</div><div class="body">
+      <div class="qt">PHP 게시판 소스코드의 취약점명, 업로드 로직 우회 기법, 공격 성공 조건을 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">취약점: <b>파일 업로드 취약점</b>(웹셸 업로드로 명령 실행·정보 탈취)
+우회: ① Content-Type을 image/jpeg로 <b>타입 변조</b> ② <b>대소문자·이중 확장자</b>로 확장자 검증 회피
+성공 조건: 업로드된 파일이 <b>웹 경로에서 실행</b> 가능해야 함</div></details>
+      <div class="src">GICHUL 23-13 · 29-14(거의 동일) · 17-11/19-15(.htaccess)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">파일 업로드 취약점 대응책 중 1) 확장자 검증의 한계와 2) 이를 보완하는 서버 측 조치 3가지를 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) 블랙리스트·확장자만 검증하면 <b>대소문자·이중확장자·타입 변조</b>로 우회됨.
+2) ① <b>화이트리스트 + 매직넘버(파일 시그니처)</b> 검증 ② 업로드 디렉터리 <b>실행권한 제거</b> ③ <b>난수 파일명</b>·웹 루트 밖 저장.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 12: NetBIOS 바인딩 ===== -->
+<section class="cand" id="c13">
+  <div class="cand-head"><span class="rk near">12</span><h2>NetBIOS 바인딩</h2></div>
+  <div class="histbar"><span class="h">23회</span><span class="h">28회</span><span class="gap">gap 4 · 🟠 근접</span></div>
+  <div class="core">
+    <div class="lbl">취약 이유 · 설정</div>
+    <ul>
+      <li>취약 이유: 인터넷에 직접 연결된 윈도우에 NetBIOS over TCP/IP가 켜지면 <b>원격에서 공유자원 접근</b> 우려</li>
+      <li>설정 경로: <code>ncpa.cpl</code> → 연결 속성 → TCP/IP <b>고급</b> → <b>WINS</b> 탭 → "NetBIOS over TCP/IP 사용 안 함"</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 28회 14번(서술)</div><div class="body">
+      <div class="qt">윈도우 NetBIOS 바인딩이 보안상 취약한 이유와 보안 설정 방법(ncpa.cpl 이용)을 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">이유: 인터넷에 직접 연결된 시스템에서 NetBIOS TCP/IP 바인딩이 활성화되면 <b>공격자가 원격에서 네트워크 공유자원을 사용</b>할 수 있음.
+설정: 시작→실행→<code>ncpa.cpl</code>→로컬 영역 연결 속성→TCP/IP 고급→<b>WINS 탭에서 "NetBIOS over TCP/IP 사용 안 함"</b></div></details>
+      <div class="src">GICHUL 28-14 · 23-15(동일 문제)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">NetBIOS 바인딩을 비활성화해야 하는 이유를 쓰고, 사용하는 포트(2가지)와 함께 설정 경로를 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">이유: 원격 <b>공유자원(139/445) 노출</b>로 정보 유출·침투 위험.
+포트: <b>UDP 137/138, TCP 139</b>(+ SMB 445).
+설정: <code>ncpa.cpl</code> → TCP/IP 고급 → WINS 탭 → <b>NetBIOS over TCP/IP 사용 안 함</b>.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 13: IPSec 모드/AH·ESP ===== -->
+<section class="cand" id="c14">
+  <div class="cand-head"><span class="rk near">13</span><h2>IPSec 모드 / AH·ESP</h2></div>
+  <div class="histbar"><span class="h">15회</span><span class="h">17회</span><span class="h">28회</span><span class="gap">gap 4 · 🟠 근접</span></div>
+  <div class="core">
+    <div class="lbl">정의 · 모드 · 프로토콜</div>
+    <ul>
+      <li>정의: <b>IP 계층</b>에서 인증(AH)·암호화(ESP)·키관리(IKE)를 수행하는 프로토콜</li>
+      <li><b>전송 모드</b>: 페이로드만 보호(호스트↔호스트) / <b>터널 모드</b>: 새 IP헤더+원본 전체 보호(VPN, GW↔GW)</li>
+      <li><b>AH</b>: 인증·무결성(암호화 X) / <b>ESP</b>: 암호화+인증 / 키교환 = <b>IKE</b></li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 28회 15번(서술)</div><div class="body">
+      <div class="qt">IPSec의 정의 및 보안모드 두 가지를 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">정의: IP 계층에서 IP패킷 단위로 <b>인증(AH)·암호화(ESP)·키관리(IKE)</b>를 수행하는 프로토콜.
+<b>터널 모드</b>: 새 IP헤더 추가로 IP패킷 전체 보호(라우터/GW 간, IPSec VPN).
+<b>전송 모드</b>: IP헤더 외 데이터만 보호(호스트 대 호스트).</div></details>
+      <div class="src">GICHUL 28-15 · 17-13(AH/ESP 구간) · 15-11(ESP 터널)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">1) AH와 ESP의 제공 보안서비스 차이를 쓰시오.
+2) 지사↔본사 라우터 간 VPN 구성 시 적합한 모드와 이유를 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>AH</b>=인증·무결성만(기밀성 X), <b>ESP</b>=암호화(기밀성)+인증. 데이터 보호가 필요하면 ESP.
+2) <b>터널 모드</b> — 원본 IP패킷 전체를 새 헤더로 감싸 <b>내부 주소를 숨기고</b> 라우터 간 구간을 보호하므로 사이트 간 VPN에 적합.</div></details>
+    </div></div>
+  </div>
+</section>
+
 <div class="foot">
-  13~31회 서술·실무 이력 합산 기반 · 임박도×신뢰도 상위 5개 ·
+  13~31회 서술·실무 이력 합산 기반 · 임박도×신뢰도 상위 14개 ·
   함께 보기 <a href="note_32.html">📓 32회 학습노트</a> · <a href="report_32.html">📊 32회 예측</a>
 </div>
 
