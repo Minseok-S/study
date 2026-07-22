@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>정보보안기사 실기 · 연도별 과목 비율 분석 & 32회 예측</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2;
+  --warn:#9A6410; --warn-wash:#F6ECD9;
+  --c-sys:#0C6E5E; --c-net:#2F7DC0; --c-app:#B4432C; --c-gen:#9A6410; --c-mgt:#6A4C93;
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+    --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+    --line:#26332D; --line-soft:#1E2A25;
+    --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+    --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+    --c-sys:#3FB89E; --c-net:#5AA9E6; --c-app:#E08066; --c-gen:#D9A648; --c-mgt:#A98BD6;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+  --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+  --line:#26332D; --line-soft:#1E2A25;
+  --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+  --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+  --c-sys:#3FB89E; --c-net:#5AA9E6; --c-app:#E08066; --c-gen:#D9A648; --c-mgt:#A98BD6;
+}
+:root[data-theme="light"]{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+  --c-sys:#0C6E5E; --c-net:#2F7DC0; --c-app:#B4432C; --c-gen:#9A6410; --c-mgt:#6A4C93;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:0 20px 90px}
+.wrap{max-width:960px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent)}
+a.back{display:inline-block;margin:22px 0 0;font-family:var(--mono);font-size:.75rem;color:var(--accent);text-decoration:none}
+a.back:hover{text-decoration:underline}
+
+header{padding:40px 0 30px;border-bottom:2px solid var(--ink)}
+.dossier{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.dossier .dot{width:8px;height:8px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 4px var(--crit-wash)}
+.dossier .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint)}
+h1{font-size:clamp(1.8rem,5vw,2.7rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin-top:14px;font-size:1.02rem;color:var(--ink-soft);max-width:64ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+
+section{margin-top:44px}
+h2{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;display:flex;align-items:baseline;gap:10px}
+h2 .n{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600}
+h3{font-size:1.02rem;font-weight:700;margin:22px 0 8px}
+p{margin:12px 0;color:var(--ink-soft)}
+p strong,li strong{color:var(--ink);font-weight:600}
+.lead{color:var(--ink);font-size:1.04rem}
+
+.callout{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:10px;padding:16px 18px;margin:18px 0}
+.callout.crit{border-left-color:var(--crit)}
+.callout.warn{border-left-color:var(--warn)}
+.callout .k{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+th,td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--line-soft)}
+th{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
+  background:var(--surface-2);position:sticky;top:0}
+td.lab,th.lab{text-align:left;font-weight:600;color:var(--ink)}
+tbody tr:hover{background:var(--surface-2)}
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.hi{background:var(--accent-wash);font-weight:700;color:var(--ink)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--ink-soft);font-family:var(--mono)}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 16px;margin:10px 0}
+.row{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:10px;margin:5px 0}
+.row .rl{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);text-align:right}
+.row .rl b{color:var(--ink)}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;background:var(--surface-2)}
+.stack .seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#fff;font-family:var(--mono);font-weight:600;min-width:0}
+.divider-lbl{grid-column:1/3;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crit);margin:12px 0 2px;display:flex;align-items:center;gap:8px}
+.divider-lbl::before,.divider-lbl::after{content:"";flex:1;height:1px;background:var(--crit-wash)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.card .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.bars{margin-top:12px}
+.fbar{display:grid;grid-template-columns:74px 1fr 46px;align-items:center;gap:8px;margin:7px 0;font-size:.82rem}
+.fbar .fl{color:var(--ink);font-weight:600}
+.fbar .track{height:16px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.fbar .fill{height:100%;border-radius:4px}
+.fbar .fv{font-family:var(--mono);text-align:right;color:var(--ink-soft)}
+ul{margin:10px 0 10px 4px;list-style:none}
+li{position:relative;padding-left:18px;margin:7px 0;color:var(--ink-soft)}
+li::before{content:"▸";position:absolute;left:0;color:var(--accent)}
+.foot{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-faint);font-family:var(--mono)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--ink-soft)}
+.up{color:var(--accent);font-weight:700}.down{color:var(--crit);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="dossier"><span class="dot"></span><span class="lbl">Gichul Analytics · 13–31회 → 32회</span></div>
+  <div class="eyebrow">정보보안기사 실기 · 출제 경향</div>
+  <h1>연도별 <em>과목 비율</em> 분석과<br>32회 출제 예측</h1>
+  <p class="sub">13~31회 기출 <b>324문항</b>을 5개 과목으로 분류해 회차별 비율을 산출하고,
+     <b>22회 시험 시행사 변경</b>이 만든 구조적 단절을 반영했다. 29~31회로 예측 모델을 역검증한 뒤 32회를 예측한다.</p>
+  <div class="meta">
+    <span class="chip">표본 324문항 / 19개 회차</span>
+    <span class="chip">분류 5과목</span>
+    <span class="chip">검증 29·30·31회</span>
+    <span class="chip">타깃 32회 (18문항)</span>
+  </div>
+  <a class="back" href="index.html">← 학습 노트로</a>
+</header>
+
+<!-- 1. 핵심 요약 -->
+<section>
+  <h2><span class="n">01</span> 핵심 요약</h2>
+  <div class="callout crit">
+    <div class="k">가장 중요한 발견 · 22회 시행사 변경</div>
+    <p style="color:var(--ink)"><strong>22회부터 문항 구조 자체가 바뀌었다.</strong>
+    13~21회는 <b>16문항(단답 10 · 서술 3 · 실무 3)</b>이었으나, 22회부터는
+    <b>18문항(단답 12 · 서술 4 · 실무 2)</b>으로 늘었다. 시행사 교체가 출제 포맷과 과목 배분에 동시에 반영됐다.</p>
+  </div>
+  <ul>
+    <li><strong>시스템 보안이 2배로</strong> — 구 시행사 평균 11% → 신 시행사 평균 23%. 최근 3회(29~31)는 <span class="up">28%</span>까지 상승.</li>
+    <li><strong>관리·법규 편중 완화</strong> — 구 35% → 신 26%. 여전히 최다 과목이지만 지배력은 약화.</li>
+    <li><strong>네트워크 하락 추세</strong> — 구 29% → 신 22% → 최근 3회 <span class="down">13%</span>. 신 시대 안에서도 뚜렷이 감소 중.</li>
+    <li><strong>애플리케이션 상승</strong> — 구 18% → 신 23%. 신 시행사가 시큐어코딩·웹로그 실무형을 늘림.</li>
+    <li><strong>보안일반(암호·접근통제)</strong>은 실기 특성상 5% 안팎으로 최소 — 단, 최근 3회 11%로 소폭 반등.</li>
+  </ul>
+</section>
+
+<!-- 2. 회차별 비율 -->
+<section>
+  <h2><span class="n">02</span> 회차별 과목 비율</h2>
+  <p>각 막대는 한 회차의 100% 구성이다. 22회 점선에서 시행사가 바뀐다.</p>
+  <div class="legend" id="legend"></div>
+  <div class="chart" id="chart"></div>
+</section>
+
+<!-- 3. 시대별 평균 -->
+<section>
+  <h2><span class="n">03</span> 시대별 평균 비교</h2>
+  <p>시행사 교체를 경계로 두 시대의 평균 비율(%)을 비교한다. 화살표는 신 시행사 시대의 변화 방향이다.</p>
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th class="lab">구간</th><th>시스템</th><th>네트워크</th><th>애플리케이션</th><th>보안일반</th><th>관리·법규</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">13–21회 <span class="pill">구 시행사·16문</span></td>
+        <td class="num">11.1</td><td class="num">29.2</td><td class="num">18.1</td><td class="num">6.3</td><td class="num">35.4</td></tr>
+      <tr><td class="lab">22–31회 <span class="pill">신 시행사·18문</span></td>
+        <td class="num hi">23.3</td><td class="num">22.2</td><td class="num hi">23.3</td><td class="num">5.0</td><td class="num hi">26.1</td></tr>
+      <tr><td class="lab">변화</td>
+        <td class="num up">▲ +12.2</td><td class="num down">▼ −7.0</td><td class="num up">▲ +5.2</td><td class="num down">▼ −1.3</td><td class="num down">▼ −9.3</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout">
+    <div class="k">해석</div>
+    <p>구 시행사는 <b>관리·법규 + 네트워크</b>에 65%를 몰아주는 편중형이었다.
+    신 시행사는 <b>시스템·네트워크·애플리케이션·관리법규를 22~26%로 고르게</b> 배분하는 균형형이다.
+    → 32회 예측의 <b>기준선(base)</b>은 반드시 <u>신 시행사 10개 회차(22–31)</u>만 사용해야 한다.</p>
+  </div>
+</section>
+
+<!-- 4. 검증 -->
+<section>
+  <h2><span class="n">04</span> 모델 역검증 · 29–31회</h2>
+  <p>“신 시행사 학습구간 <b>22–28회</b> 평균으로 <b>29–31회</b>를 예측했다면 맞았을까?”를 확인한다.
+     18문항 기준 예측 문항수와 실제 평균 비율을 비교한다.</p>
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th class="lab">과목</th><th>22–28 평균(예측)</th><th>29실제</th><th>30실제</th><th>31실제</th><th>29–31 실제평균</th><th>오차</th></tr></thead>
+    <tbody id="valBody"></tbody>
+  </table>
+  </div>
+  <div class="callout warn">
+    <div class="k">검증 결론 · MAE 8.0%p</div>
+    <p><b>단순 평균은 방향을 놓친다.</b> 학습구간 평균은 네트워크를 26%로 예측했지만 실제 29–31회는 <b>13%</b>로 급락했고,
+    시스템(21→28%)·관리법규(25→30%)·보안일반(2→11%)은 예측보다 높았다.
+    즉 <strong>신 시대 안에서도 “시스템·법규 ↑, 네트워크 ↓”의 추세가 진행 중</strong>이다.
+    따라서 32회 예측은 단순 평균이 아니라 <b>최근 회차에 가중</b>을 둬야 한다 — 이 교훈을 아래 예측에 반영했다.</p>
+  </div>
+</section>
+
+<!-- 5. 예측 -->
+<section>
+  <h2><span class="n">05</span> 32회 예측</h2>
+  <p>검증에서 얻은 “최근 가중” 원칙에 따라 두 시나리오를 제시한다. 두 안 모두 신 시행사 포맷인 <b>총 18문항</b>에 정수 배분했다.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="tag">시나리오 A · 균형 기준선</div>
+      <h4>신 시대 전체 균형</h4>
+      <p style="font-size:.82rem;margin:6px 0 2px">최근 6회(26–31) 60% + 신시대 전체 40% 가중. 큰 이변이 없다고 볼 때의 안전한 기준선.</p>
+      <div class="bars" id="barsA"></div>
+    </div>
+    <div class="card">
+      <div class="tag">시나리오 B · 추세 반영 <span style="color:var(--accent)">(권장)</span></div>
+      <h4>최근 추세 가중</h4>
+      <p style="font-size:.82rem;margin:6px 0 2px">최근 3회(29–31) 60% + 신시대 전체 40% 가중. 검증에서 확인된 “시스템·법규↑, 네트워크↓” 반영.</p>
+      <div class="bars" id="barsB"></div>
+    </div>
+  </div>
+
+  <h3>32회 대비 학습 우선순위</h3>
+  <ul>
+    <li><strong>① 관리·법규 (5문 예상 · 최우선)</strong> — 신·구 통틀어 항상 최다. 개인정보보호법·안전성 확보조치·위험평가(SLE/ALE)·ISMS-P·침해대응이 핵심. 접속기록·내부관리계획은 거의 매 회 반복.</li>
+    <li><strong>② 시스템 보안 (5문 예상 · 상승 1순위)</strong> — 신 시행사의 최대 강화 과목. /etc/shadow·utmp/wtmp/btmp·Sendmail 릴레이·NetBIOS·xinetd·윈도우 로그 경로가 실무형으로 반복 출제.</li>
+    <li><strong>③ 애플리케이션 (4문 예상)</strong> — 아파치/웹 access 로그 분석, SQL인젝션·파일업로드·시큐어코딩(블랙박스/화이트박스) 실무형 필수.</li>
+    <li><strong>④ 네트워크 (3문 예상 · 축소 주의)</strong> — 비중은 줄었지만 Snort 룰·IPSec·스캔·DDoS·서브넷 계산은 여전히 단답으로 나옴. 시간 배분만 줄일 것.</li>
+    <li><strong>⑤ 보안일반 (1문 예상)</strong> — 무선랜 암호(WPA2)·대칭/공개키·접근통제 모델 정도만 얇게 대비.</li>
+  </ul>
+  <div class="callout">
+    <div class="k">문항 유형 배분 (신 시행사 고정)</div>
+    <p>32회도 <b>단답형 12 · 서술형 4 · 실무형 2 = 18문항</b>일 가능성이 높다.
+    실무형 2문항은 최근 <b>시스템(로그·계정)·애플리케이션(웹로그) 중심</b>으로 출제되는 흐름이므로 그 조합을 집중 대비하는 것이 효율적이다.</p>
+  </div>
+</section>
+
+<div class="foot">
+  방법론: 13–31회 324문항을 문제·정답 텍스트의 가중 키워드로 5과목 분류(경계 문항은 수동 보정). 비율은 회차 내 문항수 대비 %.
+  검증은 22–28 평균으로 29–31 예측 후 실제와 MAE 비교. 예측은 최근 가중 평균을 18문항에 정수 배분.
+  분류는 기계적 추정이므로 ±1문항 오차가 있을 수 있음. · 생성 2026-07-22
+</div>
+
+</div>
+
+<script>
+const NAME={SYS:'시스템',NET:'네트워크',APP:'애플리케이션',GEN:'보안일반',MGT:'관리·법규'};
+const COL={SYS:'var(--c-sys)',NET:'var(--c-net)',APP:'var(--c-app)',GEN:'var(--c-gen)',MGT:'var(--c-mgt)'};
+const ORDER=['MGT','SYS','APP','NET','GEN'];
+// 회차별 문항수 (분류 결과)
+const R={
+ 13:{SYS:1,NET:3,APP:3,GEN:1,MGT:8}, 14:{SYS:3,NET:4,APP:3,GEN:2,MGT:4},
+ 15:{SYS:2,NET:6,APP:2,GEN:1,MGT:5}, 16:{SYS:2,NET:2,APP:3,GEN:2,MGT:7},
+ 17:{SYS:1,NET:6,APP:4,GEN:0,MGT:5}, 18:{SYS:2,NET:5,APP:4,GEN:1,MGT:4},
+ 19:{SYS:2,NET:5,APP:3,GEN:0,MGT:6}, 20:{SYS:1,NET:6,APP:2,GEN:2,MGT:5},
+ 21:{SYS:2,NET:5,APP:2,GEN:0,MGT:7}, 22:{SYS:2,NET:5,APP:6,GEN:0,MGT:5},
+ 23:{SYS:7,NET:4,APP:2,GEN:1,MGT:4}, 24:{SYS:5,NET:3,APP:6,GEN:1,MGT:3},
+ 25:{SYS:4,NET:6,APP:4,GEN:0,MGT:4}, 26:{SYS:2,NET:6,APP:5,GEN:1,MGT:4},
+ 27:{SYS:3,NET:6,APP:3,GEN:0,MGT:6}, 28:{SYS:4,NET:3,APP:6,GEN:0,MGT:5},
+ 29:{SYS:6,NET:2,APP:4,GEN:1,MGT:5}, 30:{SYS:5,NET:3,APP:1,GEN:3,MGT:6},
+ 31:{SYS:4,NET:2,APP:5,GEN:2,MGT:5}
+};
+const K=['SYS','NET','APP','GEN','MGT'];
+const tot=r=>K.reduce((a,s)=>a+r[s],0);
+const pct=r=>{const t=tot(r);const o={};K.forEach(s=>o[s]=r[s]/t*100);return o;};
+
+// legend
+document.getElementById('legend').innerHTML=K.map(s=>
+  `<span><i style="background:${COL[s]}"></i>${NAME[s]}</span>`).join('');
+
+// stacked bar chart
+let ch='';
+Object.keys(R).map(Number).sort((a,b)=>a-b).forEach(no=>{
+  if(no===22) ch+=`<div class="row"><div class="divider-lbl">22회 · 시행사 변경 (16→18문항)</div></div>`;
+  const p=pct(R[no]);
+  let segs=ORDER.map(s=>p[s]>0?`<div class="seg" style="width:${p[s]}%;background:${COL[s]}" title="${NAME[s]} ${p[s].toFixed(0)}%">${p[s]>=11?Math.round(p[s]):''}</div>`:'').join('');
+  ch+=`<div class="row"><div class="rl"><b>${no}</b>회</div><div class="stack">${segs}</div></div>`;
+});
+document.getElementById('chart').innerHTML=ch;
+
+// forecasts
+const avg=ns=>{const a={SYS:0,NET:0,APP:0,GEN:0,MGT:0};ns.forEach(n=>{const p=pct(R[n]);K.forEach(s=>a[s]+=p[s]);});K.forEach(s=>a[s]/=ns.length);return a;};
+const newEra=avg([22,23,24,25,26,27,28,29,30,31]);
+const rec6=avg([26,27,28,29,30,31]);
+const rec3=avg([29,30,31]);
+function forecast(recent,wr){
+  const f={};K.forEach(s=>f[s]=recent[s]*wr+newEra[s]*(1-wr));
+  const sum=K.reduce((a,s)=>a+f[s],0);K.forEach(s=>f[s]=f[s]/sum*100);
+  let al={};K.forEach(s=>al[s]=Math.round(f[s]/100*18));
+  let sa=K.reduce((a,s)=>a+al[s],0);
+  const fr=s=>f[s]/100*18-al[s];
+  while(sa!==18){if(sa<18){let b=[...K].sort((a,c)=>fr(c)-fr(a))[0];al[b]++;sa++;}else{let b=[...K].sort((a,c)=>fr(a)-fr(c))[0];al[b]--;sa--;}}
+  return {f,al};
+}
+function renderBars(el,fc){
+  el.innerHTML=ORDER.map(s=>{
+    const v=fc.f[s];
+    return `<div class="fbar"><span class="fl">${NAME[s]}</span>
+      <div class="track"><div class="fill" style="width:${v}%;background:${COL[s]}"></div></div>
+      <span class="fv">${v.toFixed(0)}% · <b style="color:var(--ink)">${fc.al[s]}문</b></span></div>`;
+  }).join('');
+}
+renderBars(document.getElementById('barsA'),forecast(rec6,0.6));
+renderBars(document.getElementById('barsB'),forecast(rec3,0.6));
+
+// validation table
+const train=avg([22,23,24,25,26,27,28]);
+const vAvg=avg([29,30,31]);
+let vb='';
+K.forEach(s=>{
+  const err=Math.abs(train[s]-vAvg[s]);
+  vb+=`<tr><td class="lab">${NAME[s]}</td>
+    <td class="num">${train[s].toFixed(1)}% <span style="color:var(--ink-faint)">(${(train[s]/100*18).toFixed(1)}문)</span></td>
+    <td class="num">${R[29][s]}</td><td class="num">${R[30][s]}</td><td class="num">${R[31][s]}</td>
+    <td class="num hi">${vAvg[s].toFixed(1)}%</td>
+    <td class="num" style="color:${err>7?'var(--crit)':'var(--ink-soft)'}">${err.toFixed(1)}%p</td></tr>`;
+});
+document.getElementById('valBody').innerHTML=vb;
+</script>
+</body>
+</html>
