@@ -119,6 +119,24 @@ details.quiz .qa{padding:12px 14px;font-size:.88rem;color:var(--ink-soft);line-h
 details.quiz .qa b{color:var(--ink)}
 details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--surface);padding:1px 5px;border-radius:5px}
 
+/* 출제 임박 레이더 */
+.radar{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:10px 0 18px}
+.radar table{border-collapse:collapse;width:100%;min-width:600px;font-size:.86rem}
+.radar th,.radar td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.radar th{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-family:var(--mono);font-weight:600}
+.radar tr:last-child td{border-bottom:none}
+.radar .rk{font-family:var(--mono);color:var(--ink-faint);font-size:.8rem}
+.radar .tp{font-weight:600}
+.radar .hist{font-family:var(--mono);color:var(--ink-soft);font-size:.8rem;font-variant-numeric:tabular-nums}
+.radar .gp{font-family:var(--mono);color:var(--ink-soft);text-align:center}
+.tier{font-family:var(--mono);font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.tier.hot{background:var(--crit-wash);color:var(--crit)}
+.tier.near{background:var(--warn-wash);color:var(--warn)}
+.tier.wait{background:var(--surface-2);color:var(--ink-faint)}
+.tier.spent{background:var(--surface-2);color:var(--ink-faint)}
+.method{font-size:.8rem;color:var(--ink-soft);background:var(--surface-2);border-radius:10px;padding:12px 14px;margin:0 0 14px;border-left:3px solid var(--accent)}
+.method b{color:var(--ink)}
+.method code{font-family:var(--mono);font-size:.85em;background:var(--surface);padding:1px 5px;border-radius:5px}
 .callout{background:var(--crit-wash);border:1px solid var(--crit);border-radius:12px;padding:16px 18px;margin:8px 0 6px}
 .callout .ct{font-weight:700;color:var(--crit);margin-bottom:6px;font-size:.95rem}
 .callout .cd{font-size:.88rem;color:var(--ink-soft)}
@@ -373,9 +391,139 @@ details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--s
   </div>
 </section>
 
+<!-- ============ 출제 임박 레이더 ============ -->
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>출제 임박 레이더 · 서술·실무</h2><span class="pts">순환 주기 × 공백 분석</span></div>
+  <p class="lead">서술·실무는 <b>직전 회차 반복이 드물고 3~6회 주기로 순환</b>합니다. 그래서 "마지막 출제 이후 공백(gap)이 그 주제의 평균 출제주기를 넘겼는가"로 <b>32회 임박도</b>를 점수화했습니다. 31회에 막 나온 주제(CISO·XSS·SSL·생체·세션쿠키)는 <b>소진</b>으로 후순위입니다.</p>
+  <div class="method">
+    <b>산식</b> · 임박도 = <code>공백(gap) ÷ 평균 출제주기</code> (주기 최소 3회 바닥값) → <b>1.0 이상이면 "돌아올 때"</b>. 출제 횟수가 많을수록 신뢰도↑. gap은 <code>32 − 마지막 출제 회차</code>. 데이터: 22~31회 서술(13–16)·실무(17–18) 76문항.
+  </div>
+  <div class="radar">
+    <table>
+      <thead><tr><th>#</th><th>주제</th><th>출제 이력</th><th>공백</th><th>임박도</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td class="rk">1</td><td class="tp">개인정보 안전성 확보조치(수치)</td><td class="hist">22·23</td><td class="gp">9</td><td class="gp">3.15</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">2</td><td class="tp">스니핑 탐지(ping·arp·dns·decoy)</td><td class="hist">25·26</td><td class="gp">6</td><td class="gp">2.10</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">3</td><td class="tp">DDoS·DRDoS 증폭 원리/대응</td><td class="hist">22·23·27</td><td class="gp">5</td><td class="gp">1.83</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">4</td><td class="tp">특수권한 SUID/SGID·파일권한</td><td class="hist">24·27</td><td class="gp">5</td><td class="gp">1.75</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">5</td><td class="tp">자산 중요도 산정(CIA·최고등급)</td><td class="hist">25·28</td><td class="gp">4</td><td class="gp">1.61</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">6</td><td class="tp">DB 접근권한 / 감사로그</td><td class="hist">26·28</td><td class="gp">4</td><td class="gp">1.40</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">7</td><td class="tp">SNMP 보안설정</td><td class="hist">24</td><td class="gp">8</td><td class="gp">1.33</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">8</td><td class="tp">위험분석 접근법(기준선·상세·복합)</td><td class="hist">22·27</td><td class="gp">5</td><td class="gp">1.21</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">9</td><td class="tp">ARP 스푸핑 원리/대응</td><td class="hist">25</td><td class="gp">7</td><td class="gp">1.17</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">10</td><td class="tp">SW 개발보안(시큐어 SDLC 산출물)</td><td class="hist">25</td><td class="gp">7</td><td class="gp">1.17</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">11</td><td class="tp">재해복구시스템(DRS)·RTO/RPO</td><td class="hist">27</td><td class="gp">5</td><td class="gp">0.83</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">12</td><td class="tp">NetBIOS 바인딩</td><td class="hist">23·28</td><td class="gp">4</td><td class="gp">0.84</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">13</td><td class="tp">IPSec 모드 / AH·ESP</td><td class="hist">28</td><td class="gp">4</td><td class="gp">0.67</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">14</td><td class="tp">파일 업로드 취약점 / 우회</td><td class="hist">23·29</td><td class="gp">3</td><td class="gp">0.53</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">—</td><td class="tp" style="color:var(--ink-faint)">XSS · SSL/TLS · CISO · 세션쿠키/CSRF · 생체원칙</td><td class="hist">31</td><td class="gp">1</td><td class="gp">0.2</td><td><span class="tier spent">⛔ 소진</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="lead" style="margin-bottom:6px"><b>해석</b> — 🔴 7개는 이번 회차에 <b>서술·실무 6문항 중 2~3개를 채울</b> 유력 후보입니다. 아래 <b>이것만은</b> 카드로 핵심 답안을 굳히세요. ⛔ 5개는 31회에 소진돼 32회 재출 확률이 낮으니 <b>복습 우선순위를 내리세요</b>.</p>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴1 · 개인정보 안전성 확보조치</span><span class="tag apply">응용</span><span class="rounds">gap <b>9</b> · 최장 공백</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li>접속기록 보관: <b>1년 이상</b>(원칙) / <b>2년 이상</b>(5만명↑ 정보주체·기간통신사업자·정보통신서비스 제공)</li>
+        <li>접속기록 <b>월 1회 이상</b> 점검, 다운로드 발견 시 사유 확인</li>
+        <li>비밀번호·바이오·고유식별정보 <b>암호화 저장</b>, 비밀번호는 <b>일방향(해시)</b></li>
+        <li>내부관리계획 수립, 접근권한 부여·변경·말소 기록 <b>최소 3년(고유식별정보 5년)</b> 보관</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. 접속기록을 2년 이상 보관해야 하는 대상은?</span></summary>
+      <div class="qa"><b>5만 명 이상</b>의 정보주체 개인정보를 처리하거나, <b>기간통신사업자</b>, <b>정보통신서비스 제공자</b> 등. 그 외는 1년 이상.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴2 · 스니핑 탐지</span><span class="tag apply">응용</span><span class="rounds">gap <b>6</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      전제: NIC를 <b>Promiscuous(무차별) 모드</b>로 두면 모든 패킷 수신. 탐지 4법 —
+      <ul>
+        <li><b>Ping</b>: 위조 MAC + 정상 IP로 ping → 응답하면 무차별 모드</li>
+        <li><b>ARP</b>: 위조 MAC ARP 요청 → 응답 오면 스니퍼</li>
+        <li><b>DNS</b>: 스니퍼의 역방향 DNS 조회 발생 감지</li>
+        <li><b>Decoy(유인)</b>: 가짜 계정/암호를 흘려 사용 여부 관찰</li>
+      </ul>
+      대응: <b>암호화(SSL/SSH)</b>·스위칭 환경.
+    </div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴3 · DDoS·DRDoS 증폭</span><span class="tag apply">응용</span><span class="rounds">gap <b>5</b> · 신뢰 높음</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      원리: <b>출발지 IP를 피해자로 스푸핑</b> → 반사 서버에 소량 질의 → <b>대용량 응답이 피해자로 증폭</b>(DNS ANY·NTP monlist·memcached).
+      <ul>
+        <li>증폭 이유: 작은 요청으로 <b>수십~수천 배 트래픽</b> 유발, 출처 은닉</li>
+        <li>대응: <b>Open Resolver 제거</b>·<b>uRPF</b>(출발지 검증)·<b>RRL</b>(응답률 제한)·ISP 협조 차단</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. DRDoS가 일반 DDoS보다 위협적인 이유 2가지는?</span></summary>
+      <div class="qa">① <b>증폭</b>으로 적은 자원에 큰 트래픽을 만든다. ② <b>반사</b> 구조라 실제 공격자 IP가 드러나지 않아 추적·차단이 어렵다.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴4 · 특수권한 SUID/SGID·파일권한</span><span class="tag apply">응용</span><span class="rounds">gap <b>5</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li><b>SetUID 4000</b>(실행 시 소유자 권한) · <b>SetGID 2000</b> · <b>Sticky 1000</b>(디렉터리 삭제 제한, 예: <code>/tmp</code>)</li>
+        <li>점검: <code>find / -perm -4000 -type f</code> · 제거: <code>chmod -s 파일</code></li>
+        <li>위험: SUID root 실행파일이 침해되면 <b>권한 상승</b>. 불필요한 SUID 제거가 핵심</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. -rwsr-xr-x 에서 s의 의미와 보안 위험은?</span></summary>
+      <div class="qa">소유자 실행권한 자리의 <b>s = SetUID</b> → 누가 실행하든 <b>파일 소유자(root) 권한</b>으로 동작. 취약한 SUID root 바이너리는 <b>권한 상승 공격</b>의 통로가 되므로 불필요하면 <code>chmod -s</code>로 제거.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴5 · 자산 중요도 산정</span><span class="tag recall">암기</span><span class="rounds">gap <b>4</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      기준 3가지 = <b>기밀성·무결성·가용성(CIA)</b> 등급 평가 → 자산 중요도 = <b>세 등급 중 가장 높은 값</b>으로 산정. 정보자산 식별·목록 최신화(ISMS-P 1.2.1).
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. 기밀성 2·무결성 3·가용성 1이면 자산 중요도 등급은?</span></summary>
+      <div class="qa"><b>3</b>(가장 높은 등급으로 산정). 평균이 아니라 최댓값을 쓰는 이유는 한 축이라도 손상 시 피해가 크기 때문.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴6 · DB 접근권한 / 감사로그</span><span class="tag apply">응용</span><span class="rounds">gap <b>4</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li><b>최소권한 원칙</b>: 업무 필요 최소 권한만 <code>GRANT</code>, 불필요 권한 <code>REVOKE</code></li>
+        <li>DBA·일반 사용자 권한 분리, <b>기본계정·기본암호 변경</b></li>
+        <li><b>감사(Audit) 로그</b> 활성화로 접근·변경 추적, 로그 위·변조 방지 별도 보관</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴7 · SNMP 보안설정</span><span class="tag recall">암기</span><span class="rounds">gap <b>8</b> · 최장 미출제</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li>기본 <b>community string(public/private) 반드시 변경</b>, 읽기전용 우선</li>
+        <li><b>SNMP v3 사용</b> — 인증(authentication)·암호화(privacy) 지원(v1·v2c는 평문)</li>
+        <li>불필요 시 <b>서비스 비활성화</b>, 접근 IP를 ACL로 제한</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">🟠 근접(2순위) — 여유 있으면 함께</div>
+    <ul>
+      <li><b>위험분석 접근법</b> — 기준선(체크리스트)·상세(자산·위협·취약점)·복합(고위험=상세). 위험관리 단골이라 신뢰도 높음</li>
+      <li><b>ARP 스푸핑</b> — ARP 무인증→캐시 덮어쓰기(MITM). 대응: 정적 ARP·DAI·arpwatch</li>
+      <li><b>SW 개발보안</b> — 시큐어 SDLC 단계별 산출물·보안약점 진단</li>
+    </ul>
+  </div>
+</section>
+
 <!-- ============ 신출 대비 ============ -->
 <section>
-  <div class="sec-head"><span class="n">04</span><h2>신출 5% 대비 · 얇게 넓게</h2><span class="pts">합격 후 +α</span></div>
+  <div class="sec-head"><span class="n">05</span><h2>신출 5% 대비 · 얇게 넓게</h2><span class="pts">합격 후 +α</span></div>
   <p class="lead">기출로 안 잡히는 5%. 여기서 15~25점이 빠지지만, <b>합격(60)엔 지장 없고 고득점 방어용</b>입니다. 최근 신출 계열만 이름·핵심 한 줄로 훑어두세요.</p>
   <div class="topic">
     <div class="block k"><div class="bl">🔑 최근 신출 키워드</div><div class="bt">
