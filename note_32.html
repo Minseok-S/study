@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>정보보안기사 실기 32회 대비 학습노트 · 기출+응용</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2;
+  --warn:#9A6410; --warn-wash:#F6ECD9;
+  --info:#1F5FA6; --info-wash:#E4EEF7;
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+    --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+    --line:#26332D; --line-soft:#1E2A25;
+    --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+    --crit:#E08066; --crit-wash:#2E1B15;
+    --warn:#D9A648; --warn-wash:#2C2413;
+    --info:#6BA6E0; --info-wash:#15243A;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+  --info:#1F5FA6; --info-wash:#E4EEF7;
+}
+:root[data-theme="dark"]{
+  --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+  --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+  --line:#26332D; --line-soft:#1E2A25;
+  --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+  --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+  --info:#6BA6E0; --info-wash:#15243A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:0 20px 90px}
+.wrap{max-width:920px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+.pageswitch{display:flex;flex-wrap:wrap;gap:6px;padding:16px 0 0}
+.pageswitch a{font-size:.78rem;font-weight:600;color:var(--ink-soft);text-decoration:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 13px}
+.pageswitch a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* header */
+header{padding:44px 0 30px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font-size:clamp(1.8rem,5vw,2.7rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin-top:14px;font-size:1rem;color:var(--ink-soft);max-width:64ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+.chip b{color:var(--ink)}
+
+/* strategy banner */
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:26px}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px;border-left:4px solid var(--sc)}
+.scard .st{font-size:.72rem;font-family:var(--mono);letter-spacing:.06em;color:var(--ink-faint);text-transform:uppercase}
+.scard .sv{font-size:1.02rem;font-weight:700;margin:5px 0 4px}
+.scard .sd{font-size:.83rem;color:var(--ink-soft)}
+
+/* section */
+section{padding:40px 0 8px;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+h2{font-size:1.35rem;font-weight:700;letter-spacing:-.02em}
+.sec-head .n{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600}
+.sec-head .pts{margin-left:auto;font-family:var(--mono);font-size:.75rem;color:var(--ink-faint);
+  border:1px solid var(--line);border-radius:99px;padding:3px 11px}
+.lead{color:var(--ink-soft);font-size:.93rem;max-width:70ch;margin-bottom:18px}
+
+/* topic card */
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:18px 18px 6px;margin-bottom:14px}
+.topic-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px}
+.topic-head .tn{font-size:1.04rem;font-weight:700;letter-spacing:-.01em}
+.tag{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.tag.recall{background:var(--info-wash);color:var(--info)}
+.tag.apply{background:var(--warn-wash);color:var(--warn)}
+.tag.new{background:var(--crit-wash);color:var(--crit)}
+.rounds{margin-left:auto;font-family:var(--mono);font-size:.68rem;color:var(--ink-faint)}
+.rounds b{color:var(--accent)}
+
+.block{margin-bottom:12px}
+.block .bl{font-size:.72rem;font-weight:700;letter-spacing:.02em;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.block.k .bl{color:var(--info)}
+.block.a .bl{color:var(--warn)}
+.block .bt{font-size:.9rem;color:var(--ink);line-height:1.6}
+.block .bt code{font-family:var(--mono);font-size:.84em;background:var(--surface-2);padding:1px 5px;border-radius:5px;word-break:break-word}
+.block .bt ul{margin:4px 0 0 2px;list-style:none}
+.block .bt li{padding-left:14px;position:relative;margin-bottom:2px}
+.block .bt li::before{content:"·";position:absolute;left:2px;color:var(--accent);font-weight:700}
+.kwline{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.kw{font-family:var(--mono);font-size:.72rem;background:var(--accent-wash);color:var(--accent-deep);
+  border-radius:6px;padding:3px 8px}
+
+/* self quiz */
+details.quiz{margin:6px 0 14px;border:1px dashed var(--line);border-radius:10px;background:var(--surface-2);overflow:hidden}
+details.quiz summary{list-style:none;cursor:pointer;padding:11px 14px;font-size:.86rem;font-weight:600;color:var(--warn);
+  display:flex;align-items:center;gap:8px}
+details.quiz summary::-webkit-details-marker{display:none}
+details.quiz summary::before{content:"✍️"}
+details.quiz summary .q{color:var(--ink);font-weight:600}
+details.quiz[open] summary{border-bottom:1px solid var(--line)}
+details.quiz .qa{padding:12px 14px;font-size:.88rem;color:var(--ink-soft);line-height:1.62}
+details.quiz .qa b{color:var(--ink)}
+details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--surface);padding:1px 5px;border-radius:5px}
+
+/* 출제 임박 레이더 */
+.radar{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:10px 0 18px}
+.radar table{border-collapse:collapse;width:100%;min-width:600px;font-size:.86rem}
+.radar th,.radar td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.radar th{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-family:var(--mono);font-weight:600}
+.radar tr:last-child td{border-bottom:none}
+.radar .rk{font-family:var(--mono);color:var(--ink-faint);font-size:.8rem}
+.radar .tp{font-weight:600}
+.radar .hist{font-family:var(--mono);color:var(--ink-soft);font-size:.8rem;font-variant-numeric:tabular-nums}
+.radar .gp{font-family:var(--mono);color:var(--ink-soft);text-align:center}
+.tier{font-family:var(--mono);font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.tier.hot{background:var(--crit-wash);color:var(--crit)}
+.tier.near{background:var(--warn-wash);color:var(--warn)}
+.tier.wait{background:var(--surface-2);color:var(--ink-faint)}
+.tier.spent{background:var(--surface-2);color:var(--ink-faint)}
+.method{font-size:.8rem;color:var(--ink-soft);background:var(--surface-2);border-radius:10px;padding:12px 14px;margin:0 0 14px;border-left:3px solid var(--accent)}
+.method b{color:var(--ink)}
+.method code{font-family:var(--mono);font-size:.85em;background:var(--surface);padding:1px 5px;border-radius:5px}
+.callout{background:var(--crit-wash);border:1px solid var(--crit);border-radius:12px;padding:16px 18px;margin:8px 0 6px}
+.callout .ct{font-weight:700;color:var(--crit);margin-bottom:6px;font-size:.95rem}
+.callout .cd{font-size:.88rem;color:var(--ink-soft)}
+.callout ul{margin:8px 0 0 4px;list-style:none}
+.callout li{padding-left:16px;position:relative;margin-bottom:4px;font-size:.88rem}
+.callout li::before{content:"→";position:absolute;left:0;color:var(--crit)}
+
+.foot{padding:34px 0 0;color:var(--ink-faint);font-size:.78rem;text-align:center}
+.foot a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="pageswitch">
+  <a href="index.html">📘 학습 노트</a>
+  <a href="short_answer.html">⚡ 단답형 드릴</a>
+  <a href="essay_drill.html">✍️ 서술·실무형 드릴</a>
+  <a href="keyword_drill.html">🔑 개념 키워드</a>
+  <a href="gichul_drill.html">🗂️ 기출 드릴</a>
+  <a href="report_32.html">📊 32회 예측</a>
+  <a href="note_32.html">📓 32회 학습노트</a>
+  <a class="on" href="focus_32.html">🎯 확정 후보 집중</a>
+</nav>
+
+<header>
+  <div class="eyebrow">EXAM 32 · 22~31회 기반 · 기출+응용</div>
+  <h1>32회 대비 <em>학습노트</em><br>기출로 외우고, 응용으로 굳힌다</h1>
+  <p class="sub">22~31회에서 반복 출제된 핵심 토픽을 <b>🔑기출 암기 코어</b> + <b>🔄응용 변형</b>으로 묶었습니다.
+     단답형은 그대로 나와도, 서술·실무형은 <b>같은 개념을 다른 각도</b>로 물으므로 각 카드의 <b>✍️자가점검</b>을 눌러 응용까지 회상하세요.</p>
+  <div class="meta">
+    <span class="chip">구성 <b>단답12 · 서술4 · 실무2</b></span>
+    <span class="chip">합격 <b>60 / 100점</b></span>
+    <span class="chip">재출 <b>95%</b> · 신출 5%</span>
+    <span class="chip">최근편향 <b>직전 2회 내 82%</b></span>
+  </div>
+
+  <div class="strat">
+    <div class="scard" style="--sc:var(--info)">
+      <div class="st">단답형 · 36점</div>
+      <div class="sv">암기로 방어</div>
+      <div class="sd">용어·수치·명령은 응용이 거의 없음. 22~31 기출 회상만으로 30점+ 확보.</div>
+    </div>
+    <div class="scard" style="--sc:var(--warn)">
+      <div class="st">서술형 · 48점</div>
+      <div class="sv">개념→적용</div>
+      <div class="sd">"정의만" 쓰면 부분점수. 원리·단계·이유를 재구성해야 만점. 응용 훈련 필수.</div>
+    </div>
+    <div class="scard" style="--sc:var(--crit)">
+      <div class="st">실무형 · 16점 (택1)</div>
+      <div class="sv">시나리오 분석</div>
+      <div class="sd">로그·설정·코드를 읽고 판단. 둘 중 익숙한 쪽 택1 — 신출 도구는 버려도 됨.</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 단답형 ============ -->
+<section>
+  <div class="sec-head"><span class="n">01</span><h2>단답형 암기 코어</h2><span class="pts">1–12번 · 각 3점 · 36점</span></div>
+  <p class="lead">여기는 <b>암기형</b>이 대부분. 용어·수치·명령을 정확히 외우면 응용 없이도 득점됩니다. 다만 <span style="color:var(--warn)">⚠︎</span> 표시(iptables·로그경로)는 "규칙을 직접 채우는" 형태로 변형되니 손으로 써보세요.</p>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">shadow / passwd 구조</span><span class="tag recall">암기</span><span class="rounds"><b>29·30·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <code>$id$salt$hash</code> — id(<code>1</code>=MD5·<code>5</code>=SHA256·<code>6</code>=SHA512), salt=솔트, hash=해시값.
+      shadow가 활성화되면 <code>/etc/passwd</code>의 2번째 필드는 <code>x</code>.
+      <div class="kwline"><span class="kw">$id$salt$hash</span><span class="kw">x</span><span class="kw">solt=레인보우테이블 방어</span></div>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">passwd 필드값(<code>x</code>)·<code>pwconv/pwunconv</code>·솔트가 레인보우테이블을 막는 <b>이유</b>까지 물음.</div></div>
+    <details class="quiz"><summary><span class="q">Q. 솔트(salt)가 레인보우테이블 공격을 막는 이유는?</span></summary>
+      <div class="qa">해시 연산 시 salt를 추가 입력으로 쓰면 <b>같은 비밀번호라도 매번 해시값이 달라져</b>, 미리 계산해 둔 해시-평문 대응표(레인보우테이블)를 무력화한다. <br>+ <code>pwunconv</code>: shadow의 해시를 passwd로 되돌리고 shadow 비활성화.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">iptables 규칙 <span style="color:var(--warn)">⚠︎변형</span></span><span class="tag apply">응용</span><span class="rounds"><b>23·24·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      외부→내부 ping 차단: <code>iptables -A INPUT -p icmp --icmp-type 8 -j DROP</code>
+      (icmp-type <code>8</code>=echo-request, <code>0</code>=echo-reply)
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">체인(<code>INPUT/OUTPUT/FORWARD</code>)·프로토콜(<code>-p tcp --dport</code>)·타깃(<code>DROP/REJECT/ACCEPT</code>)을 바꿔 빈칸으로 냄. 규칙을 <b>직접 완성</b>할 수 있어야 함.</div></div>
+    <details class="quiz"><summary><span class="q">Q. 내부→외부로 나가는 80·443 응답만 허용하는 규칙 골격은?</span></summary>
+      <div class="qa"><code>iptables -A OUTPUT -p tcp -m multiport --dport 80,443 -j ACCEPT</code> · 리턴 트래픽은 <code>-m state --state ESTABLISHED,RELATED -j ACCEPT</code>. <br>암기 포인트: <b>-A(추가)/-p(프로토콜)/--dport(목적지 포트)/-j(타깃)</b> 4요소.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">DNS 스푸핑 / 캐시 포이즈닝</span><span class="tag recall">암기</span><span class="rounds"><b>22·26·29·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">정상 DNS보다 <b>빠른 위조 응답</b>으로 가짜 사이트 유도(=DNS 스푸핑, MITM 일종). 캐시 포이즈닝=DNS 캐시를 오염.</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">대응책(<b>DNSSEC</b>·캐시 TTL 관리·랜덤 소스포트/쿼리ID)과 sniffing 기반 선행 조건을 물을 수 있음.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">보안 도구 명칭 세트</span><span class="tag recall">암기</span><span class="rounds"><b>23·25·28·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <ul>
+        <li><b>Tripwire</b> = 파일 <b>무결성</b> 점검 도구</li>
+        <li><b>Nessus</b>(Tenable) = 취약점 진단 스캐너</li>
+        <li><b>SIEM</b> = 로그 빅데이터 상관분석·포렌식·모니터링(← ESM 진화형)</li>
+        <li><b>Fuzzing(퍼징)</b> = 무작위 데이터 입력으로 취약점 탐지</li>
+      </ul>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">SIEM↔ESM↔SOAR 차이, IDS/IPS·SOAR와의 연계 등 "무엇의 진화/차이냐"로 변형.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">윈도우 로그 경로 <span style="color:var(--warn)">⚠︎변형</span></span><span class="tag apply">응용</span><span class="rounds"><b>23·29·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">IIS 로그 <code>C:\Windows\inetpub\logs\LogFiles\W3SVC1</code>, <b>HTTPERR</b>·<b>DHCP</b> 로그 경로. 이벤트 로그=이벤트 뷰어.</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">29-17처럼 <b>최대 로그 크기 계산</b>(단일이벤트크기 × 일일건수 × 보관일)로 변형. 계산식·단위(byte→KB) 주의.</div></div>
+    <details class="quiz"><summary><span class="q">Q. 단일 500B · 하루 1,000건 · 30일 보관이면 최대 로그 크기는?</span></summary>
+      <div class="qa">500 × 1,000 × 30 = <b>15,000,000 바이트 ≈ 15,000 KB(≈14.3 MB)</b>. 계산식을 반드시 함께 써야 부분점수 방어.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">위험관리 절차·접근법</span><span class="tag recall">암기</span><span class="rounds"><b>다수 회차</b> 단골</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      절차: 전략수립 → <b>위험분석</b> → <b>위험평가</b> → 대책선정 → 계획수립 → 구현·운영. <br>
+      3대 접근법: 기준선 / 상세 / 복합(고위험=상세, 그 외=기준선).
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">ISO 27005 용어(위험식별/분석/수준평가)로 치환, 위험처리 4종(수용·감소·전가·회피)과 엮어 서술형으로 확장.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">법령 정의 용어</span><span class="tag recall">암기</span><span class="rounds"><b>다수</b> · 31-11</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">정보통신망 / 정보보호시스템 / 정보통신기반시설 / 내부관리계획 / 전자적 침해행위 / <b>집적정보통신시설 사업자(IDC, 망법 §46)</b> 등 법조문 정의.</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">접속기록 보관(1년/2년·5만명↑=2년), 개인정보 안전성 확보조치 수치와 함께 빈칸형으로.</div></div>
+  </div>
+</section>
+
+<!-- ============ 서술형 ============ -->
+<section>
+  <div class="sec-head"><span class="n">02</span><h2>서술형 개념 + 응용</h2><span class="pts">13–16번 · 각 12점 · 48점</span></div>
+  <p class="lead">배점의 절반. <b>정의만 쓰면 절반 점수</b>, 원리·단계·보안적 의의까지 재구성해야 만점입니다. 각 카드의 자가점검은 "다른 각도로 물었을 때"를 연습하는 문항입니다.</p>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">SSL/TLS 핸드셰이크</span><span class="tag apply">응용</span><span class="rounds"><b>22·24·26·29·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">Client Hello ↔ Server Hello로 암호 스위트·난수 교환 → 서버 인증서 검증 → 세션키(pre-master) 교환.</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트 (31-16 실제 출제 각도)</div><div class="bt">
+      <ul>
+        <li><b>비대칭키(공개키)</b> = 인증서 검증·전자서명 확인·<b>세션키 교환</b> 단계에 사용</li>
+        <li><b>대칭키(세션키)</b> = 이후 <b>본 통신 데이터 암호화</b>에 사용(성능 때문에)</li>
+      </ul>
+      "어느 단계에서 어떤 키를 왜 쓰나"를 반드시 연결해서 서술.
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. 왜 비대칭키로 끝까지 통신하지 않고 대칭키로 전환하는가?</span></summary>
+      <div class="qa">비대칭(공개키) 연산은 <b>연산량이 크고 느림</b> → 초기 인증·키 교환에만 쓰고, 실제 대량 데이터는 <b>빠른 대칭키</b>로 암호화한다. 하이브리드 암호화의 핵심.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">XSS 유형·대응</span><span class="tag apply">응용</span><span class="rounds"><b>26·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <ul>
+        <li><b>저장형(Stored)</b> — 서버 DB에 스크립트 저장, 열람자 브라우저에서 실행</li>
+        <li><b>반사형(Reflected)</b> — 요청 파라미터가 응답에 그대로 반사되어 실행</li>
+        <li><b>DOM 기반</b> — 서버 거치지 않고 클라이언트 DOM 조작으로 실행</li>
+      </ul>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">대응: <b>출력값 인코딩</b>(핵심)·입력 검증·<code>CSP</code>·<code>HttpOnly</code> 쿠키. "종류만" 쓰면 감점, 대응까지 세트로.</div></div>
+    <details class="quiz"><summary><span class="q">Q. HttpOnly 쿠키가 XSS 피해를 줄이는 원리는?</span></summary>
+      <div class="qa">HttpOnly 속성이 붙은 쿠키는 <code>document.cookie</code> 등 <b>스크립트에서 접근 불가</b> → XSS로 스크립트가 실행돼도 세션 쿠키 <b>탈취를 차단</b>한다(공격 자체를 막진 못함).</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">CISO 업무·역할</span><span class="tag recall">암기</span><span class="rounds"><b>27·31</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      두문자 <b>정·위·교·법</b> —
+      ① 정보보호 관리체계 수립·운영 ② 위험관리·대책 수립 ③ 정보보호 교육·훈련 ④ 법적 준수 여부 점검(취약점 분석·평가·침해대응 포함).
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">정보통신망법상 <b>지정·신고 의무</b>, 일정 규모 이상 <b>겸직 제한</b> 등 제도 요건으로 변형 가능.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">접근통제 모델 BLP / Biba</span><span class="tag apply">응용</span><span class="rounds"><b>20·27</b> 계열 단골</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <ul>
+        <li><b>BLP</b> = 기밀성 · No Read Up / No Write Down</li>
+        <li><b>Biba</b> = 무결성 · No Read Down / No Write Up</li>
+      </ul>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">"No Write Down의 <b>보안적 의의</b>(높은 등급→낮은 등급 정보 유출 경로 차단)"를 명확히 안 쓰면 감점. 규칙 방향을 상황에 대입.</div></div>
+    <details class="quiz"><summary><span class="q">Q. BLP에서 No Write Down이 기밀성을 지키는 이유는?</span></summary>
+      <div class="qa">높은 보안등급 주체가 <b>낮은 등급 객체에 기록</b>하면 기밀 정보가 하위로 흘러 유출된다. 이 하향 정보 경로를 막아 <b>기밀성</b>을 보장한다.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">IPSec 모드 / AH·ESP</span><span class="tag apply">응용</span><span class="rounds"><b>28·30</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <ul>
+        <li>전송 모드 = 페이로드만 보호 / 터널 모드 = 원본 IP 전체 + 새 헤더</li>
+        <li><b>AH</b> = 인증·무결성(암호화 X) / <b>ESP</b> = 암호화 + 인증</li>
+      </ul>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">VPN 시나리오에서 "어떤 모드/프로토콜을 써야 하나"로 판단형 출제. 헤더 구조 그림 설명 요구 가능.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">파일 업로드 취약점</span><span class="tag apply">응용</span><span class="rounds"><b>29</b> 출제 · 소스분석형</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">대응: <b>화이트리스트</b> 확장자·<b>매직넘버</b> 검증·실행권한 제거·난수 파일명·업로드 경로 분리.</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">PHP 소스가 주어지고 <b>취약점명 + 우회기법(이중확장자·널바이트·대소문자) + 성공 조건</b>을 함께 서술(29-14형).</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">⚠︎ 서술형 감점 방지 3원칙</div>
+    <ul>
+      <li>정의 → 원리/단계 → <b>보안적 의의·이유</b>까지 3단으로 써라 (정의만=절반)</li>
+      <li>"각각 설명하시오"면 항목 수만큼 <b>번호를 매겨</b> 빠짐없이</li>
+      <li>대책·대응을 요구하면 <b>근본 대책 1개 + 부가 대책 2개</b> 구조로</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 실무형 ============ -->
+<section>
+  <div class="sec-head"><span class="n">03</span><h2>실무형 시나리오 응용</h2><span class="pts">17–18번 · 택1 · 16점</span></div>
+  <p class="lead">로그·설정·코드를 읽고 분석하는 <b>순수 응용</b> 영역. 두 문항 중 <b>익숙한 쪽 택1</b> — 신출 도구(예: 31-17 Fiddler)가 나오면 버리고 아는 쪽을 고르면 됩니다.</p>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">Snort 룰 분석·수정</span><span class="tag apply">응용</span><span class="rounds"><b>매 회차급</b> 반복</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      <code>content</code>(탐지 문자열) · <code>offset</code>(검사 시작 위치) · <code>depth</code>(검사 길이) · <code>distance</code>(직전 매치 이후 간격) · <code>nocase</code>(대소문자 무시).
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">"이 룰로 탐지 안 되는 이유 + 수정안"이 단골 → <code>offset:1→0</code> 조정, <code>nocase</code> 추가, 대소문자 우회 대응.</div></div>
+    <details class="quiz"><summary><span class="q">Q. content:"GET";offset:1;depth:3; 의 의미는?</span></summary>
+      <div class="qa">패킷 페이로드의 <b>처음 1바이트를 건너뛰고, 이후 3바이트 안에서</b> "GET" 문자열을 탐색하라는 의미. 대소문자를 섞은 우회가 의심되면 <code>nocase</code>를 추가한다.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">세션·쿠키 / CSRF 시큐어코딩</span><span class="tag apply">응용</span><span class="rounds"><b>31-18</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">
+      세션=서버 저장 / 쿠키=클라이언트(브라우저) 저장. 쿠키 3속성: <b>Secure</b>(HTTPS만)·<b>HttpOnly</b>(스크립트 차단)·<b>SameSite</b>(교차사이트 전송 차단).
+    </div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">안전한 코드가 <b>무슨 취약점을 막나</b> → <b>CSRF</b>. 추가 보완: <b>Referer 검증·CSRF 토큰·SameSite</b> 쿠키.</div></div>
+    <details class="quiz"><summary><span class="q">Q. CSRF 토큰이 공격을 막는 원리는?</span></summary>
+      <div class="qa">요청마다 서버가 발급한 <b>예측 불가한 토큰</b>을 폼에 포함시키고 검증 → 공격자가 위조 요청에 유효 토큰을 넣을 수 없어 <b>차단</b>된다. SameSite 쿠키·Referer 검증과 병행.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">SQL Injection / 시큐어코딩</span><span class="tag apply">응용</span><span class="rounds"><b>27·30</b> 출제</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">인증 우회 입력 <code>' or '1'='1</code>(항상 참). 근본 대응 = <b>Prepared Statement</b>(쿼리 구조 선컴파일, 입력을 데이터로만 처리).</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">취약 쿼리 코드를 주고 <b>취약점 지적 + 안전한 코드로 수정</b> 요구. 입력 검증·최소권한 계정·오류메시지 숨김도 언급.</div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">포트 스캔 / 방화벽 룰셋 판별</span><span class="tag apply">응용</span><span class="rounds"><b>14·계열</b> 반복</span></div>
+    <div class="block k"><div class="bl">🔑 기출 핵심</div><div class="bt">TCP ACK 스캔 = 포트 오픈 여부가 아니라 <b>방화벽 필터링 여부</b> 판별(RST 응답=미필터링, 무응답/ICMP=필터링).</div></div>
+    <div class="block a"><div class="bl">🔄 응용 포인트</div><div class="bt">스캔 결과(응답 패턴)를 주고 "어느 포트가 열림/필터링인지" 해석. SYN/FIN/NULL/XMAS 스캔과 구분.</div></div>
+  </div>
+</section>
+
+<!-- ============ 출제 임박 레이더 ============ -->
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>출제 임박 레이더 · 서술·실무</h2><span class="pts">순환 주기 × 공백 분석</span></div>
+  <p class="lead">서술·실무는 <b>직전 회차 반복이 드물고 3~6회 주기로 순환</b>합니다. 그래서 "마지막 출제 이후 공백(gap)이 그 주제의 평균 출제주기를 넘겼는가"로 <b>32회 임박도</b>를 점수화했습니다. 31회에 막 나온 주제(CISO·XSS·SSL·생체·세션쿠키)는 <b>소진</b>으로 후순위입니다.</p>
+  <div class="method">
+    <b>산식</b> · 임박도 = <code>공백(gap) ÷ 평균 출제주기</code> (주기 최소 3회 바닥값) → <b>1.0 이상이면 "돌아올 때"</b>. 출제 횟수가 많을수록 신뢰도↑. gap은 <code>32 − 마지막 출제 회차</code>. 데이터: 22~31회 서술·실무 76문항.
+  </div>
+  <div class="method" style="border-left-color:var(--warn)">
+    <b>★ 13~21회 확장 분석</b> · 옛 회차까지 합치면 이력이 길어져 <b>주기 추정 신뢰도가 올라갑니다</b>(예: DDoS n3→n5, 개인정보조치 n2→n4). 결론은 유지되며, 그 과정에서 <b>정량적 위험평가(SLE·ALE·ROI)</b>가 신규 유력 후보로 확인됐습니다 — 16·19·21회 규칙 출제 후 <b>11회 공백</b>. ⚠︎ 단, 옛날에만 나온 주제(Apache설정·가명정보·포렌식·BLP 등)는 대부분 <b>단답형으로 이동</b>했으므로 서술·실무 후보에서 제외했습니다.
+  </div>
+  <div class="radar">
+    <table>
+      <thead><tr><th>#</th><th>주제</th><th>출제 이력</th><th>공백</th><th>임박도</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--accent-wash)"><td class="rk">★</td><td class="tp">정량적 위험평가(SLE·ALE·ROI) <span style="color:var(--accent);font-family:var(--mono);font-size:.66rem;font-weight:700">NEW</span></td><td class="hist">16·19·21</td><td class="gp">11</td><td class="gp">4.11</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">1</td><td class="tp">개인정보 안전성 확보조치(수치)</td><td class="hist">15·21·22·23</td><td class="gp">9</td><td class="gp">3.54</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">2</td><td class="tp">스니핑 탐지(ping·arp·dns·decoy)</td><td class="hist">25·26</td><td class="gp">6</td><td class="gp">2.10</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">3</td><td class="tp">DDoS·DRDoS 증폭 원리/대응</td><td class="hist">22·23·27</td><td class="gp">5</td><td class="gp">1.83</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">4</td><td class="tp">특수권한 SUID/SGID·파일권한</td><td class="hist">24·27</td><td class="gp">5</td><td class="gp">1.75</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">5</td><td class="tp">자산 중요도 산정(CIA·최고등급)</td><td class="hist">25·28</td><td class="gp">4</td><td class="gp">1.61</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">6</td><td class="tp">DB 접근권한 / 감사로그</td><td class="hist">26·28</td><td class="gp">4</td><td class="gp">1.40</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">7</td><td class="tp">SNMP 보안설정</td><td class="hist">24</td><td class="gp">8</td><td class="gp">1.33</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">8</td><td class="tp">위험분석 접근법(기준선·상세·복합)</td><td class="hist">22·27</td><td class="gp">5</td><td class="gp">1.21</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">9</td><td class="tp">ARP 스푸핑 원리/대응</td><td class="hist">25</td><td class="gp">7</td><td class="gp">1.17</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">10</td><td class="tp">SW 개발보안(시큐어 SDLC 산출물)</td><td class="hist">25</td><td class="gp">7</td><td class="gp">1.17</td><td><span class="tier near">🟠 근접</span></td></tr>
+        <tr><td class="rk">11</td><td class="tp">재해복구시스템(DRS)·RTO/RPO</td><td class="hist">27</td><td class="gp">5</td><td class="gp">0.83</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">12</td><td class="tp">NetBIOS 바인딩</td><td class="hist">23·28</td><td class="gp">4</td><td class="gp">0.84</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">13</td><td class="tp">IPSec 모드 / AH·ESP</td><td class="hist">28</td><td class="gp">4</td><td class="gp">0.67</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">14</td><td class="tp">파일 업로드 취약점 / 우회</td><td class="hist">23·29</td><td class="gp">3</td><td class="gp">0.53</td><td><span class="tier wait">⚪ 대기</span></td></tr>
+        <tr><td class="rk">—</td><td class="tp" style="color:var(--ink-faint)">XSS · SSL/TLS · CISO · 세션쿠키/CSRF · 생체원칙</td><td class="hist">31</td><td class="gp">1</td><td class="gp">0.2</td><td><span class="tier spent">⛔ 소진</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="lead" style="margin-bottom:6px"><b>해석</b> — 🔴 7개는 이번 회차에 <b>서술·실무 6문항 중 2~3개를 채울</b> 유력 후보입니다. 아래 <b>이것만은</b> 카드로 핵심 답안을 굳히세요. ⛔ 5개는 31회에 소진돼 32회 재출 확률이 낮으니 <b>복습 우선순위를 내리세요</b>.</p>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴1 · 개인정보 안전성 확보조치</span><span class="tag apply">응용</span><span class="rounds">gap <b>9</b> · 최장 공백</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li>접속기록 보관: <b>1년 이상</b>(원칙) / <b>2년 이상</b>(5만명↑ 정보주체·기간통신사업자·정보통신서비스 제공)</li>
+        <li>접속기록 <b>월 1회 이상</b> 점검, 다운로드 발견 시 사유 확인</li>
+        <li>비밀번호·바이오·고유식별정보 <b>암호화 저장</b>, 비밀번호는 <b>일방향(해시)</b></li>
+        <li>내부관리계획 수립, 접근권한 부여·변경·말소 기록 <b>최소 3년(고유식별정보 5년)</b> 보관</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. 접속기록을 2년 이상 보관해야 하는 대상은?</span></summary>
+      <div class="qa"><b>5만 명 이상</b>의 정보주체 개인정보를 처리하거나, <b>기간통신사업자</b>, <b>정보통신서비스 제공자</b> 등. 그 외는 1년 이상.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴2 · 스니핑 탐지</span><span class="tag apply">응용</span><span class="rounds">gap <b>6</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      전제: NIC를 <b>Promiscuous(무차별) 모드</b>로 두면 모든 패킷 수신. 탐지 4법 —
+      <ul>
+        <li><b>Ping</b>: 위조 MAC + 정상 IP로 ping → 응답하면 무차별 모드</li>
+        <li><b>ARP</b>: 위조 MAC ARP 요청 → 응답 오면 스니퍼</li>
+        <li><b>DNS</b>: 스니퍼의 역방향 DNS 조회 발생 감지</li>
+        <li><b>Decoy(유인)</b>: 가짜 계정/암호를 흘려 사용 여부 관찰</li>
+      </ul>
+      대응: <b>암호화(SSL/SSH)</b>·스위칭 환경.
+    </div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴3 · DDoS·DRDoS 증폭</span><span class="tag apply">응용</span><span class="rounds">gap <b>5</b> · 신뢰 높음</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      원리: <b>출발지 IP를 피해자로 스푸핑</b> → 반사 서버에 소량 질의 → <b>대용량 응답이 피해자로 증폭</b>(DNS ANY·NTP monlist·memcached).
+      <ul>
+        <li>증폭 이유: 작은 요청으로 <b>수십~수천 배 트래픽</b> 유발, 출처 은닉</li>
+        <li>대응: <b>Open Resolver 제거</b>·<b>uRPF</b>(출발지 검증)·<b>RRL</b>(응답률 제한)·ISP 협조 차단</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. DRDoS가 일반 DDoS보다 위협적인 이유 2가지는?</span></summary>
+      <div class="qa">① <b>증폭</b>으로 적은 자원에 큰 트래픽을 만든다. ② <b>반사</b> 구조라 실제 공격자 IP가 드러나지 않아 추적·차단이 어렵다.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴4 · 특수권한 SUID/SGID·파일권한</span><span class="tag apply">응용</span><span class="rounds">gap <b>5</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li><b>SetUID 4000</b>(실행 시 소유자 권한) · <b>SetGID 2000</b> · <b>Sticky 1000</b>(디렉터리 삭제 제한, 예: <code>/tmp</code>)</li>
+        <li>점검: <code>find / -perm -4000 -type f</code> · 제거: <code>chmod -s 파일</code></li>
+        <li>위험: SUID root 실행파일이 침해되면 <b>권한 상승</b>. 불필요한 SUID 제거가 핵심</li>
+      </ul>
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. -rwsr-xr-x 에서 s의 의미와 보안 위험은?</span></summary>
+      <div class="qa">소유자 실행권한 자리의 <b>s = SetUID</b> → 누가 실행하든 <b>파일 소유자(root) 권한</b>으로 동작. 취약한 SUID root 바이너리는 <b>권한 상승 공격</b>의 통로가 되므로 불필요하면 <code>chmod -s</code>로 제거.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴5 · 자산 중요도 산정</span><span class="tag recall">암기</span><span class="rounds">gap <b>4</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      기준 3가지 = <b>기밀성·무결성·가용성(CIA)</b> 등급 평가 → 자산 중요도 = <b>세 등급 중 가장 높은 값</b>으로 산정. 정보자산 식별·목록 최신화(ISMS-P 1.2.1).
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. 기밀성 2·무결성 3·가용성 1이면 자산 중요도 등급은?</span></summary>
+      <div class="qa"><b>3</b>(가장 높은 등급으로 산정). 평균이 아니라 최댓값을 쓰는 이유는 한 축이라도 손상 시 피해가 크기 때문.</div>
+    </details>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴6 · DB 접근권한 / 감사로그</span><span class="tag apply">응용</span><span class="rounds">gap <b>4</b></span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li><b>최소권한 원칙</b>: 업무 필요 최소 권한만 <code>GRANT</code>, 불필요 권한 <code>REVOKE</code></li>
+        <li>DBA·일반 사용자 권한 분리, <b>기본계정·기본암호 변경</b></li>
+        <li><b>감사(Audit) 로그</b> 활성화로 접근·변경 추적, 로그 위·변조 방지 별도 보관</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-head"><span class="tn">🔴7 · SNMP 보안설정</span><span class="tag recall">암기</span><span class="rounds">gap <b>8</b> · 최장 미출제</span></div>
+    <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">
+      <ul>
+        <li>기본 <b>community string(public/private) 반드시 변경</b>, 읽기전용 우선</li>
+        <li><b>SNMP v3 사용</b> — 인증(authentication)·암호화(privacy) 지원(v1·v2c는 평문)</li>
+        <li>불필요 시 <b>서비스 비활성화</b>, 접근 IP를 ACL로 제한</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="topic" style="border-color:var(--accent)">
+    <div class="topic-head"><span class="tn">★ 정량적 위험평가 (SLE·ALE·ROI)</span><span class="tag apply">응용·계산</span><span class="rounds">gap <b>11</b> · 13~21 확장 신규</span></div>
+    <div class="block k"><div class="bl">📌 이것만은 (공식 암기)</div><div class="bt">
+      <ul>
+        <li><b>SLE = AV × EF</b> (단일 손실액 = 자산가치 × 노출계수)</li>
+        <li><b>ALE = SLE × ARO</b> (연간 손실액 = 단일손실 × 연간발생빈도)</li>
+        <li><b>대책 효과 = 감소된 ALE − 대책 운영비용</b></li>
+        <li><b>ROI(%) = (ALE − X) / X × 100</b> (X = 완전 제거에 투입한 비용)</li>
+      </ul>
+      16·19·21회 <b>실무형 계산문항</b>으로 반복. 공식 + 대입값 + 단위를 함께 써야 만점.
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. AV=100,000 · EF=0.2 · ARO=0.5 일 때 SLE와 ALE는?</span></summary>
+      <div class="qa">SLE = 100,000 × 0.2 = <b>20,000</b> · ALE = 20,000 × 0.5 = <b>10,000</b>. 대책으로 ALE가 30,000 줄고 운영비 17,000이면 효과 = 30,000 − 17,000 = <b>13,000</b>. (16-15회 실제 값)</div>
+    </details>
+    <div class="block a" style="margin-top:4px"><div class="bl">📚 기출+예상 더보기</div><div class="bt"><a href="focus_32.html" style="color:var(--accent);font-weight:600;text-decoration:none">→ 고신뢰 확정 후보 집중 페이지</a>에서 5개 후보의 실제 기출 지문과 32회 예상문제를 확인하세요.</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">🟠 근접(2순위) — 여유 있으면 함께</div>
+    <ul>
+      <li><b>위험분석 접근법</b> — 기준선(체크리스트)·상세(자산·위협·취약점)·복합(고위험=상세). 위험관리 단골이라 신뢰도 높음</li>
+      <li><b>ARP 스푸핑</b> — ARP 무인증→캐시 덮어쓰기(MITM). 대응: 정적 ARP·DAI·arpwatch</li>
+      <li><b>SW 개발보안</b> — 시큐어 SDLC 단계별 산출물·보안약점 진단</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 신출 대비 ============ -->
+<section>
+  <div class="sec-head"><span class="n">05</span><h2>신출 5% 대비 · 얇게 넓게</h2><span class="pts">합격 후 +α</span></div>
+  <p class="lead">기출로 안 잡히는 5%. 여기서 15~25점이 빠지지만, <b>합격(60)엔 지장 없고 고득점 방어용</b>입니다. 최근 신출 계열만 이름·핵심 한 줄로 훑어두세요.</p>
+  <div class="topic">
+    <div class="block k"><div class="bl">🔑 최근 신출 키워드</div><div class="bt">
+      <ul>
+        <li><b>SSRF</b> — 서버가 공격자 대신 내부 자원에 요청하게 만드는 취약점(25회 계열)</li>
+        <li><b>퍼징(Fuzzing)</b> — 무작위 입력 취약점 탐지(25→31 재등장)</li>
+        <li><b>인증서 고정(Certificate Pinning)</b> — 앱이 지정 인증서만 신뢰, MITM 방지(29-13)</li>
+        <li><b>Sendmail 스팸 릴레이</b> — <code>sendmail.cf</code>/<code>access</code>/<code>access.db</code> 설정(31-9)</li>
+        <li><b>생체정보 보호 원칙</b> — 비례성·적법성·목적제한·투명성·안전성·통제권 보장(31-15)</li>
+        <li><b>Fiddler / 프록시 진단</b> — HTTPS 복호화엔 CA 인증서 설치 + Decrypt 활성화(31-17)</li>
+      </ul>
+    </div></div>
+    <div class="block a"><div class="bl">🔄 전략</div><div class="bt">신출은 <b>깊이 파지 말고</b> "이름 → 한 줄 정의 → 방어/설정 키워드" 수준으로만. 실무형에서 신출이 나오면 <b>택1로 회피</b>.</div></div>
+  </div>
+</section>
+
+<div class="foot">
+  22~31회 기출 데이터 기반 · 32회 대비 · 재출 95% 최근편향 반영 ·
+  함께 보기 <a href="report_32.html">📊 32회 예측 리포트</a> · <a href="keyword_drill.html">🔑 개념 키워드 드릴</a>
+</div>
+
+</div>
+</body>
+</html>
