@@ -158,7 +158,8 @@ details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--s
   <a href="keyword_drill.html">🔑 개념 키워드</a>
   <a href="gichul_drill.html">🗂️ 기출 드릴</a>
   <a href="report_32.html">📊 32회 예측</a>
-  <a class="on" href="note_32.html">📓 32회 학습노트</a>
+  <a href="note_32.html">📓 32회 학습노트</a>
+  <a class="on" href="focus_32.html">🎯 확정 후보 집중</a>
 </nav>
 
 <header>
@@ -396,13 +397,17 @@ details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--s
   <div class="sec-head"><span class="n">04</span><h2>출제 임박 레이더 · 서술·실무</h2><span class="pts">순환 주기 × 공백 분석</span></div>
   <p class="lead">서술·실무는 <b>직전 회차 반복이 드물고 3~6회 주기로 순환</b>합니다. 그래서 "마지막 출제 이후 공백(gap)이 그 주제의 평균 출제주기를 넘겼는가"로 <b>32회 임박도</b>를 점수화했습니다. 31회에 막 나온 주제(CISO·XSS·SSL·생체·세션쿠키)는 <b>소진</b>으로 후순위입니다.</p>
   <div class="method">
-    <b>산식</b> · 임박도 = <code>공백(gap) ÷ 평균 출제주기</code> (주기 최소 3회 바닥값) → <b>1.0 이상이면 "돌아올 때"</b>. 출제 횟수가 많을수록 신뢰도↑. gap은 <code>32 − 마지막 출제 회차</code>. 데이터: 22~31회 서술(13–16)·실무(17–18) 76문항.
+    <b>산식</b> · 임박도 = <code>공백(gap) ÷ 평균 출제주기</code> (주기 최소 3회 바닥값) → <b>1.0 이상이면 "돌아올 때"</b>. 출제 횟수가 많을수록 신뢰도↑. gap은 <code>32 − 마지막 출제 회차</code>. 데이터: 22~31회 서술·실무 76문항.
+  </div>
+  <div class="method" style="border-left-color:var(--warn)">
+    <b>★ 13~21회 확장 분석</b> · 옛 회차까지 합치면 이력이 길어져 <b>주기 추정 신뢰도가 올라갑니다</b>(예: DDoS n3→n5, 개인정보조치 n2→n4). 결론은 유지되며, 그 과정에서 <b>정량적 위험평가(SLE·ALE·ROI)</b>가 신규 유력 후보로 확인됐습니다 — 16·19·21회 규칙 출제 후 <b>11회 공백</b>. ⚠︎ 단, 옛날에만 나온 주제(Apache설정·가명정보·포렌식·BLP 등)는 대부분 <b>단답형으로 이동</b>했으므로 서술·실무 후보에서 제외했습니다.
   </div>
   <div class="radar">
     <table>
       <thead><tr><th>#</th><th>주제</th><th>출제 이력</th><th>공백</th><th>임박도</th><th>판정</th></tr></thead>
       <tbody>
-        <tr><td class="rk">1</td><td class="tp">개인정보 안전성 확보조치(수치)</td><td class="hist">22·23</td><td class="gp">9</td><td class="gp">3.15</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr style="background:var(--accent-wash)"><td class="rk">★</td><td class="tp">정량적 위험평가(SLE·ALE·ROI) <span style="color:var(--accent);font-family:var(--mono);font-size:.66rem;font-weight:700">NEW</span></td><td class="hist">16·19·21</td><td class="gp">11</td><td class="gp">4.11</td><td><span class="tier hot">🔴 임박</span></td></tr>
+        <tr><td class="rk">1</td><td class="tp">개인정보 안전성 확보조치(수치)</td><td class="hist">15·21·22·23</td><td class="gp">9</td><td class="gp">3.54</td><td><span class="tier hot">🔴 임박</span></td></tr>
         <tr><td class="rk">2</td><td class="tp">스니핑 탐지(ping·arp·dns·decoy)</td><td class="hist">25·26</td><td class="gp">6</td><td class="gp">2.10</td><td><span class="tier hot">🔴 임박</span></td></tr>
         <tr><td class="rk">3</td><td class="tp">DDoS·DRDoS 증폭 원리/대응</td><td class="hist">22·23·27</td><td class="gp">5</td><td class="gp">1.83</td><td><span class="tier hot">🔴 임박</span></td></tr>
         <tr><td class="rk">4</td><td class="tp">특수권한 SUID/SGID·파일권한</td><td class="hist">24·27</td><td class="gp">5</td><td class="gp">1.75</td><td><span class="tier hot">🔴 임박</span></td></tr>
@@ -509,6 +514,23 @@ details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--s
         <li>불필요 시 <b>서비스 비활성화</b>, 접근 IP를 ACL로 제한</li>
       </ul>
     </div></div>
+  </div>
+
+  <div class="topic" style="border-color:var(--accent)">
+    <div class="topic-head"><span class="tn">★ 정량적 위험평가 (SLE·ALE·ROI)</span><span class="tag apply">응용·계산</span><span class="rounds">gap <b>11</b> · 13~21 확장 신규</span></div>
+    <div class="block k"><div class="bl">📌 이것만은 (공식 암기)</div><div class="bt">
+      <ul>
+        <li><b>SLE = AV × EF</b> (단일 손실액 = 자산가치 × 노출계수)</li>
+        <li><b>ALE = SLE × ARO</b> (연간 손실액 = 단일손실 × 연간발생빈도)</li>
+        <li><b>대책 효과 = 감소된 ALE − 대책 운영비용</b></li>
+        <li><b>ROI(%) = (ALE − X) / X × 100</b> (X = 완전 제거에 투입한 비용)</li>
+      </ul>
+      16·19·21회 <b>실무형 계산문항</b>으로 반복. 공식 + 대입값 + 단위를 함께 써야 만점.
+    </div></div>
+    <details class="quiz"><summary><span class="q">Q. AV=100,000 · EF=0.2 · ARO=0.5 일 때 SLE와 ALE는?</span></summary>
+      <div class="qa">SLE = 100,000 × 0.2 = <b>20,000</b> · ALE = 20,000 × 0.5 = <b>10,000</b>. 대책으로 ALE가 30,000 줄고 운영비 17,000이면 효과 = 30,000 − 17,000 = <b>13,000</b>. (16-15회 실제 값)</div>
+    </details>
+    <div class="block a" style="margin-top:4px"><div class="bl">📚 기출+예상 더보기</div><div class="bt"><a href="focus_32.html" style="color:var(--accent);font-weight:600;text-decoration:none">→ 고신뢰 확정 후보 집중 페이지</a>에서 5개 후보의 실제 기출 지문과 32회 예상문제를 확인하세요.</div></div>
   </div>
 
   <div class="callout">

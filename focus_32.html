@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>32회 고신뢰 확정 후보 집중 · 기출+예상문제</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2;
+  --warn:#9A6410; --warn-wash:#F6ECD9;
+  --info:#1F5FA6; --info-wash:#E4EEF7;
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+    --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+    --line:#26332D; --line-soft:#1E2A25;
+    --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+    --crit:#E08066; --crit-wash:#2E1B15;
+    --warn:#D9A648; --warn-wash:#2C2413;
+    --info:#6BA6E0; --info-wash:#15243A;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+  --info:#1F5FA6; --info-wash:#E4EEF7;
+}
+:root[data-theme="dark"]{
+  --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+  --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+  --line:#26332D; --line-soft:#1E2A25;
+  --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+  --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+  --info:#6BA6E0; --info-wash:#15243A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:0 20px 90px}
+.wrap{max-width:920px;margin:0 auto}
+.mono{font-family:var(--mono)}
+
+.pageswitch{display:flex;flex-wrap:wrap;gap:6px;padding:16px 0 0}
+.pageswitch a{font-size:.78rem;font-weight:600;color:var(--ink-soft);text-decoration:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 13px}
+.pageswitch a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+header{padding:44px 0 28px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font-size:clamp(1.7rem,4.6vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.12;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin-top:14px;font-size:1rem;color:var(--ink-soft);max-width:66ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+.chip b{color:var(--ink)}
+
+/* index list */
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:24px}
+.toc a{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
+  border-radius:11px;padding:12px 14px;text-decoration:none;color:var(--ink)}
+.toc a .rank{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:.9rem}
+.toc a .nm{font-weight:600;font-size:.9rem;line-height:1.3}
+.toc a .sc{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--ink-faint)}
+
+/* candidate block */
+.cand{padding:38px 0 8px;border-bottom:1px solid var(--line-soft)}
+.cand-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.cand-head .rk{font-family:var(--mono);font-size:.9rem;font-weight:700;color:#fff;background:var(--crit);
+  border-radius:7px;padding:3px 9px}
+.cand-head h2{font-size:1.32rem;font-weight:700;letter-spacing:-.02em}
+.cand-head .new{font-family:var(--mono);font-size:.64rem;font-weight:700;color:var(--accent);
+  background:var(--accent-wash);border-radius:6px;padding:3px 8px}
+.histbar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.histbar .h{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.histbar .gap{font-family:var(--mono);font-size:.72rem;color:var(--crit);background:var(--crit-wash);
+  border-radius:6px;padding:2px 8px;font-weight:600}
+
+.core{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.core .lbl{font-size:.74rem;font-weight:700;color:var(--accent);margin-bottom:7px}
+.core ul{list-style:none;margin:0}
+.core li{padding-left:15px;position:relative;margin-bottom:5px;font-size:.9rem}
+.core li::before{content:"·";position:absolute;left:3px;color:var(--accent);font-weight:700}
+.core code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding:1px 5px;border-radius:5px;word-break:break-word}
+
+.qa-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(max-width:680px){.qa-grid{grid-template-columns:1fr}}
+.qbox{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.qbox .cap{font-size:.72rem;font-weight:700;letter-spacing:.02em;padding:9px 14px;color:#fff}
+.qbox.past .cap{background:var(--info)}
+.qbox.pred .cap{background:var(--warn)}
+.qbox .body{padding:13px 15px}
+.qbox .qt{font-size:.87rem;color:var(--ink);white-space:pre-wrap;line-height:1.6}
+.qbox details{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.qbox summary{cursor:pointer;font-size:.8rem;font-weight:600;color:var(--accent);list-style:none}
+.qbox summary::-webkit-details-marker{display:none}
+.qbox summary::before{content:"▸ ";color:var(--accent)}
+.qbox details[open] summary::before{content:"▾ "}
+.qbox .at{margin-top:9px;font-size:.85rem;color:var(--ink-soft);white-space:pre-wrap;line-height:1.6}
+.qbox .at b{color:var(--ink)}
+.qbox .at code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding:1px 4px;border-radius:4px}
+.src{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);margin-top:8px}
+
+.tip{background:var(--warn-wash);border:1px solid var(--warn);border-radius:11px;padding:12px 15px;margin:14px 0 4px;font-size:.85rem;color:var(--ink-soft)}
+.tip b{color:var(--warn)}
+.foot{padding:34px 0 0;color:var(--ink-faint);font-size:.78rem;text-align:center}
+.foot a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="pageswitch">
+  <a href="index.html">📘 학습 노트</a>
+  <a href="short_answer.html">⚡ 단답형 드릴</a>
+  <a href="essay_drill.html">✍️ 서술·실무형 드릴</a>
+  <a href="keyword_drill.html">🔑 개념 키워드</a>
+  <a href="gichul_drill.html">🗂️ 기출 드릴</a>
+  <a href="report_32.html">📊 32회 예측</a>
+  <a href="note_32.html">📓 32회 학습노트</a>
+  <a class="on" href="focus_32.html">🎯 확정 후보 집중</a>
+</nav>
+
+<header>
+  <div class="eyebrow">EXAM 32 · HIGH-CONFIDENCE · 기출+예상</div>
+  <h1>32회 <em>고신뢰 확정 후보</em> 집중<br>기출로 검증하고, 예상문제로 굳힌다</h1>
+  <p class="sub">13~31회 전체를 합산해 <b>출제 이력이 길어지며 신뢰도가 올라간</b> 서술·실무 후보 5개만 모았습니다.
+     각 후보마다 <b>실제 기출 지문</b>과 <b>32회 예상문제(모범답안 포함)</b>를 나란히 두어, 어떤 각도로 나와도 대응할 수 있게 했습니다.</p>
+  <div class="meta">
+    <span class="chip">근거 <b>13~31회 서·실무</b></span>
+    <span class="chip">선정 <b>임박도 × 신뢰도</b></span>
+    <span class="chip">배점 <b>서술 12 · 실무 16</b></span>
+  </div>
+  <div class="toc">
+    <a href="#c1"><span class="rank">★</span><span class="nm">정량적 위험평가 (SLE·ALE·ROI)</span><span class="sc">gap11</span></a>
+    <a href="#c2"><span class="rank">1</span><span class="nm">개인정보 안전성 확보조치</span><span class="sc">n4</span></a>
+    <a href="#c3"><span class="rank">2</span><span class="nm">DDoS·DRDoS 증폭</span><span class="sc">n5</span></a>
+    <a href="#c4"><span class="rank">3</span><span class="nm">스니핑 탐지</span><span class="sc">n3</span></a>
+    <a href="#c5"><span class="rank">4</span><span class="nm">특수권한 SUID/SGID</span><span class="sc">n3</span></a>
+  </div>
+</header>
+
+<!-- ===== 후보 1: 정량적 위험평가 ===== -->
+<section class="cand" id="c1">
+  <div class="cand-head"><span class="rk">★</span><h2>정량적 위험평가 (SLE·ALE·ROI)</h2><span class="new">13~21 확장 신규</span></div>
+  <div class="histbar"><span class="h">16회 실무</span><span class="h">19회 실무</span><span class="h">21회 실무</span><span class="gap">이후 11회 공백 → 임박도 4.11</span></div>
+  <div class="core">
+    <div class="lbl">핵심 공식 — 대입값·단위까지 써야 만점</div>
+    <ul>
+      <li><b>SLE = AV × EF</b> (단일손실 = 자산가치 × 노출계수)</li>
+      <li><b>ALE = SLE × ARO</b> (연간손실 = 단일손실 × 연간발생빈도)</li>
+      <li><b>대책 효과(가치) = 감소된 ALE − 대책 운영비용</b></li>
+      <li><b>ROI(%) = (ALE − X) / X × 100</b> (X = 위험 제거 투입비용)</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 16회 15번(실무)</div><div class="body">
+      <div class="qt">정보보호 위험평가에서 AV=100,000, EF=0.2, ARO=0.5 일 때 SLE·ALE를 구하고, 감소 ALE=30,000·운영비=17,000 일 때 대책 효과를 구하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">SLE = 100,000 × 0.2 = <b>20,000</b>
+ALE = 20,000 × 0.5 = <b>10,000</b>
+대책 효과 = 30,000 − 17,000 = <b>13,000</b></div></details>
+      <div class="src">GICHUL 16-15 · 21-15에 재출제(7회 문제 그대로)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">어떤 자산의 AV=2,000,000, EF=0.5, ARO=0.2 이다.
+1) SLE와 ALE를 계산식과 함께 구하시오.
+2) 연 손실을 완전히 없애는 보안대책에 비용 X=300,000을 투입했다. ROI(%)를 구하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) SLE = AV×EF = 2,000,000 × 0.5 = <b>1,000,000</b>
+   ALE = SLE×ARO = 1,000,000 × 0.2 = <b>200,000</b>
+2) ROI = (ALE − X)/X × 100 = (200,000 − 300,000)/300,000 × 100 = <b>−33.3%</b>
+   → ROI가 음수이므로 <b>대책 비용이 기대 손실보다 커 비효율적</b>. 대책 재검토 필요.</div></details>
+    </div></div>
+  </div>
+  <div class="tip"><b>함정</b> · 공식만 쓰고 대입 과정을 생략하면 부분점수. ROI가 음수로 나오면 "비효율" 해석까지 붙여야 완결.</div>
+</section>
+
+<!-- ===== 후보 2: 개인정보 안전성 확보조치 ===== -->
+<section class="cand" id="c2">
+  <div class="cand-head"><span class="rk">1</span><h2>개인정보 안전성 확보조치</h2></div>
+  <div class="histbar"><span class="h">15회</span><span class="h">21회</span><span class="h">22회</span><span class="h">23회</span><span class="gap">gap 9 · n4 신뢰도 높음</span></div>
+  <div class="core">
+    <div class="lbl">핵심 수치·조치</div>
+    <ul>
+      <li>접속기록 보관: <b>1년 이상</b> / <b>2년 이상</b>(5만명↑·기간통신·정보통신서비스), <b>월 1회 이상</b> 점검</li>
+      <li>비밀번호·바이오·고유식별정보 <b>암호화 저장</b>, 비밀번호는 <b>일방향(해시)</b></li>
+      <li>접근권한 부여·변경·말소 기록 <b>최소 3년(고유식별정보 5년)</b> 보관</li>
+      <li>비밀번호 규칙: 2종 조합 <b>10자리↑</b> / 3종 조합 <b>8자리↑</b>, 반기 1회 변경</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 22회 18번(실무)</div><div class="body">
+      <div class="qt">개인정보의 기술적·관리적 보호조치 기준에서 요구하는 보호조치 5가지를 기술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">① <b>접근통제</b> — 권한 부여·변경·말소 기록 보관, 안전한 인증수단, 망분리
+② <b>접속기록</b> — 위·변조 방지, 월 1회 점검, 보존
+③ <b>암호화</b> — 비밀번호 일방향, 고유식별정보·바이오 암호화
+④ <b>악성프로그램 방지</b> — 백신 설치·갱신
+⑤ <b>물리적 안전조치</b> — 출입통제·잠금장치</div></details>
+      <div class="src">GICHUL 22-18 · 유사: 15-13, 21-13(비밀번호 규칙)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">1) 접속기록을 2년 이상 보관해야 하는 대상 2가지를 쓰시오.
+2) 비밀번호를 일방향(해시) 암호화하는 이유를 서술하시오.
+3) 문자 2종류 조합 시 요구되는 비밀번호 최소 길이는?</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>5만 명 이상</b> 정보주체를 처리하는 자, <b>기간통신사업자</b>(또는 정보통신서비스 제공자)
+2) 해시는 <b>복호화가 불가</b>능하여, 저장소가 유출돼도 <b>원문 비밀번호를 복원할 수 없어</b> 계정 도용을 막는다.
+3) <b>10자리 이상</b> (3종류 조합 시 8자리 이상)</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 3: DDoS·DRDoS 증폭 ===== -->
+<section class="cand" id="c3">
+  <div class="cand-head"><span class="rk">2</span><h2>DDoS·DRDoS 증폭</h2></div>
+  <div class="histbar"><span class="h">18회</span><span class="h">20회</span><span class="h">22회</span><span class="h">23회</span><span class="h">27회</span><span class="gap">gap 5 · n5 최고 신뢰도</span></div>
+  <div class="core">
+    <div class="lbl">원리 · 대응</div>
+    <ul>
+      <li>원리: <b>출발지 IP를 피해자로 스푸핑</b> → 반사서버에 소량 질의 → <b>대용량 응답이 피해자로 증폭</b></li>
+      <li>증폭 벡터: DNS <b>ANY</b> 질의 · NTP <b>monlist</b> · memcached</li>
+      <li>차이점: 반사구조라 <b>출처 은닉</b> + 좀비 없이도 <b>대량 트래픽</b> 생성</li>
+      <li>대응: <b>Open Resolver 제거</b> · <b>uRPF</b>(출발지 검증) · <b>RRL</b>(응답률 제한) · monlist 비활성화(<code>disable monitor</code>)</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 18회 12번(서술)</div><div class="body">
+      <div class="qt">DRDoS에 대하여 설명하시오. 1) 공격 원리 2) 기존 DoS와의 차이점 3) Unicast RPF</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) 소스 IP를 <b>공격대상 IP로 위조</b>해 다수 반사서버에 요청 → 대상은 반사서버의 응답 폭주로 서비스 거부
+2) ① 출발지 위조+반사서버 경유로 <b>출처 파악 곤란</b> ② 좀비 없이 <b>증폭</b>으로 고효율
+3) 인터페이스로 들어온 패킷의 IP를 <b>라우팅 테이블로 역검증</b>, 경로가 맞지 않으면 위조로 보고 폐기</div></details>
+      <div class="src">GICHUL 18-12 · 22-16(DNS ANY 증폭) · 27-18(NTP)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">NTP 서비스를 악용한 DRDoS 공격에 대하여,
+1) 어떤 기능이 악용되는지와 그 이유를 쓰고,
+2) 서버 측·네트워크 측 대응방안을 각각 1가지 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>monlist</b> — 최근 접속 목록(최대 600건)을 소량 요청에 대용량으로 응답 → 큰 증폭률로 악용
+2) · 서버 측: NTP를 <b>4.2.8 이상으로 업그레이드</b> 또는 <code>disable monitor</code>로 monlist 비활성화
+   · 네트워크 측: 방화벽에서 <b>UDP 123 외부 트래픽 차단</b> / uRPF로 출발지 위조 필터링</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 4: 스니핑 탐지 ===== -->
+<section class="cand" id="c4">
+  <div class="cand-head"><span class="rk">3</span><h2>스니핑 탐지</h2></div>
+  <div class="histbar"><span class="h">19회</span><span class="h">25회</span><span class="h">26회</span><span class="gap">gap 6 · 주기 3.5</span></div>
+  <div class="core">
+    <div class="lbl">Promiscuous 모드 · 탐지 4법</div>
+    <ul>
+      <li>전제: NIC를 <b>무차별(Promiscuous) 모드</b>로 두면 목적지가 자신이 아닌 패킷도 모두 수신</li>
+      <li><b>Ping</b>: 존재하지 않는 위조 MAC + 정상 IP로 ICMP → 응답하면 무차별 모드</li>
+      <li><b>ARP</b>: 위조 MAC ARP 요청 → 응답 오면 스니퍼</li>
+      <li><b>DNS</b>: 스니퍼의 역방향 DNS 조회 트래픽 감지 · <b>Decoy</b>: 가짜 계정 흘려 사용 관찰</li>
+      <li>대응: <b>SSL/SSH 암호화 통신</b>, 지능형 스위치, <code>ifconfig eth0 -promisc</code></li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 26회 15번(서술)</div><div class="body">
+      <div class="qt">로그 [device eth0 entered Promiscuous mode] 관련. 1) Promiscuous mode의 의미 2) 가능한 공격 3) 대응 방법</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) eth0로 들어오는 <b>모든 패킷을 수신</b>(목적지가 자신이 아니어도 drop하지 않음)
+2) <b>패킷 스니핑</b>(도청) 공격
+3) ① SSL/SSH <b>암호화 통신</b> ② 지능형 스위치로 불필요 브로드캐스트 최소화 ③ <code>ifconfig eth0 -promisc</code>로 해제 ④ 스니핑 탐지도구 운영</div></details>
+      <div class="src">GICHUL 26-15 · 19-13(동일 유형) · 25-14(ping 탐지)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">스니핑 탐지 방법 중 1) ARP를 이용한 방법과 2) Decoy(유인) 방법의 원리를 각각 서술하고, 3) 근본적 대응책 1가지를 쓰시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) 존재하지 않는 <b>위조 MAC으로 ARP 요청</b> → 정상 호스트는 무시하지만, 무차별 모드 스니퍼는 응답 → 스니퍼 식별
+2) 가짜 ID/비밀번호를 평문으로 <b>흘려(유인)</b> 두고, 그 계정으로 접속 시도가 발생하면 스니핑 중인 공격자 존재를 탐지
+3) <b>SSL/SSH 등 암호화 통신</b> (스니핑돼도 내용 보호)</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 후보 5: 특수권한 SUID/SGID ===== -->
+<section class="cand" id="c5">
+  <div class="cand-head"><span class="rk">4</span><h2>특수권한 SUID/SGID·파일권한</h2></div>
+  <div class="histbar"><span class="h">19회</span><span class="h">24회</span><span class="h">27회</span><span class="gap">gap 5 · n3</span></div>
+  <div class="core">
+    <div class="lbl">특수비트 · 점검</div>
+    <ul>
+      <li><b>SetUID 4000</b>(실행 시 소유자 권한) · <b>SetGID 2000</b>(소유 그룹 권한) · <b>Sticky 1000</b>(디렉터리 삭제 제한, <code>/tmp</code>)</li>
+      <li>표기: <code>-rwsr-xr-x</code>의 소유자 실행자리 <b>s=SetUID</b>, 그룹 자리 <b>s=SetGID</b>, 기타 실행자리 <b>t=Sticky</b></li>
+      <li>점검: <code>find / -perm -4000 -type f</code> · 제거: <code>chmod -s 파일</code></li>
+      <li>위험: SUID root 바이너리가 침해되면 <b>권한 상승</b> → 불필요한 SUID 제거가 핵심</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 24회 13번(서술)</div><div class="body">
+      <div class="qt">다음 조치가 필요한 이유를 설명하시오. 1) chmod -s {파일명} 2) find / -user root -type f \( -perm -4000 -o -perm -2000 \)</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) 파일의 <b>특수비트(SetUID/SetGID)를 제거</b>
+2) / 하위에서 <b>root 소유 + 특수비트 설정</b> 파일을 검색
+이유: 특수비트 파일 실행 시 <b>소유자(root) 권한으로 동작</b> → 취약하면 <b>권한 상승 공격</b>의 통로가 되므로, 불필요한 SUID/SGID를 찾아 제거해야 함</div></details>
+      <div class="src">GICHUL 24-13 · 19-11(권한 해석) · 27-15(rwx 해석)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">파일 권한이 <code>-rwsr-xr-x root root /usr/bin/backup</code> 이다.
+1) 소유자 실행자리 s의 의미와 실행 시 동작을 서술하시오.
+2) 이 설정이 위험한 이유와 점검·제거 명령을 쓰시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>SetUID</b> 설정 → 누가 실행하든 <b>소유자 root 권한</b>으로 동작
+2) 취약한 SUID root 파일은 <b>권한 상승 공격</b>에 악용 가능.
+   점검: <code>find / -perm -4000 -type f</code> · 제거: <code>chmod -s /usr/bin/backup</code></div></details>
+    </div></div>
+  </div>
+</section>
+
+<div class="foot">
+  13~31회 서술·실무 이력 합산 기반 · 임박도×신뢰도 상위 5개 ·
+  함께 보기 <a href="note_32.html">📓 32회 학습노트</a> · <a href="report_32.html">📊 32회 예측</a>
+</div>
+
+</div>
+</body>
+</html>
