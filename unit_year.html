@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정보보안기사 실기 — 단원별 · 연도별 기출 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/short-answer.css">
+<link rel="stylesheet" href="assets/essay-drill.css">
+<style>
+  /* ── 단원 × 연도 매트릭스 ── */
+  .uy-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 10px}
+  .uy-seg{display:inline-flex;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;background:var(--card)}
+  .uy-seg button{padding:7px 16px;font-size:.84rem;font-weight:700;color:var(--ink-soft);background:none}
+  .uy-seg button.on{background:var(--accent);color:#fff}
+  .uy-hint{flex-basis:100%;font-size:.72rem;color:var(--ink-soft);margin-top:2px}
+  .uy-hint b{color:var(--warn)}
+
+  .uy-scroll{overflow-x:auto;border:1.5px solid var(--line);border-radius:12px;background:var(--card)}
+  table.uy-matrix{border-collapse:collapse;width:100%;min-width:560px;font-size:.82rem}
+  .uy-matrix th,.uy-matrix td{border:1px solid var(--line);text-align:center;padding:0}
+  .uy-matrix thead th{background:#EEF3F0;color:var(--ink);font-weight:700;padding:9px 8px;white-space:nowrap;position:sticky;top:0}
+  .uy-matrix thead th.col-h{cursor:pointer}
+  .uy-matrix thead th.col-h:hover{background:var(--accent-soft);color:var(--accent)}
+  .uy-matrix thead th .col-sub{display:block;font-family:var(--mono);font-size:.66rem;font-weight:500;color:var(--ink-soft)}
+  .uy-matrix tbody th.row-h{background:#F7FAF8;text-align:left;padding:10px 12px;white-space:nowrap;cursor:pointer;border-left:5px solid var(--rc,var(--accent))}
+  .uy-matrix tbody th.row-h:hover{background:var(--accent-soft)}
+  .uy-matrix tbody th .row-name{font-weight:700;color:var(--ink)}
+  .uy-cell{cursor:pointer;font-family:var(--mono);font-weight:600;min-width:44px;height:42px;transition:background .1s}
+  .uy-cell .n{font-size:.9rem}
+  .uy-cell[data-n="0"]{color:var(--line);cursor:default;font-weight:400}
+  .uy-cell:not([data-n="0"]):hover{background:var(--accent-soft);color:var(--accent)}
+  .uy-cell.sel{background:var(--accent);color:#fff}
+  .uy-cell.sel:hover{background:var(--accent);color:#fff}
+  .uy-matrix .tot{background:#EEF3F0;font-weight:700}
+  .uy-matrix .tot.uy-cell{cursor:pointer}
+  .uy-matrix tfoot th,.uy-matrix tfoot td{background:#EEF3F0;font-weight:700;padding:9px 8px;font-family:var(--mono)}
+  .uy-legend{display:flex;flex-wrap:wrap;gap:12px;margin:12px 2px 0;font-size:.72rem;color:var(--ink-soft)}
+  .uy-legend span{display:inline-flex;align-items:center;gap:5px}
+  .uy-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+  /* ── 선택 결과 패널 ── */
+  .uy-panel{margin-top:22px}
+  .uy-panel-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .uy-panel-head h2{font-size:1.12rem;font-weight:700;letter-spacing:-.02em}
+  .uy-panel-head .cnt{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+  .uy-empty{color:var(--ink-soft);font-size:.9rem;padding:20px 2px}
+  .uy-q{border:1.5px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:10px;overflow:hidden}
+  .uy-q>summary{list-style:none;cursor:pointer;padding:13px 15px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .uy-q>summary::-webkit-details-marker{display:none}
+  .uy-q>summary:hover{background:#F7FAF8}
+  .uy-q .badge{font-family:var(--mono);font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap}
+  .uy-q .b-round{background:var(--accent-soft);color:var(--accent)}
+  .uy-q .b-kind{background:#EEF0F3;color:var(--ink-soft)}
+  .uy-q .b-cat{background:var(--cc,#eee);color:#fff}
+  .uy-q .q-line{flex:1 1 260px;font-weight:600;font-size:.9rem;color:var(--ink);min-width:0}
+  .uy-q .chev{color:var(--ink-soft);font-family:var(--mono);transition:transform .15s}
+  .uy-q[open] .chev{transform:rotate(90deg)}
+  .uy-q .body{padding:2px 15px 16px;border-top:1px dashed var(--line)}
+  .uy-q .body .lbl{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--ink-soft);margin:12px 0 5px;text-transform:uppercase}
+  .uy-q .prose{white-space:pre-wrap;font-size:.9rem;line-height:1.7;color:var(--ink)}
+  .uy-q .code{white-space:pre;overflow-x:auto;font-family:var(--mono);font-size:.82rem;background:#0F1A16;color:#D7E6DF;padding:12px 14px;border-radius:8px;margin:8px 0;line-height:1.55}
+  .uy-q .a-text .prose{color:#0c3a30}
+  .uy-q .blank{color:var(--accent);font-weight:700}
+  .uy-q .note-box{margin-top:12px;font-size:.82rem}
+  .uy-q .note-box summary{cursor:pointer;color:var(--ink-soft);font-weight:600}
+  .uy-q .note-text{margin-top:6px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="page-switch">
+    <a class="ps-item" href="index.html">📘 학습 노트</a>
+    <a class="ps-item" href="short_answer.html">⚡ 단답형 드릴</a>
+    <a class="ps-item" href="essay_drill.html">✍️ 서술·실무형 드릴</a>
+    <a class="ps-item" href="keyword_drill.html">🔑 개념 키워드</a>
+    <a class="ps-item" href="subject_drill.html">🎯 과목별 통합</a>
+    <a class="ps-item" href="mock_exam.html">📝 모의고사</a>
+    <a class="ps-item" href="gichul_drill.html">🗂️ 기출 드릴</a>
+    <a class="ps-item on" href="unit_year.html">📅 단원·연도별</a>
+    <a class="ps-item" href="report_32.html">📊 32회 예측</a>
+    <a class="ps-item" href="note_32.html">📓 32회 학습노트</a>
+    <a class="ps-item" href="focus_32.html">🎯 확정 후보 집중</a>
+    <a class="ps-item" href="focus_drill.html">🎯 확정 후보 드릴</a>
+  </nav>
+  <header>
+    <div class="brand"><span class="tag">UNIT × YEAR · 기출 매트릭스</span>단원별 · 연도별 기출 정리</div>
+    <div class="session-pill" id="sessionPill"></div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<script src="data/gichul-data.js"></script>
+<script src="assets/unit-year.js"></script>
+</body>
+</html>
