@@ -427,6 +427,22 @@ details.quiz .qa code{font-family:var(--mono);font-size:.84em;background:var(--s
   </div>
   <p class="lead" style="margin-bottom:6px"><b>해석</b> — 🔴 7개는 이번 회차에 <b>서술·실무 6문항 중 2~3개를 채울</b> 유력 후보입니다. 아래 <b>이것만은</b> 카드로 핵심 답안을 굳히세요. ⛔ 5개는 31회에 소진돼 32회 재출 확률이 낮으니 <b>복습 우선순위를 내리세요</b>.</p>
 
+  <div class="method" style="border-left-color:var(--accent)">
+    <b>★ v2 재보정 (빈도 보정)</b> · 30회로 백테스트하니 <b>SQLi·위험관리</b>처럼 <b>gap이 짧아도(최근 출제) 재출</b>되는 빈출 주제를 놓쳤습니다(적중 3/5). 그래서 산식에 <b>빈도 prior</b>를 더해 — <code>score = 공백/주기 + 0.22×(출제횟수−2)</code> — <b>🟢 상시(빈출 스테이플)</b> 계층을 신설했습니다. 재검증 결과 <b>SQLi가 적중으로 전환(4/5)</b>. 아래 3개는 최근 나왔어도 <b>반드시 함께 대비</b>하세요.
+  </div>
+  <div class="radar">
+    <table>
+      <thead><tr><th>빈출 스테이플</th><th>출제 이력</th><th>n</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td class="tp">IDS/IPS·Snort 룰</td><td class="hist">13·14·17·20·21·25·30</td><td class="gp">7</td><td><span class="tier" style="background:var(--accent-wash);color:var(--accent-deep)">🟢 상시</span></td></tr>
+        <tr><td class="tp">SQL Injection·시큐어코딩</td><td class="hist">18·22·27·30</td><td class="gp">4</td><td><span class="tier" style="background:var(--accent-wash);color:var(--accent-deep)">🟢 상시</span></td></tr>
+        <tr><td class="tp">유닉스 계정/패스워드·세션</td><td class="hist">14·18·24·30</td><td class="gp">4</td><td><span class="tier" style="background:var(--accent-wash);color:var(--accent-deep)">🟢 상시</span></td></tr>
+        <tr><td class="tp">파일 업로드 취약점 <span style="color:var(--crit);font-size:.7rem">↑🔴</span></td><td class="hist">17·19·23·29</td><td class="gp">4</td><td><span class="tier" style="background:var(--accent-wash);color:var(--accent-deep)">🟢 상시</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="lead" style="margin-bottom:6px;font-size:.85rem;color:var(--ink-faint)">→ 세 스테이플의 기출·예상문제는 <a href="focus_32.html" style="color:var(--accent);font-weight:600;text-decoration:none">확정 후보 집중 페이지</a>의 🟢 섹션에서 확인하세요.</p>
+
   <div class="topic">
     <div class="topic-head"><span class="tn">🔴1 · 개인정보 안전성 확보조치</span><span class="tag apply">응용</span><span class="rounds">gap <b>9</b> · 최장 공백</span></div>
     <div class="block k"><div class="bl">📌 이것만은</div><div class="bt">

@@ -117,6 +117,8 @@ h1 em{font-style:normal;color:var(--accent)}
 .tierhead h3{font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
 .tierhead .desc{font-size:.82rem;color:var(--ink-soft)}
 .cand-head .rk.near{background:var(--warn)}
+.cand-head .rk.stpl{background:var(--accent)}
+.tierhead.g{border-top-color:var(--accent)}
 .tip{background:var(--warn-wash);border:1px solid var(--warn);border-radius:11px;padding:12px 15px;margin:14px 0 4px;font-size:.85rem;color:var(--ink-soft)}
 .tip b{color:var(--warn)}
 .foot{padding:34px 0 0;color:var(--ink-faint);font-size:.78rem;text-align:center}
@@ -140,13 +142,14 @@ h1 em{font-style:normal;color:var(--accent)}
 <header>
   <div class="eyebrow">EXAM 32 · HIGH-CONFIDENCE · 기출+예상</div>
   <h1>32회 <em>고신뢰 확정 후보</em> 집중<br>기출로 검증하고, 예상문제로 굳힌다</h1>
-  <p class="sub">13~31회 전체를 합산해 임박도·신뢰도가 검증된 서술·실무 후보 <b>14개</b>를 <b>🔴 임박</b>과 <b>🟠 근접</b> 2순위로 정리했습니다.
+  <p class="sub">13~31회 전체를 합산해 임박도·신뢰도가 검증된 서술·실무 후보 <b>17개</b>를 <b>🔴 임박</b> · <b>🟠 근접</b> · <b>🟢 상시(빈출 스테이플)</b>로 정리했습니다.
      각 후보마다 <b>실제 기출 지문</b>과 <b>32회 예상문제(모범답안 포함)</b>를 나란히 두어, 어떤 각도로 나와도 대응할 수 있게 했습니다.</p>
   <div class="meta">
     <span class="chip">근거 <b>13~31회 서·실무</b></span>
-    <span class="chip">선정 <b>임박도 × 신뢰도</b></span>
-    <span class="chip">🔴 임박 <b>8</b> · 🟠 근접 <b>6</b></span>
+    <span class="chip">선정 <b>임박도 × 빈도 보정</b></span>
+    <span class="chip">🔴 8 · 🟠 6 · 🟢 3</span>
   </div>
+  <p class="sub" style="font-size:.85rem;margin-top:12px;color:var(--ink-faint)">🟢 <b>빈출 스테이플</b>은 최근 회차에 나왔더라도 <b>출제 빈도가 매우 높아 gap이 짧아도 재출</b>되는 주제입니다(30회 백테스트에서 SQLi가 이 보정으로 적중). 임박 후보와 <b>함께</b> 반드시 커버하세요.</p>
   <div class="toc">
     <a href="#c1"><span class="rank">★</span><span class="nm">정량적 위험평가 (SLE·ALE·ROI)</span><span class="sc">gap11</span></a>
     <a href="#c2"><span class="rank">1</span><span class="nm">개인정보 안전성 확보조치</span><span class="sc">n4</span></a>
@@ -162,6 +165,9 @@ h1 em{font-style:normal;color:var(--accent)}
     <a href="#c12"><span class="rank">11</span><span class="nm">파일 업로드 취약점</span><span class="sc">🟠</span></a>
     <a href="#c13"><span class="rank">12</span><span class="nm">NetBIOS 바인딩</span><span class="sc">🟠</span></a>
     <a href="#c14"><span class="rank">13</span><span class="nm">IPSec 모드/AH·ESP</span><span class="sc">🟠</span></a>
+    <a href="#c15"><span class="rank">S1</span><span class="nm">SQL Injection</span><span class="sc">🟢</span></a>
+    <a href="#c16"><span class="rank">S2</span><span class="nm">IDS/IPS·Snort 룰</span><span class="sc">🟢</span></a>
+    <a href="#c17"><span class="rank">S3</span><span class="nm">유닉스 계정/세션</span><span class="sc">🟢</span></a>
   </div>
 </header>
 
@@ -587,8 +593,97 @@ ALE = 20,000 × 0.5 = <b>10,000</b>
   </div>
 </section>
 
+<div class="tierhead g"><h3>🟢 빈출 스테이플 · 상시 대비</h3><span class="desc">gap이 짧아도(최근 출제) 빈도가 높아 재출되는 주제 · 빈도 보정 반영</span></div>
+
+<!-- ===== 스테이플 1: SQL Injection ===== -->
+<section class="cand" id="c15">
+  <div class="cand-head"><span class="rk stpl">S1</span><h2>SQL Injection</h2></div>
+  <div class="histbar"><span class="h">18회</span><span class="h">22회</span><span class="h">27회</span><span class="h">30회</span><span class="gap">n4 빈출 · gap 2라도 상시</span></div>
+  <div class="core">
+    <div class="lbl">인증 우회 · 근본 대응</div>
+    <ul>
+      <li>인증 우회 입력: <code>' or '1'='1</code> (WHERE 절이 항상 참)</li>
+      <li>근본 대응: <b>Prepared Statement</b> — 쿼리 구조 선컴파일, 입력을 <b>데이터로만</b> 처리</li>
+      <li>부가: 입력 검증·최소권한 DB계정·오류메시지 숨김</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 30회 18번(실무)</div><div class="body">
+      <div class="qt">SELECT pw FROM member WHERE id='user01'
+1) 구문 설명 2) 이용 가능한 취약점 3) pw를 알아내려면 user01에 입력할 값</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) member 테이블에서 id가 user01인 사용자의 <b>pw를 조회</b>
+2) <b>SQL Injection</b>
+3) <code>' or '1'='1</code> (조건이 항상 참이 되어 전체/타 계정 정보 노출)</div></details>
+      <div class="src">GICHUL 30-18 · 27-17(Java prepared) · 22-17</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">아래 자바 코드의 SQLi 취약점을 근본적으로 없애려 한다. 빈칸을 채우고 그 원리를 서술하시오.
+<code>String sql="SELECT * FROM member WHERE id=(  )";
+PreparedStatement ps=conn.(  )(sql);
+ps.(  )(1, id);</code></div>
+      <details><summary>모범답안 보기</summary><div class="at">빈칸: <code>?</code> · <code>prepareStatement</code> · <code>setString</code>
+원리: 쿼리 <b>구조를 먼저 컴파일</b>한 뒤 입력을 <code>?</code> 자리에 <b>값(데이터)으로만</b> 바인딩 → 입력이 쿼리 구문으로 해석되지 않아 SQLi 차단.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 스테이플 2: IDS/IPS·Snort 룰 ===== -->
+<section class="cand" id="c16">
+  <div class="cand-head"><span class="rk stpl">S2</span><h2>IDS/IPS · Snort 룰</h2></div>
+  <div class="histbar"><span class="h">13·14·17</span><span class="h">20·21</span><span class="h">25</span><span class="h">30회</span><span class="gap">n7 최다 빈출 · 상시</span></div>
+  <div class="core">
+    <div class="lbl">배치 · 탐지 · 오탐/미탐</div>
+    <ul>
+      <li>IDS(탐지·미러·내부망) / IPS(차단·인라인·경계) · 오용탐지(시그니처) / 이상탐지(프로파일)</li>
+      <li>Snort 옵션: <code>content·offset·depth·distance·nocase</code></li>
+      <li>부정확 룰 → <b>오탐(FP)·미탐(FN)</b> 동시 증가 → 패턴·포트·임계값 정확히 정의</li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 30회 16번(서술)</div><div class="body">
+      <div class="qt">Snort 탐지 룰을 부정확하게 작성할 경우의 문제점 두 가지를 쓰고, 룰 조건을 정확히 정의해야 하는 이유를 설명하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">문제점: ① <b>오탐(false positive)</b> — 정상 트래픽을 공격으로 차단 ② <b>미탐(false negative)</b> — 실제 공격을 놓침.
+이유: 둘 다 늘면 <b>운영 효율·보안 수준이 함께 저하</b>되므로 패턴·포트·임계값을 정확히 정의해야 함.</div></details>
+      <div class="src">GICHUL 30-16 · 25-16(IDS 행위) · 17-12(배치)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">1) 오용 탐지와 이상 탐지의 차이를 서술하시오.
+2) 공격 탐지 시 IDS가 수행할 수 있는 행위를 3가지 쓰시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <b>오용 탐지</b>=알려진 공격 <b>시그니처와 대조</b>(오탐↓·미탐↑) / <b>이상 탐지</b>=정상 <b>프로파일에서 벗어난 행위</b> 탐지(미탐↓·신종 탐지 가능·오탐↑).
+2) ① 관리자에게 <b>경보(메일·SMS)</b> ② <b>로그 기록</b>(포렌식 기초) ③ 세션 차단/방화벽·SIEM 연동 대응.</div></details>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== 스테이플 3: 유닉스 계정/세션 ===== -->
+<section class="cand" id="c17">
+  <div class="cand-head"><span class="rk stpl">S3</span><h2>유닉스 계정 · 패스워드 · 세션</h2></div>
+  <div class="histbar"><span class="h">14회</span><span class="h">18회</span><span class="h">24회</span><span class="h">30회</span><span class="gap">n4 빈출 · 상시</span></div>
+  <div class="core">
+    <div class="lbl">핵심 설정</div>
+    <ul>
+      <li>세션 타임아웃: <code>export TMOUT=600</code> (/etc/profile) · root 터미널 제한: <code>/etc/securetty</code></li>
+      <li>계정 잠금 임계값: <code>deny=5</code>·<code>unlock_time</code>·<code>no_magic_root</code>·<code>reset</code></li>
+      <li>패스워드 최소길이(OS별): Solaris <code>PASSLENGTH</code> · Linux <code>PASS_MIN_LEN</code>(login.defs) · AIX <code>minlen</code></li>
+    </ul>
+  </div>
+  <div class="qa-grid">
+    <div class="qbox past"><div class="cap">📚 기출 · 30회 17번(실무)</div><div class="body">
+      <div class="qt">1) 세션 타임아웃 600초 설정에 사용할 환경변수와 export 명령을 쓰시오.
+2) root 로그인 터미널을 제한하는 파일명은?</div>
+      <details><summary>모범답안 보기</summary><div class="at">1) <code>export TMOUT=600</code> (/etc/profile 등 공통 환경설정에 추가)
+2) <code>/etc/securetty</code> (허용 터미널만 기재, pts 제거로 원격 root 로그인 차단)</div></details>
+      <div class="src">GICHUL 30-17 · 24-17(OS별 최소길이) · 14-11(deny/unlock_time)</div>
+    </div></div>
+    <div class="qbox pred"><div class="cap">📝 32회 예상문제</div><div class="body">
+      <div class="qt">계정 임계값 설정 <code>deny=5, unlock_time=120, no_magic_root, reset</code>의 각 옵션 의미를 서술하시오.</div>
+      <details><summary>모범답안 보기</summary><div class="at"><b>deny=5</b>: 인증 5회 실패 시 계정 잠금 · <b>unlock_time=120</b>: 마지막 실패 후 120초 뒤 자동 잠금 해제 · <b>no_magic_root</b>: root는 잠금 예외 · <b>reset</b>: 로그인 성공 시 실패 횟수 초기화</div></details>
+    </div></div>
+  </div>
+</section>
+
 <div class="foot">
-  13~31회 서술·실무 이력 합산 기반 · 임박도×신뢰도 상위 14개 ·
+  13~31회 서술·실무 이력 합산 · 빈도 보정 반영 · 총 17개 후보 ·
   함께 보기 <a href="note_32.html">📓 32회 학습노트</a> · <a href="report_32.html">📊 32회 예측</a>
 </div>
 
