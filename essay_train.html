@@ -48,6 +48,7 @@ select,.btn{
   background:transparent;border:1px solid var(--ink);border-radius:0;
   padding:.4rem .7rem;cursor:pointer;transition:background .15s,color .15s;
 }
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
 select{background:var(--card)}
 .btn:hover{background:var(--ink);color:var(--card)}
 .btn.ghost{border-color:var(--line);color:var(--ink-2)}
@@ -168,6 +169,7 @@ main{padding-top:1.6rem}
     <div class="hd">
       <div class="brand">서술형 답안 훈련<small>정보보안기사 실기 · 17문항</small></div>
       <div class="hd-r">
+        <a class="btn ghost" href="index.html">← 홈</a>
         <select id="mode">
           <option value="seq">순서대로</option>
           <option value="rand">랜덤</option>
