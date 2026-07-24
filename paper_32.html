@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>정보보안기사 실기 32회 · 예상 문제지 (기출 정량분석 기반)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+  --g-fix:#0C6E5E; --g-strong:#2F7DC0; --g-return:#9A6410; --g-new:#B4432C;
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+    --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+    --line:#26332D; --line-soft:#1E2A25;
+    --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+    --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+    --g-fix:#3FB89E; --g-strong:#5AA9E6; --g-return:#D9A648; --g-new:#E08066;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1512; --surface:#141F1B; --surface-2:#1B2823;
+  --ink:#E7EEEA; --ink-soft:#A6B4AD; --ink-faint:#76857D;
+  --line:#26332D; --line-soft:#1E2A25;
+  --accent:#3FB89E; --accent-deep:#57C6AD; --accent-wash:#16302A;
+  --crit:#E08066; --crit-wash:#2E1B15; --warn:#D9A648; --warn-wash:#2C2413;
+  --g-fix:#3FB89E; --g-strong:#5AA9E6; --g-return:#D9A648; --g-new:#E08066;
+}
+:root[data-theme="light"]{
+  --ground:#F3F6F4; --surface:#FFFFFF; --surface-2:#EEF3F0;
+  --ink:#111E19; --ink-soft:#4B5A53; --ink-faint:#7A877F;
+  --line:#D9E1DC; --line-soft:#E7ECE8;
+  --accent:#0C6E5E; --accent-deep:#0A5546; --accent-wash:#E3F1EC;
+  --crit:#B4432C; --crit-wash:#F7E7E2; --warn:#9A6410; --warn-wash:#F6ECD9;
+  --g-fix:#0C6E5E; --g-strong:#2F7DC0; --g-return:#9A6410; --g-new:#B4432C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.62;
+  -webkit-font-smoothing:antialiased;padding:0 20px 90px}
+.wrap{max-width:900px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+a.back{display:inline-block;margin:22px 0 0;font-family:var(--mono);font-size:.75rem;color:var(--accent);text-decoration:none}
+a.back:hover{text-decoration:underline}
+
+header{padding:40px 0 28px;border-bottom:2px solid var(--ink)}
+.dossier{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.dossier .dot{width:8px;height:8px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 4px var(--crit-wash)}
+.dossier .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint)}
+h1{font-size:clamp(1.8rem,5vw,2.7rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin-top:14px;font-size:1.02rem;color:var(--ink-soft);max-width:64ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+
+section{margin-top:40px}
+h2{font-size:1.3rem;font-weight:700;letter-spacing:-.02em;display:flex;align-items:baseline;gap:10px}
+h2 .n{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600}
+p{margin:12px 0;color:var(--ink-soft)}
+p strong{color:var(--ink);font-weight:600}
+
+.gradelegend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.gl{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-soft);font-family:var(--mono);
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+.gl i{width:9px;height:9px;border-radius:50%}
+
+.disc{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:.9rem;color:var(--ink-soft)}
+.disc b{color:var(--ink)}
+
+.partlabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);
+  margin:30px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.partlabel span:last-child{color:var(--ink-faint)}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.q .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.q .qn{font-family:var(--mono);font-weight:700;color:var(--ink);font-size:.95rem;background:var(--surface-2);
+  border-radius:6px;padding:2px 9px}
+.q .grade{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.08em;padding:3px 8px;border-radius:99px;color:#fff}
+.grade.fix{background:var(--g-fix)} .grade.strong{background:var(--g-strong)} .grade.ret{background:var(--g-return)} .grade.new{background:var(--g-new)}
+.q .subj{font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);letter-spacing:.06em}
+.q .ev{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--ink-faint)}
+.q .body{font-size:.95rem;color:var(--ink);margin:8px 0}
+.q .body .code{font-family:var(--mono);font-size:.82rem;background:var(--surface-2);border:1px solid var(--line-soft);
+  border-radius:6px;padding:8px 10px;margin:8px 0;white-space:pre-wrap;overflow-x:auto;color:var(--ink-soft)}
+details{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+summary{cursor:pointer;font-family:var(--mono);font-size:.76rem;color:var(--accent);font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▶ ";font-size:.6rem}
+details[open] summary::before{content:"▼ "}
+.ans{margin-top:8px;font-size:.9rem;color:var(--ink-soft);background:var(--accent-wash);border-radius:8px;padding:12px 14px}
+.ans b{color:var(--ink)}
+.ans .why{margin-top:8px;padding-top:8px;border-top:1px solid var(--line-soft);font-size:.82rem;color:var(--ink-faint)}
+
+.foot{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-faint);font-family:var(--mono);line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="dossier"><span class="dot"></span><span class="lbl">Predicted Paper · 32nd</span></div>
+  <div class="eyebrow">정보보안기사 실기 · 32회 예상 문제지</div>
+  <h1>32회 <em>예상 문제</em> 18선<br><span style="font-size:.5em;color:var(--ink-soft);font-weight:600">문제 + 모범답안 + 출제근거</span></h1>
+  <p class="sub">13~31회 324문항의 <b>세부 토픽 빈도·최근성·출제공백</b>을 정량 분석해, 신 시행사 포맷
+     <b>(단답 12 · 서술 4 · 실무 2 = 100점)</b>에 맞춰 실제 문항 형태로 재구성한 예측입니다. 각 문항에 근거를 병기했습니다.</p>
+  <div class="meta">
+    <span class="chip">근거 324문항 / 40개 토픽</span>
+    <span class="chip">재출 편향 95%</span>
+    <span class="chip">회귀후보 반영</span>
+  </div>
+  <a class="back" href="subject_ratio.html">← 과목비율 분석으로</a>
+</header>
+
+<section>
+  <h2><span class="n">00</span> 예측 등급 · 근거 표기</h2>
+  <div class="gradelegend">
+    <span class="gl"><i style="background:var(--g-fix)"></i>확정 — 스테이플, 거의 매회</span>
+    <span class="gl"><i style="background:var(--g-strong)"></i>유력 — 신 시행사 다빈도</span>
+    <span class="gl"><i style="background:var(--g-return)"></i>회귀후보 — 빈출인데 공백 큼</span>
+    <span class="gl"><i style="background:var(--g-new)"></i>신출대비 — 최신 트렌드</span>
+  </div>
+  <p style="font-size:.86rem">우측 <span class="mono">근거</span>는 <b>출현/19회 · 최근 등장 · 신시대(22–31) 출현/10</b> 순. 예: <span class="mono">12회·31회·신7/10</span> = 전체 12번, 마지막 31회, 신 시행사 10회 중 7번.</p>
+</section>
+
+<!-- 단답형 -->
+<div class="partlabel"><span>■ 단답형 · 12문 × 3점 = 36점</span><span>제한시간 배분 ~35분</span></div>
+<div id="short"></div>
+
+<!-- 서술형 -->
+<div class="partlabel"><span>■ 서술형 · 4문 × 12점 = 48점</span><span>배점 최대 · 부분점수 확보 관건</span></div>
+<div id="essay"></div>
+
+<!-- 실무형 -->
+<div class="partlabel"><span>■ 실무형 · 2문 × (택1 또는 각 8점) = 16점</span><span>로그·시나리오 분석</span></div>
+<div id="prac"></div>
+
+<section>
+  <h2><span class="n">08</span> 이번 회차 특별 주목</h2>
+  <p><strong>🟡 회귀후보 3종을 반드시 챙기세요.</strong> 통계상 “빈출인데 최근 공백이 큰” 토픽은 32회에서 되돌아올 확률이 높습니다.</p>
+  <ul style="list-style:none;margin:8px 0">
+    <li style="padding:6px 0;border-bottom:1px solid var(--line-soft)">▸ <b>정량적 위험평가(SLE·ALE·ARO)</b> — 7회 출현했으나 24회 이후 <b>7회차째 공백</b>. 서술형 최유력 회귀.</li>
+    <li style="padding:6px 0;border-bottom:1px solid var(--line-soft)">▸ <b>ARP 스푸핑</b> — 25회 이후 <b>6회차 공백</b>. 단답 회귀 1순위.</li>
+    <li style="padding:6px 0">▸ <b>무선랜 보안(WPA2/WPA3)</b> — 24회 이후 <b>7회차 공백</b>. WPA3 신출과 결합 가능.</li>
+  </ul>
+  <p style="font-size:.86rem;color:var(--ink-faint)">※ 신 시행사(22회~) 특징: <b>Windows 로그·계정 실무(신시대 8/10)</b>와 <b>SNMP(7/10)</b>가 급부상. 실무형은 리눅스/윈도우 로그 분석 쪽에 무게가 실립니다.</p>
+</section>
+
+<div class="disc">
+  <b>면책</b> · 이 문제지는 공개 기출 13–31회의 <b>정량 패턴에 근거한 학습용 예측</b>이며 실제 32회 출제와 무관합니다.
+  문항·수치는 기출 빈출 형태를 재구성한 것으로, 실제 시험의 지문·정답과 다를 수 있습니다. 합격의 핵심은 예측 적중이 아니라 <b>스테이플 토픽의 완전 숙지</b>입니다.
+</div>
+
+<div class="foot">
+  방법: 40개 세부 토픽 정규식으로 회차별 출현 매칭 → 빈도·최근 등장·출제공백 산출 → 신 시행사(22–31) 포맷에 배치.
+  등급은 (출현빈도 × 최근성 × 공백)의 정성 종합. · 기출 13–31회 정량 분석 기반 · 생성 2026-07-22
+</div>
+
+</div>
+
+<script>
+// 예상 문항 데이터
+const SHORT=[
+ {n:1,g:'strong',gl:'유력',subj:'시스템',ev:'6회·29회·신4/10',
+  q:'리눅스 특수 권한 SetUID·SetGID·Sticky Bit의 8진수 값을 각각 쓰고, ls -l 출력에서 실행권한 자리에 표시되는 문자를 쓰시오.',
+  a:'<b>SetUID 4000</b>(소유자 실행권한 자리 <b>s</b>), <b>SetGID 2000</b>(그룹 실행권한 자리 <b>s</b>), <b>Sticky Bit 1000</b>(other 실행권한 자리 <b>t</b>). 해당 자리에 실행권한(x)이 없으면 대문자 <b>S / T</b>로 표기.',
+  why:'특수권한 8진수는 신·구 통틀어 최빈출 단답. /etc/passwd·find -perm과 묶여 실무형으로도 확장.'},
+ {n:2,g:'ret',gl:'회귀후보',subj:'시스템',ev:'4회·28회·신3/10 (공백3)',
+  q:'다음 로그 파일과 조회 명령을 연결하시오. (1) 현재 로그인한 사용자 (2) 로그인·로그아웃·재부팅 이력 (3) 로그인 실패 기록',
+  a:'(1) <b>utmp</b> — w / who &nbsp; (2) <b>wtmp</b> — last &nbsp; (3) <b>btmp</b> — lastb &nbsp;(+lastlog=마지막 로그인 시각→lastlog)',
+  why:'스테이플이지만 28회 이후 3회 공백 → 회귀 가능성. 파일↔명령 매칭 형태로 반복.'},
+ {n:3,g:'strong',gl:'유력',subj:'시스템',ev:'7회·31회·신2/10(30·31 연속)',
+  q:'/etc/shadow의 암호 필드는 $id$salt$hash 형식이다. id 값 1 · 5 · 6 이 각각 의미하는 해시 알고리즘을 쓰시오.',
+  a:'<b>1 = MD5</b>, &nbsp;<b>5 = SHA-256</b>, &nbsp;<b>6 = SHA-512</b> &nbsp;(2a = Blowfish). salt는 레인보우 테이블 공격 방어용.',
+  why:'30·31회 연속 출제된 상승 토픽. 신 시행사가 shadow 구조를 반복적으로 물음.'},
+ {n:4,g:'ret',gl:'회귀후보',subj:'네트워크',ev:'3회·25회·신1/10 (공백6·최장)',
+  q:'ARP 스푸핑 공격의 동작 원리를 한 줄로 설명하고, 근본적 대응책 1가지를 명령과 함께 쓰시오.',
+  a:'위조된 <b>ARP Reply</b>로 피해자의 ARP 캐시에 있는 <b>IP–MAC 매핑을 공격자 MAC으로 변조</b>해 트래픽을 가로챈다(MITM). 대응: <b>정적(static) ARP 등록</b> — <span class="mono">arp -s [IP] [MAC]</span>.',
+  why:'전체 기출 중 최장 공백(25회 마지막). 빈출 토픽의 회귀 1순위.'},
+ {n:5,g:'fix',gl:'확정',subj:'네트워크',ev:'12회·31회·신7/10',
+  q:'다음 설명에 해당하는 DoS/DDoS 공격명을 각각 쓰시오. (1) 출발지를 피해자 IP로 위조하여 브로드캐스트로 ICMP 요청 (2) TCP 연결의 SYN만 다량 전송하여 백로그 큐 고갈 (3) 출발지 IP·포트를 목적지와 동일하게 위조',
+  a:'(1) <b>Smurf Attack</b> &nbsp;(2) <b>SYN Flooding</b> &nbsp;(3) <b>Land Attack</b>',
+  why:'거의 매회 출제되는 확정 스테이플. 3~4개 유형 매칭 형태가 정형.'},
+ {n:6,g:'ret',gl:'회귀후보',subj:'네트워크',ev:'2회·27회·신2/10 (공백4)',
+  q:'TCP 플래그를 조작하는 스텔스 스캔 3가지(XMAS·NULL·FIN)에서, 스캔 대상 포트가 "닫혀 있을 때" 돌아오는 응답 패킷을 쓰고, "열려 있을 때"의 응답을 쓰시오.',
+  a:'닫힌 포트 → <b>RST(RST/ACK)</b> 응답. 열린 포트 → <b>무응답</b>(응답 없음). 세 스캔 모두 방화벽·IDS 로깅 우회를 목적으로 함.',
+  why:'26·27회 연속 후 공백 4. 스캔 기법은 주기적으로 재등장.'},
+ {n:7,g:'strong',gl:'유력',subj:'애플리케이션',ev:'6회·30회·신5/10',
+  q:'SQL 인젝션의 가장 근본적인 대응 기법으로, 쿼리의 구조(SQL문)와 사용자 입력 데이터를 분리하여 바인딩 처리하는 방식을 무엇이라 하는가?',
+  a:'<b>매개변수화 쿼리(Prepared Statement / Parameterized Query)</b>. 그 외 입력값 검증(화이트리스트), 저장 프로시저, 최소권한 DB 계정, 오류메시지 노출 차단.',
+  why:'신 시행사에서 웹 시큐어코딩 비중 증가. 대응기법 단답이 정형.'},
+ {n:8,g:'strong',gl:'유력',subj:'애플리케이션',ev:'11회·28회·신5/10 (+신출)',
+  q:'정상 소프트웨어의 개발·빌드·업데이트 과정에 악성코드를 은닉해 다수 사용자를 동시 감염시키는 공격 유형을 쓰고, 이를 방어하기 위해 SW 구성요소를 명세화한 산출물의 약어를 쓰시오.',
+  a:'공격 유형: <b>공급망 공격(Supply Chain Attack)</b>. 산출물: <b>SBOM</b>(Software Bill of Materials, SW 자재명세서).',
+  why:'악성코드/APT는 빈출(11회). 최근 공급망·SBOM·제로트러스트가 신출 단답으로 유입.'},
+ {n:9,g:'ret',gl:'회귀후보',subj:'침해대응',ev:'2회·28회·신1/10 (공백3)',
+  q:'록히드마틴 사이버 킬 체인(Cyber Kill Chain) 7단계 중 4·5단계를 순서대로 쓰고, MITRE ATT&CK이 킬 체인과 다르게 "무엇"을 중심으로 공격을 기술하는지 쓰시오.',
+  a:'4단계 <b>Exploitation(취약점 공격)</b> → 5단계 <b>Installation(악성코드 설치)</b>. (전체: Recon→Weaponization→Delivery→Exploitation→Installation→C2→Actions). ATT&CK은 공격자의 <b>전술·기법(TTP)</b> 중심 매트릭스.',
+  why:'13·28회 출제 후 공백 3. 킬체인 vs ATT&CK 비교가 최근 트렌드.'},
+ {n:10,g:'fix',gl:'확정',subj:'위험·법규',ev:'19회·31회·신10/10',
+  q:'위험 처리(대응) 4가지 전략을 쓰고, 잔여 위험이 조직이 수용 가능한 위험 수준(DoA) 이하일 때 선택하는 전략을 쓰시오.',
+  a:'4가지: <b>위험 감소(완화)·위험 회피·위험 전가(이전)·위험 수용</b>. DoA 이하 → <b>위험 수용(Risk Acceptance)</b>.',
+  why:'19개 회차 전부 등장한 유일한 100% 스테이플. 반드시 확보해야 할 문항.'},
+ {n:11,g:'fix',gl:'확정',subj:'위험·법규',ev:'10회·29회·신5/10',
+  q:'「개인정보의 안전성 확보조치 기준」상 개인정보처리시스템 접속기록의 최소 보관 기간(원칙 / 강화 대상)과 점검 주기를 쓰시오.',
+  a:'원칙 <b>1년 이상</b> 보관. 단, <b>5만 명 이상</b> 정보주체의 개인정보 또는 <b>고유식별정보·민감정보</b>를 처리하는 시스템은 <b>2년 이상</b>. 접속기록은 <b>월 1회 이상</b> 점검.',
+  why:'법규 최빈출. 접속기록·내부관리계획은 거의 매회 단답 또는 서술로 등장.'},
+ {n:12,g:'strong',gl:'유력',subj:'보안일반',ev:'5회·31회·신3/10',
+  q:'블록암호 운영 모드 중 (1) 각 평문 블록을 독립적으로 암호화하여 동일 평문→동일 암호문이 되어 패턴이 노출되는 모드, (2) 이전 암호문 블록과 XOR 후 암호화하여 패턴을 은닉하는 모드를 쓰시오.',
+  a:'(1) <b>ECB</b>(Electronic Code Book) &nbsp;(2) <b>CBC</b>(Cipher Block Chaining). CBC는 첫 블록에 <b>IV(초기화 벡터)</b> 사용.',
+  why:'해시·암호 운영모드는 신 시행사에서도 꾸준. ECB 취약성 비교가 정형.'},
+];
+
+const ESSAY=[
+ {n:13,g:'ret',gl:'회귀후보',subj:'위험·법규',ev:'7회·24회 (공백7·강력)',
+  q:'정량적 위험분석과 정성적 위험분석의 차이를 설명하고, 정량적 위험분석의 핵심 지표인 SLE·ALE·ARO의 산출식을 쓰시오.',
+  a:'<b>정량적</b>: 손실을 <b>화폐 가치로 수치화</b>(객관적, 비용·시간 多 / 델파이·과거자료·수학적 계산). <b>정성적</b>: 손실을 상·중·하 등 <b>서술적 등급</b>으로 평가(주관적, 신속 / 시나리오·순위결정법).<br>· <b>SLE = 자산가치(AV) × 노출계수(EF)</b><br>· <b>ALE = SLE × 연간발생빈도(ARO)</b><br>대책의 가치 = (도입 전 ALE − 도입 후 ALE) − 연간 대책 비용.',
+  why:'실기 최빈출 서술 주제인데 24회 이후 7회차 공백. 서술형 회귀 최유력.'},
+ {n:14,g:'strong',gl:'유력',subj:'네트워크',ev:'8회·30회·신3/10',
+  q:'IPSec의 두 보안 프로토콜 AH와 ESP가 제공하는 보안 서비스의 차이를 설명하고, 전송 모드(Transport)와 터널 모드(Tunnel)의 차이를 설명하시오.',
+  a:'<b>AH</b>(Authentication Header): <b>무결성 + 인증 + 재전송 방지</b> 제공, <b>기밀성 없음</b>.<br><b>ESP</b>(Encapsulating Security Payload): <b>기밀성(암호화) + 무결성 + 인증</b> 제공.<br><b>전송 모드</b>: IP 페이로드만 보호, 원본 IP 헤더 유지(호스트↔호스트).<br><b>터널 모드</b>: 원본 IP 패킷 전체를 암호화·캡슐화하고 <b>새 IP 헤더</b>를 추가(게이트웨이/VPN 구간).',
+  why:'SSL/TLS 핸드셰이크와 함께 네트워크 서술 양대 축. 30회 최근 출제.'},
+ {n:15,g:'fix',gl:'확정',subj:'네트워크',ev:'14회·30회·신6/10',
+  q:'다음 Snort 룰을 각 필드 단위로 해석하고, 어떤 공격을 탐지하려는 룰인지 설명하시오.',
+  code:'alert tcp any any -> 192.168.10.0/24 80 ( \\\n   content:"../../"; content:"/etc/passwd"; \\\n   msg:"Directory Traversal Attempt"; sid:1000012; )',
+  a:'· <b>alert</b>: 매칭 시 경보 발생(액션)<br>· <b>tcp any any</b>: 프로토콜 TCP, 출발지 IP·포트 무관<br>· <b>-&gt; 192.168.10.0/24 80</b>: 목적지 내부망 대역의 80(HTTP) 포트<br>· <b>content:"../../", "/etc/passwd"</b>: 페이로드에 해당 문자열 포함 시 탐지<br>· <b>msg</b>: 로그 메시지, <b>sid</b>: 룰 고유번호<br>→ 웹 요청으로 상위 디렉터리를 거슬러 /etc/passwd를 읽으려는 <b>디렉터리 트래버설(경로 조작)</b> 탐지 룰.',
+  why:'단답·서술·실무를 넘나드는 최강 후보(14회). 헤더+옵션 해석/작성이 정형.'},
+ {n:16,g:'strong',gl:'유력',subj:'애플리케이션',ev:'9회·31회·신5/10',
+  q:'XSS(Cross-Site Scripting)를 Stored·Reflected·DOM 기반 3가지로 구분하여 설명하고, 공통 대응책 2가지를 쓰시오.',
+  a:'<b>Stored(저장형)</b>: 악성 스크립트가 <b>서버 DB에 저장</b>되어 게시글 열람자마다 실행(피해 큼).<br><b>Reflected(반사형)</b>: 요청 파라미터의 스크립트가 <b>응답에 즉시 반사</b>되어 실행(피싱 링크 유도).<br><b>DOM 기반</b>: 서버를 거치지 않고 <b>클라이언트 스크립트가 DOM을 조작</b>하는 과정에서 실행.<br>대응: ① 입력값 검증 + <b>출력 시 HTML 인코딩(이스케이프)</b> ② <b>CSP</b> 적용, HttpOnly 쿠키, WAF.',
+  why:'웹 공격 서술 단골. 31회 출제되었고 종류 구분+대응이 정형.'},
+];
+
+const PRAC=[
+ {n:17,g:'strong',gl:'유력',subj:'애플리케이션 실무',ev:'웹로그 24·29회·신2/10',
+  q:'다음 Apache access_log 일부를 보고 (1) 공격 유형, (2) 공격 성공 여부와 판단 근거, (3) 대응책 2가지를 기술하시오.',
+  code:'211.x.x.x - - [21/Jul/2026:10:11:02] "POST /board/upload.php HTTP/1.1" 200 512\n211.x.x.x - - [21/Jul/2026:10:11:40] "GET /board/files/cmd.php?cmd=id HTTP/1.1" 200 128\n211.x.x.x - - [21/Jul/2026:10:12:05] "GET /board/files/cmd.php?cmd=cat+/etc/passwd HTTP/1.1" 200 940',
+  a:'<b>(1) 공격 유형</b>: 파일 업로드 취약점을 통한 <b>웹셸(Web Shell) 업로드·명령 실행</b>.<br><b>(2) 성공 여부</b>: 업로드(POST upload.php) 응답 <b>200</b> 후, 업로드된 <b>cmd.php에 cmd=id / cmd=cat /etc/passwd</b> 요청이 모두 <b>200 + 응답 크기 정상</b> → 명령이 실제 실행됨 → <b>공격 성공</b>.<br><b>(3) 대응</b>: ① 업로드 파일 <b>확장자 화이트리스트</b> 검증(.php 차단) + 파일 시그니처 검사 ② 업로드 디렉터리 <b>실행 권한 제거</b>(Options -ExecCGI, 별도 스토리지) ③ WAF·웹셸 탐지.',
+  why:'신 시행사 실무형은 웹 access_log 분석이 반복(24·29회). 업로드→웹셸 시나리오가 정형.'},
+ {n:18,g:'strong',gl:'유력',subj:'시스템 실무',ev:'Win로그 신8/10·계정점검',
+  q:'침해가 의심되는 리눅스 서버를 점검한다. (1) UID가 0인 백도어(관리자 권한) 계정을 찾는 방법, (2) 불필요하게 SetUID가 설정된 파일을 탐색하는 명령, (3) 최근 로그인 실패 기록을 확인하는 명령을 각각 쓰시오.',
+  a:'<b>(1)</b> /etc/passwd에서 세 번째 필드(UID)가 0인 계정 확인 — <span class="mono">awk -F: \'$3==0 {print $1}\' /etc/passwd</span> (root 외에 UID 0이 있으면 백도어).<br><b>(2)</b> <span class="mono">find / -perm -4000 -type f 2&gt;/dev/null</span> (SetGID는 -2000).<br><b>(3)</b> <span class="mono">lastb</span> (btmp 기반 로그인 실패 기록). 성공 이력은 <span class="mono">last</span>(wtmp).',
+  why:'신 시행사가 크게 강화한 시스템 계정·로그 실무(신시대 8/10). 윈도우 버전(이벤트 로그·net user)으로 변형 가능.'},
+];
+
+function grade(g){return {fix:'확정',strong:'유력',ret:'회귀후보',new:'신출대비'}[g];}
+function render(list,el){
+  el.innerHTML=list.map(o=>`
+   <div class="q">
+     <div class="top">
+       <span class="qn">${String(o.n).padStart(2,'0')}</span>
+       <span class="grade ${o.g}">${o.gl}</span>
+       <span class="subj">${o.subj}</span>
+       <span class="ev">근거 ${o.ev}</span>
+     </div>
+     <div class="body">${o.q}${o.code?`<div class="code">${o.code}</div>`:''}</div>
+     <details>
+       <summary>모범답안 보기</summary>
+       <div class="ans">${o.a}<div class="why">▸ 출제근거: ${o.why}</div></div>
+     </details>
+   </div>`).join('');
+}
+render(SHORT,document.getElementById('short'));
+render(ESSAY,document.getElementById('essay'));
+render(PRAC,document.getElementById('prac'));
+</script>
+</body>
+</html>

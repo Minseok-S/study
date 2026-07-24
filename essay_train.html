@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정보보안기사 실기 · 서술형 답안 훈련</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E4E8EB;
+  --card:#F8F9FA;
+  --ink:#16202A;
+  --ink-2:#53646F;
+  --ink-3:#8B99A3;
+  --rule:#CCD5DB;
+  --line:#D5DCE1;
+  --red:#B8342A;
+  --green:#17635A;
+  --amber:#A8770F;
+  --lh:2.05rem;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans KR","Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-weight:400;
+  line-height:1.7;
+  padding:0 0 5rem;
+}
+.wrap{max-width:820px;margin:0 auto;padding:0 1.1rem}
+
+/* ── 헤더 ── */
+header{
+  border-bottom:1px solid var(--ink);
+  background:var(--paper);
+  position:sticky;top:0;z-index:20;
+}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:1.1rem 0 .8rem;flex-wrap:wrap}
+.brand{font-family:"Gowun Batang",serif;font-size:1.42rem;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+.brand small{display:block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.16em;color:var(--ink-3);font-weight:400;margin-top:.3rem}
+.hd-r{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+select,.btn{
+  font-family:inherit;font-size:.8rem;color:var(--ink);
+  background:transparent;border:1px solid var(--ink);border-radius:0;
+  padding:.4rem .7rem;cursor:pointer;transition:background .15s,color .15s;
+}
+select{background:var(--card)}
+.btn:hover{background:var(--ink);color:var(--card)}
+.btn.ghost{border-color:var(--line);color:var(--ink-2)}
+.btn.ghost:hover{background:var(--ink-2);color:var(--card);border-color:var(--ink-2)}
+
+/* 진행 눈금 */
+.ticks{display:flex;gap:2px;padding-bottom:.7rem}
+.tick{flex:1;height:5px;background:var(--line);cursor:pointer;transition:background .2s}
+.tick.o{background:var(--green)}
+.tick.t{background:var(--amber)}
+.tick.x{background:var(--red)}
+.tick.cur{outline:1px solid var(--ink);outline-offset:1px}
+
+/* ── 문제 카드 ── */
+main{padding-top:1.6rem}
+.qmeta{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.55rem}
+.qno{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--red)}
+.qpts{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink-3);margin-left:auto}
+.qtitle{font-family:"Gowun Batang",serif;font-size:1.05rem;font-weight:700;color:var(--ink-2)}
+.prompt{
+  font-family:"Gowun Batang",serif;font-size:1.24rem;line-height:1.72;
+  padding-bottom:1.1rem;border-bottom:2px solid var(--ink);margin-bottom:1.5rem;
+}
+.prompt pre{
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;line-height:1.7;
+  background:var(--ink);color:#D8E0E6;padding:.85rem 1rem;margin:.9rem 0 .2rem;
+  overflow-x:auto;white-space:pre;
+}
+.prompt ul{margin:.7rem 0 0 1.1rem;font-size:1.06rem}
+.prompt li{margin:.2rem 0}
+
+/* 소문항 */
+.part{margin-bottom:2.1rem}
+.plabel{
+  font-size:.93rem;font-weight:600;margin-bottom:.5rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.plabel .hit{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--ink-3);margin-left:auto;font-weight:400}
+
+/* 원고지풍 답안란 */
+.sheet{position:relative;background:var(--card);border:1px solid var(--rule)}
+.sheet textarea{
+  display:block;width:100%;min-height:calc(var(--lh)*3);
+  font-family:inherit;font-size:.96rem;line-height:var(--lh);
+  color:var(--ink);background:
+    repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px),var(--rule) var(--lh));
+  background-position:0 .5rem;
+  border:0;outline:0;resize:vertical;padding:.5rem .85rem;
+}
+.sheet textarea::placeholder{color:var(--ink-3)}
+.sheet:focus-within{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+
+/* 채점 키워드 칩 */
+.kws{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+.kw{
+  font-size:.75rem;padding:.2rem .55rem;border:1px solid var(--line);
+  color:var(--ink-3);background:transparent;transition:all .25s ease;
+}
+.kw.on{border-color:var(--green);color:var(--card);background:var(--green)}
+
+/* 모범답안 */
+.model{
+  display:none;margin-top:.9rem;padding:.9rem 1rem;
+  border-left:3px solid var(--red);background:rgba(184,52,42,.05);
+  font-size:.92rem;color:#7A2A22;line-height:1.85;
+}
+.model.show{display:block}
+.model b{color:var(--red);font-weight:600}
+
+/* 액션 */
+.acts{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;
+  border-top:1px solid var(--line);padding-top:1.1rem;margin-top:.5rem}
+.grade{display:flex;gap:.4rem;margin-left:auto}
+.g{width:2.4rem;height:2.4rem;border:1px solid var(--line);background:transparent;
+  font-family:"Gowun Batang",serif;font-size:1.1rem;cursor:pointer;color:var(--ink-2);transition:all .15s}
+.g[data-g="o"]:hover,.g[data-g="o"].sel{border-color:var(--green);color:var(--card);background:var(--green)}
+.g[data-g="t"]:hover,.g[data-g="t"].sel{border-color:var(--amber);color:var(--card);background:var(--amber)}
+.g[data-g="x"]:hover,.g[data-g="x"].sel{border-color:var(--red);color:var(--card);background:var(--red)}
+
+/* 채점 도장 */
+.stamp{
+  position:fixed;top:50%;left:50%;pointer-events:none;z-index:60;
+  font-family:"Gowun Batang",serif;font-size:5.5rem;font-weight:700;
+  border:5px solid currentColor;border-radius:50%;width:9rem;height:9rem;
+  display:grid;place-items:center;opacity:0;
+  transform:translate(-50%,-50%) rotate(-16deg) scale(1.5);
+}
+.stamp.go{animation:pop .75s ease-out}
+@keyframes pop{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(-16deg) scale(1.6)}
+  18%{opacity:.92;transform:translate(-50%,-50%) rotate(-16deg) scale(1)}
+  70%{opacity:.92}
+  100%{opacity:0}
+}
+
+/* 통계 / 완료 */
+.stats{display:flex;gap:1.6rem;flex-wrap:wrap;border-top:1px solid var(--ink);
+  margin-top:2.6rem;padding-top:1rem;font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--ink-2)}
+.stats b{font-size:1.05rem;color:var(--ink);font-weight:400}
+.done{text-align:center;padding:4rem 1rem}
+.done h2{font-family:"Gowun Batang",serif;font-size:1.8rem;margin-bottom:.7rem}
+.done p{color:var(--ink-2);font-size:.92rem;margin-bottom:1.6rem}
+.note{font-size:.74rem;color:var(--ink-3);margin-top:.5rem;font-family:"IBM Plex Mono",monospace}
+
+@media (max-width:560px){
+  .prompt{font-size:1.1rem}
+  .brand{font-size:1.2rem}
+  .qpts{width:100%;margin-left:0}
+  .stamp{font-size:4rem;width:7rem;height:7rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hd">
+      <div class="brand">서술형 답안 훈련<small>정보보안기사 실기 · 17문항</small></div>
+      <div class="hd-r">
+        <select id="mode">
+          <option value="seq">순서대로</option>
+          <option value="rand">랜덤</option>
+          <option value="wrong">△·X 문항만</option>
+        </select>
+        <button class="btn ghost" id="reset">기록 지우기</button>
+      </div>
+    </div>
+    <div class="ticks" id="ticks"></div>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+<div class="stamp" id="stamp"></div>
+
+<script>
+const Q=[
+{no:1,t:"위험분석 접근법",p:12,prompt:"위험분석 접근법 4가지를 쓰고, 각각의 개념·장점·단점을 서술하시오.",parts:[
+ {l:"① 베이스라인 접근법",kw:["체크리스트|표준화|기준","최소 보안|기본 통제","시간|비용","특수성|고유|반영"],
+  m:"<b>개념</b> 표준화된 체크리스트나 검증된 보안 기준을 기반으로 보호대책 구현 여부를 점검하는 방식이다.<br><b>장점</b> 동일한 기본 통제를 일괄 적용하므로 분석 시간과 비용이 적고 최소 보안 수준을 신속히 확보할 수 있다.<br><b>단점</b> 조직 고유의 업무 특성과 자산별 중요도가 반영되지 않아 과대·과소 보호가 발생할 수 있다."},
+ {l:"② 비정형 접근법",kw:["경험|지식","방법론|구조","소규모|신속|적다","편차|상이|누락"],
+  m:"<b>개념</b> 정립된 방법론 없이 수행자의 경험과 전문 지식에 의존해 중요 위험 중심으로 분석하는 방식이다.<br><b>장점</b> 절차가 단순해 소규모 조직에서 빠르고 저렴하게 수행할 수 있다.<br><b>단점</b> 수행자 역량에 따라 결과 편차가 크고 특정 위험이 누락될 수 있으며 객관적 검증이 어렵다."},
+ {l:"③ 상세 위험 분석법",kw:["위험평가 모델|정립","자산","위협","취약점","정확|최적","시간|비용|전문"],
+  m:"<b>개념</b> 정립된 위험평가 모델을 기반으로 자산 가치, 위협, 취약점을 각각 식별·평가하여 위험을 산정한다.<br><b>장점</b> 조직 환경에 가장 정확히 부합하는 최적의 대책 수립이 가능하고 재평가와 근거 제시가 용이하다.<br><b>단점</b> 과정이 복잡해 시간·비용이 많이 들고 전문 인력이 요구된다."},
+ {l:"④ 복합 접근법",kw:["고위험|중요","상세","베이스라인","효율|유연","기준|복잡"],
+  m:"<b>개념</b> 고위험 영역은 상세 위험 분석법을, 그 외는 베이스라인 접근법을 적용해 병행하는 방식이다.<br><b>장점</b> 중요 자산에 자원을 집중하면서 전체 비용을 절감할 수 있어 효율성과 유연성이 높다.<br><b>단점</b> 고위험 구분 기준을 명확히 세우기 어렵고 두 체계를 병행해 관리 정책이 복잡해진다."}]},
+
+{no:2,t:"DNS 증폭 공격",p:8,prompt:"DNS 증폭(Amplification) 공격에 대하여 답하시오.",parts:[
+ {l:"(1) 사용되는 IP 공격 기법과 공격 성립 과정",kw:["IP 스푸핑|출발지|위조","ANY|질의|쿼리","반사|개방형|재귀","증폭","서비스 거부|DoS|대역폭|부하"],
+  m:"<b>IP 스푸핑</b> 기법이 사용된다. 공격자는 DNS 질의 패킷의 출발지 IP를 공격 대상 서버 IP로 위조한 뒤, 응답 크기가 큰 ANY 타입 질의를 다수의 개방형 DNS 서버(반사 서버)로 전송한다. 반사 서버는 위조된 IP를 정상 요청자로 인식하여 원 질의보다 수십 배 증폭된 응답을 대상 서버로 전송하고, 그 결과 대상 서버의 대역폭과 자원이 고갈되어 서비스 거부 상태에 빠진다."},
+ {l:"(2) 해당 기법을 사용하는 이유 2가지",kw:["증폭률|적은 요청|좀비","출처|역추적|은닉"],
+  m:"① 질의 대비 응답의 증폭률이 크기 때문에 다수의 좀비 PC 없이도 소량의 요청으로 대규모 공격 트래픽을 만들 수 있다.<br>② 실제 트래픽은 정상 DNS 서버에서 발신되고 출발지 IP도 위조되어 있어 공격의 실제 출처를 역추적하기 어렵다."}]},
+
+{no:3,t:"SQL 인젝션",p:9,prompt:"다음은 로그인 페이지에 전달된 요청 파라미터의 일부이다.<pre>id=1' or '1'='1'#&amp;pw=1234</pre>",parts:[
+ {l:"(1) 공격 명칭",kw:["SQL 인젝션|SQL Injection|SQL 삽입"],m:"<b>SQL 인젝션(SQL Injection)</b> 공격이다."},
+ {l:"(2) 공격 원리",kw:["질의문|SQL문|쿼리","항상 참|참으로","주석|#","인증|로그인 우회"],
+  m:"서버에서 문자열로 조립되는 인증 질의문의 구조 자체를 변조하고 있다. 삽입된 <b>or '1'='1'</b> 조건에 의해 WHERE 절이 항상 참이 되고, 뒤따르는 비밀번호 검증 구문은 <b>#</b> 주석 기호로 무력화된다. 이를 통해 정상 계정 정보 없이 인증 로직을 우회한다."},
+ {l:"(3) 대응 방안 2가지 이상",kw:["Prepared|바인딩|PreparedStatement","입력값 검증|필터링","권한 최소화|최소 권한","에러|오류 메시지"],
+  m:"① <b>Prepared Statement(바인딩 변수)</b>를 사용해 질의문 구조와 입력값을 분리한다.<br>② 입력값에 대해 화이트리스트 기반 검증과 특수문자 필터링을 수행한다.<br>③ DB 계정 권한을 업무에 필요한 최소한으로 제한한다.<br>④ 상세 오류 메시지가 사용자 화면에 노출되지 않도록 한다."}]},
+
+{no:4,t:"쿠키 보안 설정값",p:8,prompt:"세션 쿠키의 보안을 강화하기 위한 다음 4가지 속성에 대하여, 각각의 기능과 대응 가능한 공격을 연결하여 서술하시오.<ul><li>Secure / HttpOnly / Expires(Max-Age) / SameSite</li></ul>",parts:[
+ {l:"① Secure",kw:["HTTPS|암호화","스니핑|도청|탈취"],
+  m:"HTTPS로 암호화된 통신 구간에서만 쿠키가 전송되도록 제한한다. 평문 구간에서 전송되지 않으므로 네트워크 <b>스니핑</b>을 통한 세션 쿠키 탈취를 방지한다."},
+ {l:"② HttpOnly",kw:["자바스크립트|스크립트|document.cookie","XSS","세션|쿠키 탈취"],
+  m:"자바스크립트를 통한 쿠키 접근을 차단한다. XSS 취약점이 있더라도 악성 스크립트가 세션 쿠키를 읽어 외부로 전송할 수 없어 <b>XSS를 통한 세션 하이재킹</b>을 막는다."},
+ {l:"③ Expires / Max-Age",kw:["유효 기간|만료","삭제|무력화|재사용"],
+  m:"쿠키의 유효 기간을 지정한다. 만료 시 브라우저가 자동 삭제하므로 탈취되더라도 재사용 가능한 시간이 제한된다. 미지정 시 브라우저 종료로 삭제되는 세션 쿠키로 동작한다."},
+ {l:"④ SameSite",kw:["교차 사이트|타 도메인|다른 도메인","전송 제한|차단","CSRF"],
+  m:"쿠키를 설정한 도메인과 요청 발생 도메인이 다른 교차 사이트 요청에서 쿠키 전송 여부를 제어한다. Strict·Lax·None 값을 가지며, 타 사이트 유발 요청에 인증 쿠키가 자동 첨부되지 않아 <b>CSRF</b>에 대응한다."}]},
+
+{no:5,t:"SNMP 보안 설정",p:8,prompt:"SNMP 서비스 운영 시 적용해야 할 보안 설정을 4가지 이상 서술하시오.",parts:[
+ {l:"보안 설정 4가지 이상",kw:["SNMPv3|v3","ACL|접근 제어|IP 제한","Read-Only|RO|쓰기 제거|RW","커뮤니티 스트링","포트|161|중지"],
+  m:"① 평문 전송되는 v1·v2c 대신 인증과 암호화를 지원하는 <b>SNMPv3</b>를 사용한다.<br>② <b>ACL</b>을 적용해 인가된 관리 서버 IP에서만 접근하도록 제한한다.<br>③ 설정 변경이 가능한 <b>Read-Write 모드를 제거</b>하고 Read-Only로 운영한다.<br>④ <b>커뮤니티 스트링</b>을 기본값(public·private)에서 유추하기 어려운 값으로 변경하고 주기적으로 교체한다.<br>⑤ 미사용 시스템은 서비스를 중지하고 161·162 포트를 차단한다."}]},
+
+{no:6,t:"스니핑 탐지 방법",p:12,prompt:"스위칭 환경에서 무차별 모드(Promiscuous Mode)로 동작 중인 호스트를 탐지하는 방법 4가지를 쓰고, 각 방법의 탐지 원리를 서술하시오.",parts:[
+ {l:"① Ping(ICMP) 이용",kw:["위조|존재하지 않는 MAC","Echo Request|ping","응답|Reply","무차별 모드|Promiscuous"],
+  m:"네트워크에 존재하지 않는 위조 MAC 주소로 <b>ICMP Echo Request</b>를 의심 호스트에 전송한다. 정상 호스트는 자신의 MAC이 아니므로 폐기하지만, 무차별 모드 호스트는 이를 수신해 <b>Echo Reply</b>를 응답하므로 스니퍼로 탐지된다."},
+ {l:"② ARP 이용",kw:["위조 MAC|가짜 MAC","ARP Request|요청","ARP Reply|응답"],
+  m:"존재하지 않는 위조 MAC을 목적지로 하는 <b>ARP Request</b>를 전송한 뒤 응답 여부를 확인한다. 무차별 모드 호스트만 필터링 없이 수신해 <b>ARP Reply</b>를 응답하므로 스니퍼로 판단한다."},
+ {l:"③ DNS 이용",kw:["역방향|Reverse|DNS 조회","존재하지 않는 IP|가짜 IP","트래픽 관찰|발생"],
+  m:"스니핑 도구는 수집 패킷의 IP를 도메인명으로 표시하기 위해 <b>역방향 DNS 조회</b>를 수행한다. 존재하지 않는 가짜 IP를 출발지로 하는 패킷을 흘린 뒤 해당 IP에 대한 역방향 조회 트래픽 발생 여부를 관찰하여 탐지한다."},
+ {l:"④ Decoy(유인) 이용",kw:["가짜 계정|미끼|유인","평문","로그인 시도"],
+  m:"실제로 사용되지 않는 <b>가짜 계정과 비밀번호</b>를 평문 프로토콜로 네트워크에 흘려보낸 뒤, 해당 계정으로 로그인을 시도하는 호스트를 스니퍼로 탐지한다."}]},
+
+{no:7,t:"정보자산 중요도 등급",p:6,prompt:"정보자산의 중요도 등급을 상(H)·중(M)·하(L)로 구분하여, 각 등급이 취급하는 정보의 특성과 접근 허용 범위를 서술하시오.",parts:[
+ {l:"상·중·하 등급",kw:["기밀성","책임자|제한적","인가|허가된 직원","일반 직원","공개|대중"],
+  m:"<b>상(H)</b> 기밀성이 매우 높아 유출 시 심각한 피해가 발생하는 정보를 취급하며, 업무상 반드시 필요한 책임자에 한하여 제한적으로 접근이 허용된다.<br><b>중(M)</b> 기밀성이 중간 수준인 정보를 처리하며, 인가된 직원에 한하여 접근이 허용된다.<br><b>하(L)</b> 기밀성이 낮은 정보를 처리하여 내부 일반 직원도 접근할 수 있고, 공개를 전제로 한 정보는 일반 대중도 접근 가능하다."}]},
+
+{no:8,t:"ARP 스푸핑",p:10,prompt:"다음은 특정 PC에서 실행한 명령어의 결과이다.<pre>인터페이스: 192.168.100.55 --- 0xb\n  인터넷 주소          물리적 주소           유형\n  192.168.100.1     00-1c-42-3f-a1-77     동적\n  192.168.100.77    00-1c-42-3f-a1-77     동적</pre>",parts:[
+ {l:"(1) 사용한 명령어",kw:["arp -a|arp-a"],m:"<b>arp -a</b>"},
+ {l:"(2) 의심되는 공격 명칭과 피해",kw:["ARP 스푸핑|ARP Spoofing","캐시|테이블|변조","경유|중간","도청|스니핑|변조"],
+  m:"<b>ARP 스푸핑</b> 공격이다. 공격자가 위조된 ARP Reply를 지속 전송해 피해 호스트의 <b>ARP 캐시 테이블</b>을 변조함으로써, 게이트웨이로 향하는 정상 트래픽이 공격자 시스템을 경유하게 만든다. 이를 통해 스위칭 환경에서도 송수신 패킷을 도청하거나 위·변조할 수 있다."},
+ {l:"(3) 공격을 의심할 수 있는 근거",kw:["동일한 MAC|같은 물리적 주소|중복","서로 다른 IP|두 개의 IP"],
+  m:"서로 다른 두 IP(192.168.100.1과 192.168.100.77)가 <b>동일한 MAC 주소</b>로 중복 등록되어 있다. 이는 ARP 캐시가 위조되었음을 의미한다."},
+ {l:"(4) 대응 명령어",kw:["arp -s","192.168.100.1","00-0a-00-62-c6-09"],
+  m:"<b>arp -s 192.168.100.1 00-0a-00-62-c6-09</b><br>게이트웨이의 IP와 정상 MAC을 정적(static)으로 등록하여 위조된 ARP Reply로 캐시가 변경되지 않도록 한다."}]},
+
+{no:9,t:"XSS",p:10,prompt:"XSS(Cross Site Scripting) 공격에 대하여 답하시오.",parts:[
+ {l:"(1) 정의",kw:["입력값 검증|필터링 미흡","스크립트 삽입","다른 사용자|브라우저에서 실행","쿠키 탈취|세션|리다이렉션"],
+  m:"웹 애플리케이션의 <b>입력값 검증 미흡</b>을 이용해 악의적인 스크립트를 삽입하고, 이를 <b>다른 사용자의 브라우저에서 실행</b>되도록 하는 공격이다. 실행된 스크립트를 통해 세션 쿠키 탈취, 악성 사이트 리다이렉션, 화면 변조 등의 피해가 발생한다."},
+ {l:"(2) 공격 유형 3가지와 동작 방식",kw:["저장형|Stored","반사형|Reflected","DOM","데이터베이스|DB 저장","URL 파라미터","서버를 거치지 않|클라이언트"],
+  m:"<b>저장형(Stored)</b> 입력 폼으로 악성 스크립트를 삽입해 DB에 저장시킨 뒤, 다른 사용자가 해당 게시글을 열람할 때 실행된다. 불특정 다수가 피해를 입어 파급력이 가장 크다.<br><b>반사형(Reflected)</b> 스크립트가 포함된 URL 파라미터를 서버가 검증 없이 응답에 그대로 반사하여 실행된다. 조작된 URL의 클릭 유도가 필요하다.<br><b>DOM 기반</b> 파라미터 값이 서버로 전달되지 않고 클라이언트 스크립트가 DOM을 생성하는 과정에서 실행된다. 서버 로그에 남지 않아 탐지가 어렵다."},
+ {l:"(3) 대응 방안",kw:["출력|치환|인코딩|이스케이프","특수문자","HttpOnly","CSP"],
+  m:"입력값의 특수문자를 <b>HTML 엔티티로 치환</b>하고 출력 위치(HTML 본문·속성·스크립트)에 맞는 인코딩을 적용한다. 쿠키에 <b>HttpOnly</b> 속성을 설정하고 <b>CSP</b>를 적용하여 피해를 완화한다."}]},
+
+{no:10,t:"재해복구 시스템",p:12,prompt:"재해복구 시스템(DRS)의 유형 4가지를 복구 수준이 높은 순서대로 쓰고, 각각의 개념과 장단점을 서술하시오.",parts:[
+ {l:"① 미러 사이트",kw:["동일한 수준|동일한 자원","Active-Active|동시|실시간","즉시|손실 없|0","비용"],
+  m:"주 센터와 동일 수준의 자원을 원격지에 구축해 <b>Active-Active</b>로 동시 운영하며 실시간 동일 서비스를 제공한다. 재해 시 전환 절차 없이 서비스가 지속되어 데이터 손실이 없고 복구 시간이 사실상 0이다. 다만 구축·유지 비용이 가장 크고 동기화와 보안 관리 부담이 높다."},
+ {l:"② 핫 사이트",kw:["동일한 수준|동일한 자원","대기|Standby|Active-Standby","전환","수시간|신속","비용"],
+  m:"동일 수준의 자원을 보유하되 평상시 <b>대기(Standby)</b> 상태로 두었다가 재해 시 액티브로 전환한다. 실시간·준실시간 미러링으로 <b>수시간 이내</b> 복구가 가능하나, 구축 비용이 높고 지속적 유지관리가 필요하다."},
+ {l:"③ 웜 사이트",kw:["일부|중요 자원만","비용 적|저렴","수일|시간 소요","손실"],
+  m:"중앙처리장치·DB 서버 등 <b>필수적인 일부 자원만</b> 원격지에 보유한다. 비용이 상대적으로 낮으나 부족한 자원을 사후 확보해야 하므로 복구에 수일이 소요되고 데이터 손실 가능성이 크다."},
+ {l:"④ 콜드 사이트",kw:["데이터만|백업 보관","공간|설비|최소한","조달|확보","수주|가장 길|손실률"],
+  m:"<b>데이터만 원격지에 백업 보관</b>하고 전원·공조·회선 등 최소한의 설비 공간만 확보해 두었다가, 재해 시 필요한 자원을 조달해 복구한다. 비용이 가장 저렴하지만 자원 조달에 수주가 소요되어 복구 시간이 가장 길고 손실률도 가장 높다."}]},
+
+{no:11,t:"정보자산 중요도 산정",p:9,prompt:"정보자산 중요도 산정에 대하여 답하시오.",parts:[
+ {l:"(1) 개념",kw:["기밀성","무결성","가용성","가장 높은 등급|최고 등급"],
+  m:"자산이 취급하는 정보의 속성에 따라 <b>기밀성·무결성·가용성</b> 등급을 각각 평가한 후, 세 등급 중 <b>가장 높은 등급</b>을 해당 자산의 중요도로 산정하는 것을 말한다."},
+ {l:"(2) 3가지 평가 기준의 의미",kw:["유출","위변조|위조|변조","중단|서비스"],
+  m:"<b>기밀성</b> 정보가 인가되지 않은 자에게 유출되었을 때의 영향도<br><b>무결성</b> 정보가 인가되지 않은 방법으로 위·변조되었을 때의 영향도<br><b>가용성</b> 자산이 제공하는 서비스가 중단되었을 때의 영향도"},
+ {l:"(3) 최고 등급으로 산정하는 이유",kw:["하나|어느 하나|한 속성","심각한 피해","평균","누락|희석|과소"],
+  m:"세 속성 중 <b>어느 하나만 침해되어도</b> 조직에 심각한 피해가 발생할 수 있기 때문이다. <b>평균값</b>으로 산정하면 특정 속성의 높은 위험이 낮은 등급에 희석되어 그 위험에 대응하는 보호대책이 <b>누락</b>되거나 과소 적용될 수 있다."}]},
+
+{no:12,t:"파일 업로드 공격",p:12,prompt:"파일 업로드 공격에 대하여 답하시오.",parts:[
+ {l:"(1) 개념",kw:["웹셸|웹쉘|Web Shell","업로드","실행|명령어","권한|탈취|내부망"],
+  m:"파일 업로드 기능의 검증 미흡을 이용해 서버에서 실행 가능한 악성 스크립트, 즉 <b>웹셸</b>을 업로드하고 이를 브라우저로 직접 호출하여 실행시키는 공격이다. 성공 시 웹 서버 권한으로 시스템 명령어 실행, 파일 열람·변조가 가능하며 내부망 침투의 발판이 된다."},
+ {l:"(2) 필터링 우회 방법 3가지",kw:["Content-Type|MIME|헤더 변조","대소문자","이중 확장자|확장자 두 개","널 바이트|%00"],
+  m:"① 프록시로 요청을 가로채 <b>Content-Type</b>을 image/jpeg 등 허용된 MIME 타입으로 변조한다.<br>② <b>대소문자를 혼합</b>하여(test.PhP) 블랙리스트 검증을 우회한다.<br>③ <b>이중 확장자</b>(test.jpg.php)를 사용해 검증 기준과 실행 판단 기준의 차이를 이용한다.<br>④ <b>널 바이트</b>(test.php%00.jpg)를 삽입해 확장자 검사 후 문자열이 절단되게 한다."},
+ {l:"(3) 성공 조건 2가지",kw:["검증 로직|확장자 검증","미흡|블랙리스트|없","실행 권한","직접 접근|경로|호출"],
+  m:"① 업로드 파일의 <b>확장자 검증 로직</b>이 없거나 블랙리스트 방식 등으로 미흡한 경우<br>② 업로드 파일이 저장되는 디렉터리에 <b>스크립트 실행 권한</b>이 부여되어 있고, 웹 브라우저로 해당 경로에 직접 접근할 수 있는 경우"},
+ {l:"(4) 대응 방안 2가지",kw:["화이트리스트","서버|서버 측 검증","실행 권한 제거","파일명 변경|웹 루트 외부"],
+  m:"① <b>화이트리스트</b> 방식으로 필요한 확장자만 허용하고 서버 측에서 검증한다.<br>② 업로드 디렉터리의 <b>실행 권한을 제거</b>하고 웹 루트 외부에 저장한 뒤 별도 다운로드 모듈로만 접근하게 한다.<br>③ 저장 파일명을 임의 값으로 변경해 경로를 유추할 수 없게 한다."}]},
+
+{no:13,t:"위험관리 전략",p:8,prompt:"위험관리 전략 4가지를 쓰고 각각을 설명하시오.",parts:[
+ {l:"4가지 전략",kw:["회피","전가|전이","감소|완화","수용","보험|외주","보호대책|대책 구현","감수|받아들"],
+  m:"<b>위험 회피</b> 위험이 존재하는 업무나 사업 자체를 수행하지 않아 원인을 제거하는 전략이다.<br><b>위험 전가</b> 보험 가입이나 외주 위탁을 통해 잠재적 손실 비용을 제3자에게 이전하는 전략이다.<br><b>위험 감소</b> 적절한 정보보호 대책을 구현하여 위험을 수용 가능한 수준(DoA) 이하로 낮추는 전략이다.<br><b>위험 수용</b> 위험이 수용 가능 범위 이내이거나 대책 비용이 예상 손실보다 클 때 현재 위험을 인정하고 손실을 감수하는 전략이다."}]},
+
+{no:14,t:"BYOD 보안 기술",p:6,prompt:"BYOD 기반 모바일 오피스 환경에서 업무 정보를 보호하기 위해 사용되는 기술 3가지를 쓰고, 각각의 개념을 서술하시오.",parts:[
+ {l:"3가지 기술",kw:["MDM","컨테이너","가상화","루팅|탈옥","원격 잠금|원격 삭제","프라이버시|개인","OS 분리|하이퍼바이저"],
+  m:"<b>MDM</b> 모바일 단말을 중앙에서 원격 통제·관리하는 기술로, 단말 인증, <b>루팅·탈옥 탐지</b>, 기능 제어, 분실 시 원격 잠금 및 데이터 삭제 정책을 적용한다.<br><b>컨테이너화</b> 한 기기 내부에 업무용과 개인용 영역을 논리적으로 분리된 컨테이너로 구성한다. 업무 데이터는 암호화된 컨테이너에만 저장되어 정보 보호와 <b>개인 프라이버시</b>를 함께 보장한다.<br><b>모바일 가상화</b> 하이퍼바이저를 이용해 한 단말에서 업무용 OS와 개인용 OS를 완전히 분리 구동하고 필요에 따라 전환해 사용한다."}]},
+
+{no:15,t:"위험의 구성 조건",p:8,prompt:"위험(Risk)을 구성하는 3가지 요소를 쓰고 각각의 의미를 서술한 뒤, 손실이 실제로 발생하게 되는 조건을 서술하시오.",parts:[
+ {l:"3가지 요소와 손실 발생 조건",kw:["자산","위협","취약점","가치|보호해야","잠재적 원인|행위자","약점|결함|속성","보호대책|대책이 없","발현|발생하면 손실"],
+  m:"<b>자산</b> 조직이 보호해야 할 가치를 지닌 모든 유형·무형의 대상<br><b>위협</b> 자산에 손실을 초래할 수 있는 잠재적 원인 또는 행위자<br><b>취약점</b> 위협이 이용하는 대상이 되는 자산의 잠재적 약점이나 결함<br><b>손실 발생 조건</b> 자산에 위협과 관련된 취약점이 존재하고 그에 대한 적절한 <b>보호대책이 없는 상태</b>에서 위협이 실제로 발현될 때 손실이 발생한다. 세 요소 중 하나라도 성립하지 않으면 위험은 발생하지 않는다."}]},
+
+{no:16,t:"BCP 수립 5단계",p:5,prompt:"BCP(업무연속성계획) 수립 절차 5단계를 순서대로 쓰시오.",parts:[
+ {l:"5단계",kw:["범위 설정|기획","사업영향분석|BIA","복구 전략","복구 계획","테스트|유지보수|훈련"],
+  m:"① <b>범위 설정 및 기획</b> — 대상 범위·조직·일정 정의<br>② <b>사업영향분석(BIA)</b> — 핵심 업무 식별, RTO·RPO 산정<br>③ <b>복구 전략 개발</b> — 복구 방식과 대체 사이트 유형 결정<br>④ <b>복구 계획 수립</b> — 절차서·비상 조직·연락 체계 문서화<br>⑤ <b>수행 테스트 및 유지보수</b> — 모의훈련으로 실효성 검증 및 현행화"}]},
+
+{no:17,t:"정량적 위험평가",p:9,prompt:"정량적 위험평가에 대하여 답하시오.",parts:[
+ {l:"(1) SLE·ALE의 약어와 산출 공식",kw:["SLE","ALE","AV","EF","ARO"],
+  m:"<b>SLE</b>(Single Loss Expectancy, 단일 손실 예상액) = <b>AV × EF</b><br><b>ALE</b>(Annualized Loss Expectancy, 연간 손실 예상액) = <b>SLE × ARO</b>"},
+ {l:"(2) AV, EF, ARO의 의미",kw:["자산 가치|Asset Value","노출 계수|Exposure|비율","연간 발생률|발생 횟수|Annualized Rate"],
+  m:"<b>AV</b> 자산 가치<br><b>EF</b> 노출 계수. 위협 발생 시 자산이 손실되는 비율(%)<br><b>ARO</b> 연간 발생률. 해당 위협이 1년간 발생하는 예상 횟수"},
+ {l:"(3) AV 5,000만 원 · EF 40% · ARO 0.5회일 때 ALE (과정 포함)",kw:["2,000만|2000만|20,000,000|2000","1,000만|1000만|10,000,000|1000"],
+  m:"SLE = 5,000만 원 × 0.4 = <b>2,000만 원</b><br>ALE = 2,000만 원 × 0.5 = <b>1,000만 원</b>"}]}
+];
+
+/* ── 상태 ── */
+const KEY="isec-seosul-v1";
+let rec={},order=[],idx=0,mem={};
+const $=s=>document.querySelector(s);
+const norm=s=>(s||"").toLowerCase().replace(/[\s\.,·'"`\-_()]/g,"");
+
+async function load(){
+  try{ if(window.storage){ const r=await window.storage.get(KEY); if(r&&r.value) rec=JSON.parse(r.value); } }
+  catch(e){ rec=mem; }
+  if(!rec||typeof rec!=="object") rec={};
+}
+async function save(){
+  mem=rec;
+  try{ if(window.storage) await window.storage.set(KEY,JSON.stringify(rec)); }catch(e){}
+}
+
+function buildOrder(){
+  const mode=$("#mode").value;
+  let list=Q.map(q=>q.no);
+  if(mode==="wrong"){
+    list=list.filter(n=>rec[n]==="t"||rec[n]==="x");
+    if(!list.length) list=[];
+  }
+  if(mode==="rand") list.sort(()=>Math.random()-.5);
+  order=list; idx=0;
+}
+
+function ticks(){
+  const el=$("#ticks"); el.innerHTML="";
+  Q.forEach((q,i)=>{
+    const d=document.createElement("div");
+    d.className="tick "+(rec[q.no]||"")+(order[idx]===q.no?" cur":"");
+    d.title=q.no+". "+q.t;
+    d.onclick=()=>{const p=order.indexOf(q.no); if(p>=0){idx=p;render();}};
+    el.appendChild(d);
+  });
+}
+
+function stamp(g){
+  const s=$("#stamp");
+  s.textContent=g==="o"?"○":g==="t"?"△":"✕";
+  s.style.color=g==="o"?"var(--green)":g==="t"?"var(--amber)":"var(--red)";
+  s.classList.remove("go"); void s.offsetWidth; s.classList.add("go");
+}
+
+function render(){
+  ticks();
+  const main=$("#main");
+  if(!order.length){
+    main.innerHTML=`<div class="done"><h2>다시 풀 문항이 없습니다</h2>
+      <p>△·X로 채점한 문항이 아직 없어요. 순서대로 또는 랜덤 모드로 시작해 보세요.</p>
+      <button class="btn" onclick="document.querySelector('#mode').value='seq';buildOrder();render()">순서대로 시작</button></div>`;
+    return;
+  }
+  if(idx>=order.length){
+    const o=Q.filter(q=>rec[q.no]==="o").length,t=Q.filter(q=>rec[q.no]==="t").length,x=Q.filter(q=>rec[q.no]==="x").length;
+    main.innerHTML=`<div class="done"><h2>한 바퀴 끝</h2>
+      <p>○ ${o} · △ ${t} · ✕ ${x}</p>
+      <button class="btn" onclick="buildOrder();render()">다시 풀기</button>
+      <button class="btn ghost" onclick="document.querySelector('#mode').value='wrong';buildOrder();render()">△·X만 다시</button></div>`;
+    return;
+  }
+  const q=Q.find(x=>x.no===order[idx]);
+  main.innerHTML=`
+    <div class="qmeta"><span class="qno">문제 ${String(q.no).padStart(2,"0")}</span>
+      <span class="qtitle">${q.t}</span><span class="qpts">${q.p}점 · ${idx+1}/${order.length}</span></div>
+    <div class="prompt">${q.prompt}</div>
+    <div id="parts"></div>
+    <div class="acts">
+      <button class="btn ghost" id="showm">모범답안 보기</button>
+      <div class="grade">
+        <button class="g" data-g="o">○</button>
+        <button class="g" data-g="t">△</button>
+        <button class="g" data-g="x">✕</button>
+      </div>
+    </div>
+    <div class="note">답안을 쓰면 채점 키워드가 자동으로 점등됩니다. 채점 후 다음 문항으로 넘어갑니다.</div>
+    <div class="stats" id="stats"></div>`;
+
+  const ps=$("#parts");
+  q.parts.forEach((p,i)=>{
+    const d=document.createElement("div"); d.className="part";
+    d.innerHTML=`<div class="plabel">${p.l}<span class="hit" id="h${i}">0 / ${p.kw.length}</span></div>
+      <div class="sheet"><textarea id="ta${i}" rows="4" placeholder="완결된 문장으로 서술하세요. (~이다 / ~한다)"></textarea></div>
+      <div class="kws" id="kw${i}">${p.kw.map((k,j)=>`<span class="kw" id="k${i}_${j}">${k.split("|")[0]}</span>`).join("")}</div>
+      <div class="model" id="m${i}">${p.m}</div>`;
+    ps.appendChild(d);
+    const ta=d.querySelector("#ta"+i);
+    ta.addEventListener("input",()=>{
+      const v=norm(ta.value); let hit=0;
+      p.kw.forEach((k,j)=>{
+        const ok=k.split("|").some(a=>v.includes(norm(a)));
+        d.querySelector(`#k${i}_${j}`).classList.toggle("on",ok);
+        if(ok) hit++;
+      });
+      d.querySelector("#h"+i).textContent=`${hit} / ${p.kw.length}`;
+    });
+  });
+
+  $("#showm").onclick=e=>{
+    const on=!document.querySelector(".model").classList.contains("show");
+    document.querySelectorAll(".model").forEach(m=>m.classList.toggle("show",on));
+    e.target.textContent=on?"모범답안 닫기":"모범답안 보기";
+  };
+  document.querySelectorAll(".g").forEach(b=>{
+    if(rec[q.no]===b.dataset.g) b.classList.add("sel");
+    b.onclick=async()=>{
+      rec[q.no]=b.dataset.g; await save(); stamp(b.dataset.g);
+      setTimeout(()=>{idx++;render();window.scrollTo({top:0,behavior:"smooth"});},420);
+    };
+  });
+  statLine();
+}
+
+function statLine(){
+  const el=$("#stats"); if(!el) return;
+  const o=Q.filter(q=>rec[q.no]==="o").length,t=Q.filter(q=>rec[q.no]==="t").length,x=Q.filter(q=>rec[q.no]==="x").length;
+  const done=o+t+x, rate=done?Math.round(o/done*100):0;
+  el.innerHTML=`<span>완료 <b>${done}</b>/17</span><span>○ <b>${o}</b></span><span>△ <b>${t}</b></span><span>✕ <b>${x}</b></span><span>정답률 <b>${rate}%</b></span>`;
+}
+
+$("#mode").onchange=()=>{buildOrder();render();window.scrollTo({top:0})};
+$("#reset").onclick=async()=>{ if(confirm("채점 기록을 모두 지울까요?")){ rec={}; await save(); buildOrder(); render(); } };
+
+(async()=>{ await load(); buildOrder(); render(); })();
+</script>
+</body>
+</html>
