@@ -343,6 +343,80 @@
   .scb.w.on{background:#fdeef0; border-color:#d2455a; color:#d2455a}
   .exam-foot{text-align:center; color:var(--ink-mute); font-size:12px; margin:24px 0 10px; line-height:1.7}
 
+  /* ── 예상문제 뷰 토글 (목록형 ↔ 시험형) ── */
+  .ex-viewtoggle{display:flex; gap:3px; background:var(--panel); padding:3px; border-radius:9px; border:1px solid var(--line2)}
+  .ex-viewtoggle button{border:0; background:transparent; color:var(--ink-dim); padding:6px 12px; border-radius:7px; font-size:12.5px; font-weight:700; white-space:nowrap}
+  .ex-viewtoggle button.on{background:var(--brand-deep); color:#eafeff}
+
+  /* ── 문항 팔레트 (시험형/결과) ── */
+  .q-palette{display:flex; flex-wrap:wrap; gap:7px; margin:6px 0 16px; padding:12px 14px;
+    background:var(--bg2); border:1px solid var(--line); border-radius:12px}
+  .qp{width:34px; height:34px; flex:none; display:grid; place-items:center; border-radius:8px;
+    border:1px solid var(--line2); background:var(--panel); color:var(--ink-dim);
+    font:700 13px/1 var(--mono); cursor:pointer; transition:.12s}
+  .qp:hover{border-color:var(--brand); color:var(--brand)}
+  .qp.answered{border-color:var(--brand); color:var(--brand-deep); background:#e6f7f8}
+  .qp.g-c{background:#eafaf2; border-color:var(--ans); color:var(--ans)}
+  .qp.g-p{background:#fff7e8; border-color:#b8630f; color:#b8630f}
+  .qp.g-w{background:#fdeef0; border-color:#d2455a; color:#d2455a}
+  .qp.cur{box-shadow:0 0 0 3px rgba(13,151,161,.28); border-color:var(--brand-deep); transform:translateY(-1px)}
+
+  /* ── 시험형 스테이지 (가로: 좌우 화살표 + 단일 문제) ── */
+  .solve-stage{display:flex; align-items:stretch; gap:12px}
+  .solve-track{flex:1; min-width:0}
+  .solve-track .exq{margin-bottom:0}
+  .exq.solve .exq-body{padding:14px 20px 20px}
+  .exq.solve .exq-q{font-size:15.5px; line-height:1.65}
+  .exq.solve .exq-ta{min-height:120px}
+  .solve-arrow{flex:none; width:48px; align-self:center; height:88px; border-radius:12px;
+    border:1px solid var(--line2); background:var(--panel); color:var(--brand-deep);
+    font-size:30px; font-weight:400; line-height:1; cursor:pointer; transition:.12s;
+    display:grid; place-items:center}
+  .solve-arrow:hover:not(:disabled){border-color:var(--brand); background:#e6f7f8}
+  .solve-arrow:disabled{opacity:.3; cursor:default}
+
+  /* ── 시험형 하단 내비게이션 ── */
+  .solve-foot{display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;
+    margin:18px 0 8px; padding:14px 16px; background:var(--bg2); border:1px solid var(--line); border-radius:12px}
+  .solve-foot .solve-count{font:600 13px/1 var(--sans); color:var(--ink-dim)}
+  .solve-foot .solve-count b{color:var(--brand-deep); font-family:var(--mono)}
+  .ebtn.primary{background:var(--brand-deep); border-color:var(--brand-deep); color:#eafeff}
+  .ebtn.primary:hover{background:var(--brand); border-color:var(--brand); color:#fff}
+  .ebtn:disabled{opacity:.4; cursor:default}
+
+  /* ── 채점 결과 화면 ── */
+  .result-hero{text-align:center; padding:28px 20px; margin:6px 0 8px;
+    background:linear-gradient(160deg,var(--bg2),var(--panel)); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow)}
+  .result-hero .rh-label{font:600 12px/1 var(--mono); letter-spacing:.08em; color:var(--ink-mute); text-transform:uppercase; margin-bottom:12px}
+  .result-hero .rh-score{font-size:22px; color:var(--ink-mute)}
+  .result-hero .rh-score b{font-size:52px; font-weight:800; color:var(--brand-deep); letter-spacing:-.02em; vertical-align:-2px}
+  .result-hero .rh-bar{max-width:420px; margin:16px auto 14px; height:10px; background:var(--panel2); border:1px solid var(--line); border-radius:99px; overflow:hidden}
+  .result-hero .rh-bar > i{display:block; height:100%; width:0; border-radius:99px;
+    background:linear-gradient(90deg,var(--brand-deep),var(--brand)); transition:width .5s ease}
+  .result-hero .rh-stats{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:6px}
+  .rh-stats .rs{font:700 12px/1 var(--mono); padding:6px 11px; border-radius:99px; border:1px solid var(--line2); background:var(--panel); color:var(--ink-dim)}
+  .rh-stats .rs.c{background:#eafaf2; border-color:var(--ans); color:var(--ans)}
+  .rh-stats .rs.p{background:#fff7e8; border-color:#b8630f; color:#b8630f}
+  .rh-stats .rs.w{background:#fdeef0; border-color:#d2455a; color:#d2455a}
+  .result-hero .rh-note{margin-top:14px; font-size:12.5px; color:var(--ink-mute)}
+  .result-hero .rh-note b{color:var(--ink-dim)}
+  .result-list{margin-top:6px}
+  .result-row{width:100%; display:flex; align-items:center; gap:12px; text-align:left;
+    background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:11px 14px; margin-bottom:8px; cursor:pointer; transition:.12s}
+  .result-row:hover{border-color:var(--brand); box-shadow:var(--shadow)}
+  .rr-no{width:28px; height:28px; flex:none; display:grid; place-items:center; border-radius:7px; background:var(--brand-deep); color:#fff; font:800 13px/1 var(--mono)}
+  .rr-dom{flex:1; min-width:0; font-size:13.5px; color:var(--ink-dim); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rr-grade{font:700 11px/1 var(--mono); padding:5px 9px; border-radius:6px; border:1px solid var(--line2); color:var(--ink-mute)}
+  .rr-grade.c{background:#eafaf2; border-color:var(--ans); color:var(--ans)}
+  .rr-grade.p{background:#fff7e8; border-color:#b8630f; color:#b8630f}
+  .rr-grade.w{background:#fdeef0; border-color:#d2455a; color:#d2455a}
+  .rr-pts{font:700 12px/1 var(--mono); color:var(--ink-dim); white-space:nowrap}
+  .rr-go{font-size:11.5px; color:var(--brand); font-weight:700; white-space:nowrap}
+  @media(max-width:560px){
+    .rr-go{display:none}
+    .rr-dom{font-size:12.5px}
+  }
+
   /* ── 빈 상태 ── */
   .empty{text-align:center; padding:70px 20px; color:var(--ink-mute)}
   .empty .big{font-size:44px; margin-bottom:10px}
@@ -381,4 +455,9 @@
       backdrop-filter:blur(6px); border-top:1px solid var(--line); box-shadow:0 -6px 20px rgba(30,50,90,.08);
     }
     .flash-nav button{flex:1; padding:12px 8px; font-size:13px; white-space:nowrap}
+    /* 예상문제 시험형: 모바일은 좌우 화살표 숨기고 하단 버튼·스와이프로 이동 */
+    .solve-arrow{display:none}
+    .exq.solve .exq-body{padding:12px 16px 16px}
+    .q-palette{gap:6px; padding:10px}
+    .qp{width:30px; height:30px; font-size:12px}
   }

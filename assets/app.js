@@ -437,6 +437,26 @@
     else if(e.key==="ArrowLeft") flashGo(-1);
     else if(e.key==="ArrowRight") flashGo(1);
   });
+  // ── 키보드 (예상문제 시험형: ← → 문항 이동) ──
+  document.addEventListener("keydown",e=>{
+    if(state.mode!=="exam" || state.examView!=="solve" || state.exResult) return;
+    if(e.target.tagName==="INPUT" || e.target.tagName==="TEXTAREA") return;
+    if(e.key==="ArrowLeft") examNav(-1);
+    else if(e.key==="ArrowRight") examNav(1);
+  });
+  // ── 터치 스와이프 (예상문제 시험형: 좌우로 문항 이동) ──
+  let _swipeX=null;
+  const _content=document.getElementById("content");
+  _content.addEventListener("touchstart",e=>{
+    if(state.mode!=="exam" || state.examView!=="solve" || state.exResult){ _swipeX=null; return; }
+    if(e.target.closest("textarea, pre, .exq-scen")){ _swipeX=null; return; }
+    _swipeX=e.changedTouches[0].clientX;
+  },{passive:true});
+  _content.addEventListener("touchend",e=>{
+    if(_swipeX==null) return;
+    const dx=e.changedTouches[0].clientX-_swipeX; _swipeX=null;
+    if(Math.abs(dx)>60) examNav(dx<0?1:-1);
+  },{passive:true});
 
   // ── 사이드바 토글 (모바일: 드로어 / 데스크톱: 접기) ──
   const SIDE_LS="sec_side_collapsed";
@@ -461,6 +481,12 @@
   try{ exStore=JSON.parse(localStorage.getItem(EX_LS)||"{}"); }catch(e){ exStore={}; }
   function exPersist(){ try{ localStorage.setItem(EX_LS, JSON.stringify(exStore)); }catch(e){} }
   state.round = 0; // 현재 회차 인덱스
+  // 예상문제 뷰: "list"(세로 목록형) / "solve"(가로 시험형 · 한 문제씩)
+  const EX_VIEW_LS = "secexam_view_v1";
+  try{ state.examView = localStorage.getItem(EX_VIEW_LS)==="solve" ? "solve" : "list"; }catch(e){ state.examView="list"; }
+  state.exIdx = 0;      // 시험형에서 현재 문항 인덱스
+  state.exResult = false; // 채점 결과 화면 표시 여부
+  function setExamView(v){ state.examView=v; try{ localStorage.setItem(EX_VIEW_LS, v); }catch(e){} }
 
   const EX_TYPE_INFO = {
     "단답형":["단답형","1~12번 · 각 3점 · 36점"],
@@ -486,59 +512,177 @@
     return s;
   }
 
-  function renderExam(){
-    const c=document.getElementById("content");
-    const ri=state.round;
+  // ── 공통 헤더(인트로 + 회차 탭 + 뷰 토글) ──
+  function examHead(ri){
     let html='<div class="exam-intro">'
       +'<div class="ei-title">📝 실전 예상문제</div>'
       +'<div class="ei-sub">'+esc(EXAM.title)+' · 총 '+EXAM.rounds.length+'회분 · 회차당 18문항(100점·180분)</div>'
       +'</div>';
-    // 회차 탭
     html+='<div class="round-tabs">';
     EXAM.rounds.forEach((r,i)=>{ html+='<button class="round-tab'+(i===ri?" on":"")+'" data-round="'+i+'">'+esc(r.title)+'</button>'; });
     html+='</div>';
-    // 점수 바
+    return html;
+  }
+  function examViewToggle(){
+    return '<div class="ex-viewtoggle" role="tablist">'
+      +'<button class="'+(state.examView==="list"?"on":"")+'" data-exview="list" role="tab">📄 목록형</button>'
+      +'<button class="'+(state.examView==="solve"?"on":"")+'" data-exview="solve" role="tab">📝 시험형</button>'
+      +'</div>';
+  }
+  // 단일 문제 카드(목록형·시험형 공용) — data-r/data-n 으로 기존 채점 이벤트 재사용
+  function examCardHTML(ri,q,extraCls){
+    const st=exStore[exKey(ri,q.num)]||{};
+    const scen = q.scenario ? '<div class="exq-scen"><div class="md">'+renderMd(q.scenario)+'</div></div>' : "";
+    return '<article class="exq'+(extraCls||"")+(st.open?" open":"")+'" data-r="'+ri+'" data-n="'+q.num+'">'
+      +'<div class="exq-head"><span class="exq-no">'+q.num+'</span>'
+        +'<span class="exq-type t'+q.type+'">'+q.type+'</span>'
+        +'<span class="exq-dom">'+esc(q.domain)+'</span>'
+        +'<span class="exq-pts">'+q.points+'점</span></div>'
+      +'<div class="exq-body">'
+        +'<div class="exq-q"><div class="md">'+renderMd(q.question)+'</div></div>'
+        +scen
+        +'<textarea class="exq-ta" placeholder="답안을 작성해 보세요 (자동 저장)">'+(st.ans?esc(st.ans):"")+'</textarea>'
+        +'<button class="exq-reveal">📖 모범답안 · 해설 보기</button>'
+        +'<div class="exq-ans"><div class="at">✔ 모범답안</div><div class="ab"><div class="md">'+renderMd(q.answer)+'</div>'
+          +'<div class="et">💡 해설 · 채점 포인트</div><div class="md">'+renderMd(q.explanation)+'</div></div></div>'
+        +'<div class="exq-sc"><span class="l">자가채점:</span>'
+          +'<button class="scb c'+(st.grade==="correct"?" on":"")+'" data-g="correct">정답</button>'
+          +'<button class="scb p'+(st.grade==="partial"?" on":"")+'" data-g="partial">부분</button>'
+          +'<button class="scb w'+(st.grade==="wrong"?" on":"")+'" data-g="wrong">오답</button>'
+        +'</div>'
+      +'</div></article>';
+  }
+  // 문항 팔레트(시험형·결과 공용) — 채점 상태별 색상
+  function paletteHTML(ri,curIdx){
+    return EXAM.rounds[ri].questions.map((q,i)=>{
+      const s=exStore[exKey(ri,q.num)]||{};
+      let cls="";
+      if(s.grade==="correct")cls=" g-c"; else if(s.grade==="partial")cls=" g-p";
+      else if(s.grade==="wrong")cls=" g-w"; else if(s.ans&&s.ans.trim())cls=" answered";
+      return '<button class="qp'+cls+(i===curIdx?" cur":"")+'" data-exgo="'+i+'" title="'+q.num+'번 · '+esc(q.type)+'">'+q.num+'</button>';
+    }).join("");
+  }
+
+  // ── 렌더 디스패처 ──
+  function renderExam(){
+    if(state.exResult){ renderExamResult(); return; }
+    if(state.examView==="solve"){ renderExamSolve(); return; }
+    renderExamList();
+  }
+
+  // ── 목록형(세로) ──
+  function renderExamList(){
+    const c=document.getElementById("content");
+    const ri=state.round;
+    let html=examHead(ri);
     html+='<div class="exam-bar">'
+      + examViewToggle()
       +'<div class="escore">자가채점 <b id="exScore">'+calcExamScore(ri)+'</b> / 100점</div>'
       +'<div class="spacer"></div>'
       +'<button class="ebtn" data-ex="revealAll">전체 정답</button>'
       +'<button class="ebtn" data-ex="hideAll">정답 접기</button>'
       +'<button class="ebtn" data-ex="reset">답안 초기화</button>'
       +'</div>';
-    // 문제
     let lastType="";
     EXAM.rounds[ri].questions.forEach(q=>{
       if(q.type!==lastType){ lastType=q.type; const info=EX_TYPE_INFO[q.type];
         html+='<div class="sec-div"><h3>'+info[0]+'</h3><div class="l"></div><span class="p">'+info[1]+'</span></div>'; }
-      const st=exStore[exKey(ri,q.num)]||{};
-      let scen="";
-      if(q.scenario){
-        scen='<div class="exq-scen"><div class="md">'+renderMd(q.scenario)+'</div></div>';
-      }
-      html+='<article class="exq'+(st.open?" open":"")+'" data-r="'+ri+'" data-n="'+q.num+'">'
-        +'<div class="exq-head"><span class="exq-no">'+q.num+'</span>'
-          +'<span class="exq-type t'+q.type+'">'+q.type+'</span>'
-          +'<span class="exq-dom">'+esc(q.domain)+'</span>'
-          +'<span class="exq-pts">'+q.points+'점</span></div>'
-        +'<div class="exq-body">'
-          +'<div class="exq-q"><div class="md">'+renderMd(q.question)+'</div></div>'
-          +scen
-          +'<textarea class="exq-ta" placeholder="답안을 작성해 보세요 (자동 저장)">'+(st.ans?esc(st.ans):"")+'</textarea>'
-          +'<button class="exq-reveal">📖 모범답안 · 해설 보기</button>'
-          +'<div class="exq-ans"><div class="at">✔ 모범답안</div><div class="ab"><div class="md">'+renderMd(q.answer)+'</div>'
-            +'<div class="et">💡 해설 · 채점 포인트</div><div class="md">'+renderMd(q.explanation)+'</div></div></div>'
-          +'<div class="exq-sc"><span class="l">자가채점:</span>'
-            +'<button class="scb c'+(st.grade==="correct"?" on":"")+'" data-g="correct">정답</button>'
-            +'<button class="scb p'+(st.grade==="partial"?" on":"")+'" data-g="partial">부분</button>'
-            +'<button class="scb w'+(st.grade==="wrong"?" on":"")+'" data-g="wrong">오답</button>'
-          +'</div>'
-        +'</div></article>';
+      html+=examCardHTML(ri,q,"");
     });
     html+='<div class="exam-foot">⚠️ 학습용 <b>예상문제</b>로 실제 출제 문제가 아닙니다. 법령·수치는 개정될 수 있으니 시험 직전 최신 공고·조문을 확인하세요.<br>실무형(17·18번)은 <b>2문항 중 1문항만 선택</b>하여 작성합니다.</div>';
     c.innerHTML=html;
   }
 
+  // ── 시험형(가로 · 한 문제씩) ──
+  function renderExamSolve(){
+    const c=document.getElementById("content");
+    const ri=state.round;
+    const qs=EXAM.rounds[ri].questions;
+    if(state.exIdx<0) state.exIdx=0;
+    if(state.exIdx>=qs.length) state.exIdx=qs.length-1;
+    const idx=state.exIdx, q=qs[idx], info=EX_TYPE_INFO[q.type];
+    let html=examHead(ri);
+    html+='<div class="exam-bar">'
+      + examViewToggle()
+      +'<div class="escore">자가채점 <b id="exScore">'+calcExamScore(ri)+'</b> / 100점</div>'
+      +'<div class="spacer"></div>'
+      +'<button class="ebtn" data-ex="result">🏁 채점 결과</button>'
+      +'<button class="ebtn" data-ex="reset">답안 초기화</button>'
+      +'</div>';
+    html+='<div class="q-palette">'+paletteHTML(ri,idx)+'</div>';
+    html+='<div class="solve-stage">'
+      +'<button class="solve-arrow" data-exnav="-1"'+(idx===0?' disabled':'')+' aria-label="이전 문항">‹</button>'
+      +'<div class="solve-track">'+examCardHTML(ri,q," solve")+'</div>'
+      +'<button class="solve-arrow" data-exnav="1"'+(idx===qs.length-1?' disabled':'')+' aria-label="다음 문항">›</button>'
+      +'</div>';
+    html+='<div class="solve-foot">'
+      +'<button class="ebtn" data-exnav="-1"'+(idx===0?' disabled':'')+'>← 이전</button>'
+      +'<span class="solve-count">'+esc(info[0])+' · 문항 <b>'+(idx+1)+'</b> / '+qs.length+'</span>'
+      + (idx===qs.length-1
+          ? '<button class="ebtn primary" data-ex="result">🏁 채점 결과 보기</button>'
+          : '<button class="ebtn" data-exnav="1">다음 →</button>')
+      +'</div>';
+    html+='<div class="exam-foot">⚠️ 학습용 <b>예상문제</b>입니다. 실무형(17·18번)은 <b>2문항 중 1문항만</b> 선택해 작성하세요.<br>← → 방향키·좌우 스와이프로 문항을 이동할 수 있어요.</div>';
+    c.innerHTML=html;
+  }
+
+  // ── 채점 결과 화면 ──
+  function renderExamResult(){
+    const c=document.getElementById("content");
+    const ri=state.round;
+    const qs=EXAM.rounds[ri].questions;
+    const score=calcExamScore(ri);
+    let cC=0,cP=0,cW=0,cN=0;
+    qs.forEach(q=>{ const g=(exStore[exKey(ri,q.num)]||{}).grade;
+      if(g==="correct")cC++; else if(g==="partial")cP++; else if(g==="wrong")cW++; else cN++; });
+    const graded=cC+cP+cW;
+    let html=examHead(ri);
+    html+='<div class="result-hero">'
+      +'<div class="rh-label">자가채점 결과 · '+esc(EXAM.rounds[ri].title)+'</div>'
+      +'<div class="rh-score"><b>'+score+'</b> <span>/ 100점</span></div>'
+      +'<div class="rh-bar"><i style="width:'+score+'%"></i></div>'
+      +'<div class="rh-stats"><span class="rs c">정답 '+cC+'</span><span class="rs p">부분 '+cP+'</span>'
+        +'<span class="rs w">오답 '+cW+'</span><span class="rs n">미채점 '+cN+'</span></div>'
+      + (graded<qs.length
+          ? '<div class="rh-note">아직 채점하지 않은 문항이 <b>'+cN+'개</b> 있어요. 문항을 눌러 모범답안을 확인하고 채점해 보세요.</div>'
+          : '<div class="rh-note">모든 문항을 채점했어요! 🎉</div>')
+      +'</div>';
+    html+='<div class="result-list">';
+    let lastType="";
+    qs.forEach((q,i)=>{
+      if(q.type!==lastType){ lastType=q.type; const info=EX_TYPE_INFO[q.type];
+        html+='<div class="sec-div"><h3>'+info[0]+'</h3><div class="l"></div><span class="p">'+info[1]+'</span></div>'; }
+      const st=exStore[exKey(ri,q.num)]||{}, g=st.grade;
+      let gl='미채점', gc='n', earned=0;
+      if(g==="correct"){gl='정답';gc='c';earned=q.points;}
+      else if(g==="partial"){gl='부분';gc='p';earned=Math.round(q.points/2);}
+      else if(g==="wrong"){gl='오답';gc='w';}
+      html+='<button class="result-row" data-exgo="'+i+'">'
+        +'<span class="rr-no">'+q.num+'</span>'
+        +'<span class="rr-dom">'+esc(q.domain)+'</span>'
+        +'<span class="rr-grade '+gc+'">'+gl+'</span>'
+        +'<span class="rr-pts">'+earned+' / '+q.points+'점</span>'
+        +'<span class="rr-go">문제 보기 ›</span>'
+        +'</button>';
+    });
+    html+='</div>';
+    html+='<div class="solve-foot">'
+      +'<button class="ebtn primary" data-ex="back">← 문제로 돌아가기</button>'
+      +'<button class="ebtn" data-ex="reset">답안 초기화</button>'
+      +'</div>';
+    html+='<div class="exam-foot">실무형(17·18번)은 두 문항 중 <b>점수가 높은 한 문항</b>만 총점(100점)에 반영됩니다.</div>';
+    c.innerHTML=html;
+  }
+
   function updateExScore(){ const el=document.getElementById("exScore"); if(el) el.textContent=calcExamScore(state.round); }
+  function refreshPalette(){ const w=document.querySelector(".q-palette"); if(w) w.innerHTML=paletteHTML(state.round, state.exIdx); }
+  function examNav(d){
+    const qs=EXAM.rounds[state.round].questions;
+    let n=state.exIdx+d;
+    if(n<0)n=0; if(n>=qs.length)n=qs.length-1;
+    if(n===state.exIdx) return;
+    state.exIdx=n; renderExamSolve();
+  }
 
   // ══════════ 기출문제 모드 ══════════
   // 예상문제와 렌더/이벤트 로직을 공유하되, 데이터·저장소·채점 방식만 분리한다.
@@ -609,9 +753,18 @@
     const tab=e.target.closest(".round-tab");
     if(tab){
       if(tab.dataset.giround!==undefined){ state.giRound=+tab.dataset.giround; renderGichul(); }
-      else { state.round=+tab.dataset.round; renderExam(); }
+      else { state.round=+tab.dataset.round; state.exIdx=0; state.exResult=false; renderExam(); }
       return;
     }
+    // 예상문제 뷰 토글 (목록형 ↔ 시험형)
+    const vt=e.target.closest("[data-exview]");
+    if(vt){ const v=vt.dataset.exview; if(v!==state.examView){ setExamView(v); state.exResult=false; renderExam(); window.scrollTo(0,0); } return; }
+    // 문항 팔레트 / 결과행 → 시험형으로 해당 문항 열기
+    const go=e.target.closest("[data-exgo]");
+    if(go){ state.exIdx=+go.dataset.exgo; state.exResult=false; setExamView("solve"); renderExam(); window.scrollTo(0,0); return; }
+    // 이전 / 다음 문항
+    const nav=e.target.closest("[data-exnav]");
+    if(nav){ examNav(+nav.dataset.exnav); return; }
     // 상단 바 버튼 (예상)
     const eb=e.target.closest("[data-ex]");
     if(eb){
@@ -619,6 +772,8 @@
       if(a==="revealAll"){ EXAM.rounds[ri].questions.forEach(q=>{exStore[exKey(ri,q.num)]=Object.assign(exStore[exKey(ri,q.num)]||{},{open:true});}); exPersist(); renderExam(); }
       else if(a==="hideAll"){ EXAM.rounds[ri].questions.forEach(q=>{ if(exStore[exKey(ri,q.num)]) exStore[exKey(ri,q.num)].open=false; }); exPersist(); renderExam(); }
       else if(a==="reset"){ if(confirm("이 회차의 답안과 채점 기록을 모두 삭제할까요?")){ EXAM.rounds[ri].questions.forEach(q=>{ delete exStore[exKey(ri,q.num)]; }); exPersist(); renderExam(); } }
+      else if(a==="result"){ state.exResult=true; renderExam(); window.scrollTo(0,0); }
+      else if(a==="back"){ state.exResult=false; renderExam(); window.scrollTo(0,0); }
       return;
     }
     // 상단 바 버튼 (기출)
@@ -641,7 +796,8 @@
       if(sc){ const g=sc.dataset.g; const cur=(store[k]||{}).grade; const ng=cur===g?null:g;
         store[k]=Object.assign(store[k]||{},{grade:ng}); persist();
         card.querySelectorAll(".scb").forEach(x=>x.classList.toggle("on", ng&&x.dataset.g===ng));
-        if(gi) updateGiStat(); else updateExScore(); return; }
+        if(gi) updateGiStat(); else { updateExScore(); if(state.mode==="exam"&&state.examView==="solve"&&!state.exResult) refreshPalette(); }
+        return; }
     }
   });
   document.getElementById("content").addEventListener("input",e=>{
